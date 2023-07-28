@@ -9,5 +9,4 @@ class KsSpodaApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-//testowa zmiana
 }
