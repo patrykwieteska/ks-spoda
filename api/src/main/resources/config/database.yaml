@@ -1,7 +1,14 @@
+#---
 spring:
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
     username: sa
     password: password
+    driverClassName: org.h2.Driver
   jpa.database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled: true
+#---

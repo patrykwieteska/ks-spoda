@@ -1,2 +1,8 @@
 spring:
-  config.import: config/database.yaml
+  profiles:
+    active: dev
+  config:
+    import:
+      - classpath:config/database.yaml
+  liquibase:
+    change-log: classpath:database/changelog/changelog-master.yaml
