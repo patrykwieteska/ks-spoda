@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @ToString(callSuper = true)
 @Table(name = "LEAGUE")
@@ -27,5 +28,15 @@ public class League extends BaseEntity {
     private LocalDate startDate;
     @Column(name = "END_DATE")
     private LocalDate endDate;
+    @Column(name="IS_FINISHED")
+    private Boolean isFinished;
+
+    @OneToMany (mappedBy = "league", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Round> roundList;
+
+    public void setRoundList(List<Round> roundList) {
+        this.roundList = roundList;
+    }
 
 }

@@ -1,8 +1,8 @@
-package pl.spoda.ks.api.league.model.response;
+package pl.spoda.ks.api.league.model;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.spoda.ks.api.commons.model.response.BaseResponse;
+import pl.spoda.ks.api.commons.BaseResponse;
 
 @Getter
 @Setter

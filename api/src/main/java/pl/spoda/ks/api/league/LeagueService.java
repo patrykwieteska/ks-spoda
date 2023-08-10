@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pl.spoda.ks.api.commons.model.response.BaseResponse;
-import pl.spoda.ks.api.commons.ResponseService;
-import pl.spoda.ks.api.league.model.request.LeagueRequest;
-import pl.spoda.ks.api.league.model.response.LeagueCreatedResponse;
-import pl.spoda.ks.api.league.model.response.LeagueListResponse;
+import pl.spoda.ks.api.commons.BaseResponse;
+import pl.spoda.ks.api.commons.ResponseResolver;
+import pl.spoda.ks.api.league.model.LeagueRequest;
+import pl.spoda.ks.api.league.model.LeagueCreatedResponse;
+import pl.spoda.ks.api.league.model.LeagueListResponse;
 import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
@@ -22,17 +22,17 @@ public class LeagueService {
 
     private final LeagueMapper leagueMapper;
     private final LeagueServiceDb leagueServiceDb;
-    private final ResponseService responseService;
+    private final ResponseResolver responseResolver;
 
     @LogEvent
     public ResponseEntity<BaseResponse> createLeague(LeagueRequest request) {
         if (leagueServiceDb.isLeagueAlreadyExists( request.getName() )) {
             HttpStatus status = HttpStatus.CONFLICT;
-            return responseService.prepareResponse( status, InfoMessage.LEAGUE_NAME_ALREADY_TAKEN );
+            return responseResolver.prepareResponse( status, InfoMessage.LEAGUE_NAME_ALREADY_TAKEN );
         }
 
         LeagueDto result = leagueServiceDb.save( leagueMapper.mapLeague( request ) );
-        return responseService.prepareResponseCreated( LeagueCreatedResponse.builder().leagueId( result.getId() ).build());
+        return responseResolver.prepareResponseCreated( LeagueCreatedResponse.builder().leagueId( result.getId() ).build());
     }
 
     public ResponseEntity<BaseResponse> getLeagues() {
@@ -43,6 +43,6 @@ public class LeagueService {
         if(storedLeagues.isEmpty()) {
             response.setMessage( InfoMessage.NO_LEAGUES_FOUND );
         }
-       return  responseService.prepareResponse( response );
+       return  responseResolver.prepareResponse( response );
     }
 }

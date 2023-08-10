@@ -1,5 +1,6 @@
 package pl.spoda.ks.database.repository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
@@ -22,6 +23,7 @@ public class LeagueServiceDb {
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
     @LogEvent
+    @Transactional
     public LeagueDto save(LeagueDto leagueDto) {
         League league = mapper.mapToLeagueEntity( leagueDto );
         dbService.createEntity( league );

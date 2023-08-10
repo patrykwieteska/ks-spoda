@@ -1,4 +1,4 @@
-package pl.spoda.ks.api.commons.model.response;
+package pl.spoda.ks.api.commons;
 
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;

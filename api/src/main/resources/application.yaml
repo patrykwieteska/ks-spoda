@@ -6,3 +6,5 @@ spring:
       - classpath:config/database.yaml
   liquibase:
     change-log: classpath:database/changelog/changelog-master.yaml
+
+base.request: "/api/v1"
