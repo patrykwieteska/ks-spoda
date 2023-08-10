@@ -12,7 +12,7 @@ import pl.spoda.ks.database.entity.League;
 import pl.spoda.ks.database.entity.Round;
 import pl.spoda.ks.database.mapper.EntityMapper;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,18 +26,35 @@ public class RoundServiceDb {
     @Transactional
     @LogEvent
     public RoundDto createRound(RoundDto roundDto) {
-        Optional<League> storedLeague = leagueRepository.findById( roundDto.getLeagueId() );
+        League storedLeague = leagueRepository.findById( roundDto.getLeagueId()).orElse( null );
+        validateLeague( roundDto, storedLeague );
 
-        if (storedLeague.isEmpty())
+        Round round = entityMapper.mapToRound( roundDto );
+        round.setLeague( storedLeague);
+        dbService.createEntity( round );
+
+        Round save = roundRepository.save( round );
+        return entityMapper.mapToRoundDto( save );
+    }
+
+    private void validateLeague(RoundDto roundDto, League storedLeague) {
+        if (storedLeague ==null)
             throw new SpodaApplicationException( String.format( "League with id: %d is not exist", roundDto.getLeagueId() ) );
 
-        if (BooleanUtils.isTrue(storedLeague.get().getIsFinished()))
+        if (BooleanUtils.isTrue( storedLeague.getIsFinished()))
             throw new SpodaApplicationException( String.format( "League %d is finished. Could not edit it",
                     roundDto.getLeagueId() ) );
 
-        Round round = entityMapper.mapToRound( roundDto );
-        dbService.createEntity( round );
+        if(roundRepository.findByDate( roundDto.getDate() ).isPresent()) {
+            throw new SpodaApplicationException( String.format( "Round with date: %s already exists",
+                    roundDto.getDate() ) );
+        }
+    }
 
-        return entityMapper.mapToRoundDto( roundRepository.save( round ) );
+    public List<RoundDto> getRoundsByLeagueId(Integer leagueId) {
+        List<Round> storedRound = roundRepository.findByLeagueId( leagueId );
+        return storedRound.stream()
+                .map( entityMapper::mapToRoundDto )
+                .toList();
     }
 }

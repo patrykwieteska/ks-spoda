@@ -1,5 +1,6 @@
 package pl.spoda.ks.api.commons;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -13,5 +14,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class BaseResponse {
     private int status;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String message;
 }

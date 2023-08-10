@@ -9,10 +9,13 @@ import pl.spoda.ks.api.commons.ResponseResolver;
 import pl.spoda.ks.api.league.model.LeagueRequest;
 import pl.spoda.ks.api.league.model.LeagueCreatedResponse;
 import pl.spoda.ks.api.league.model.LeagueListResponse;
+import pl.spoda.ks.api.league.model.LeagueRoundsResponse;
 import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
+import pl.spoda.ks.database.dto.RoundDto;
 import pl.spoda.ks.database.repository.LeagueServiceDb;
+import pl.spoda.ks.database.repository.RoundServiceDb;
 
 import java.util.List;
 
@@ -23,6 +26,7 @@ public class LeagueService {
     private final LeagueMapper leagueMapper;
     private final LeagueServiceDb leagueServiceDb;
     private final ResponseResolver responseResolver;
+    private final RoundServiceDb roundServiceDb;
 
     @LogEvent
     public ResponseEntity<BaseResponse> createLeague(LeagueRequest request) {
@@ -44,5 +48,15 @@ public class LeagueService {
             response.setMessage( InfoMessage.NO_LEAGUES_FOUND );
         }
        return  responseResolver.prepareResponse( response );
+    }
+
+    public ResponseEntity<BaseResponse> getLeagueWithRoundList(Integer leagueId) {
+        LeagueDto leagueDto = leagueServiceDb.getSingleLeague(leagueId);
+        List<RoundDto> leagueRounds = roundServiceDb.getRoundsByLeagueId(leagueId);
+        LeagueRoundsResponse response = LeagueRoundsResponse.builder()
+                .league( leagueDto )
+                .rounds( leagueRounds )
+                .build();
+        return responseResolver.prepareResponse(response);
     }
 }
