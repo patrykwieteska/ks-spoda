@@ -1,7 +1,7 @@
 package pl.spoda.ks.database.repository;
 
 import org.springframework.stereotype.Service;
-import pl.spoda.ks.database.model.BaseEntity;
+import pl.spoda.ks.database.entity.BaseEntity;
 
 import java.time.LocalDateTime;
 

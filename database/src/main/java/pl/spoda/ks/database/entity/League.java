@@ -1,4 +1,4 @@
-package pl.spoda.ks.database.model;
+package pl.spoda.ks.database.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
