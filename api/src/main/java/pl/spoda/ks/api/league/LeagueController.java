@@ -27,4 +27,12 @@ public class LeagueController {
     public ResponseEntity<BaseResponse> getLeagues() {
         return leagueService.getLeagues();
     }
+
+    @GetMapping("/{id}")
+    @LogEvent
+    public ResponseEntity<BaseResponse> getSingleLeague(
+            @PathVariable(name = "id") Integer leagueId
+    ) {
+        return leagueService.getLeagueWithRoundList(leagueId);
+    }
 }
