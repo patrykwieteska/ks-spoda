@@ -1,7 +1,7 @@
 --liquibase formatted sql
 --changeset ks-spoda:1.0
 
-CREATE TABLE LEAGUE (
+CREATE TABLE "LEAGUE" (
     "ID" NUMBER(10) AUTO_INCREMENT PRIMARY KEY NOT NULL,
     "NAME" VARCHAR(50) unique NOT NULL,
     "DESCRIPTION" VARCHAR (200) NULL,

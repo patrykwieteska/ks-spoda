@@ -1,7 +1,7 @@
 package pl.spoda.ks.api.league;
 
 import org.springframework.stereotype.Service;
-import pl.spoda.ks.api.league.model.request.LeagueRequest;
+import pl.spoda.ks.api.league.model.LeagueRequest;
 import pl.spoda.ks.database.dto.LeagueDto;
 
 @Service
@@ -12,6 +12,7 @@ public class LeagueMapper {
                 .startDate( request.getStartDate() )
                 .name( request.getName() )
                 .description( request.getDescription() )
+                .isFinished( false )
                 .build();
     }
 }

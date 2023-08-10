@@ -3,10 +3,9 @@ package pl.spoda.ks.api.commons;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pl.spoda.ks.api.commons.model.response.BaseResponse;
 
 @Service
-public class ResponseService {
+public class ResponseResolver {
 
     public ResponseEntity<BaseResponse> prepareResponse(HttpStatus status, String message) {
         return ResponseEntity.status( status ).body(
