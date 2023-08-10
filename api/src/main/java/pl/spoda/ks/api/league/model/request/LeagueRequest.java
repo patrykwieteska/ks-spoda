@@ -1,4 +1,4 @@
-package pl.spoda.ks.api.league;
+package pl.spoda.ks.api.league.model.request;
 
 import lombok.*;
 
