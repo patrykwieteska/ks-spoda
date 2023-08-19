@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @SuperBuilder
 @Entity
 @Getter
-public class Round extends BaseEntity {
+public class MatchDay extends BaseEntity {
 
     @Column(name = "ID")
     @Id
@@ -21,8 +21,12 @@ public class Round extends BaseEntity {
     private Integer id;
     @Column(name="LEAGUE_ID",nullable = false,insertable = false,updatable = false)
     private Integer leagueId;
-    @Column(name = "DATE")
+    @Column(name = "DATE", nullable = false)
     private LocalDate date;
+    @Column(name="LOCATION")
+    private String location;
+    @Column(name="IS_FINISHED")
+    private Boolean isFinished;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="LEAGUE_ID")
@@ -30,8 +34,14 @@ public class Round extends BaseEntity {
     @EqualsAndHashCode.Exclude
     private League league;
 
-    public void setLeague(League league) {
+    public MatchDay league(League league) {
         this.league = league;
+        return this;
+    }
+
+    public MatchDay isFinished(Boolean isFinished) {
+        this.isFinished = isFinished;
+        return this;
     }
 
 }

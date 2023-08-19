@@ -2,6 +2,8 @@ package pl.spoda.ks.comons.messages;
 
 public class InfoMessage {
 
+    public static final String ROUNDS_NOT_FINISHED = "Aby zakończyć ligę należy w pierwszej kolejności zakończyć " +
+            "wszystkie kolejki";
     private InfoMessage() {
         throw new IllegalStateException("Utility class");
     }

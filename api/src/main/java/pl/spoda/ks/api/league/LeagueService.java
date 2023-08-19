@@ -7,15 +7,15 @@ import org.springframework.stereotype.Service;
 import pl.spoda.ks.api.commons.BaseResponse;
 import pl.spoda.ks.api.commons.ResponseResolver;
 import pl.spoda.ks.api.league.model.LeagueRequest;
-import pl.spoda.ks.api.league.model.LeagueCreatedResponse;
+import pl.spoda.ks.api.league.model.StoredLeague;
 import pl.spoda.ks.api.league.model.LeagueListResponse;
-import pl.spoda.ks.api.league.model.LeagueRoundsResponse;
+import pl.spoda.ks.api.league.model.InitLeagueResponse;
 import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
-import pl.spoda.ks.database.dto.RoundDto;
+import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.repository.LeagueServiceDb;
-import pl.spoda.ks.database.repository.RoundServiceDb;
+import pl.spoda.ks.database.repository.MatchDayServiceDb;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class LeagueService {
     private final LeagueMapper leagueMapper;
     private final LeagueServiceDb leagueServiceDb;
     private final ResponseResolver responseResolver;
-    private final RoundServiceDb roundServiceDb;
+    private final MatchDayServiceDb matchDayServiceDb;
 
     @LogEvent
     public ResponseEntity<BaseResponse> createLeague(LeagueRequest request) {
@@ -36,7 +36,7 @@ public class LeagueService {
         }
 
         LeagueDto result = leagueServiceDb.save( leagueMapper.mapLeague( request ) );
-        return responseResolver.prepareResponseCreated( LeagueCreatedResponse.builder().leagueId( result.getId() ).build());
+        return responseResolver.prepareResponseCreated( StoredLeague.builder().leagueId( result.getId() ).build());
     }
 
     public ResponseEntity<BaseResponse> getLeagues() {
@@ -50,13 +50,20 @@ public class LeagueService {
        return  responseResolver.prepareResponse( response );
     }
 
-    public ResponseEntity<BaseResponse> getLeagueWithRoundList(Integer leagueId) {
+    @LogEvent
+    public ResponseEntity<BaseResponse> initLeague(Integer leagueId) {
         LeagueDto leagueDto = leagueServiceDb.getSingleLeague(leagueId);
-        List<RoundDto> leagueRounds = roundServiceDb.getRoundsByLeagueId(leagueId);
-        LeagueRoundsResponse response = LeagueRoundsResponse.builder()
+        List<MatchDayDto> leagueMatchDays = matchDayServiceDb.getMatchDaysByLeagueId(leagueId);
+        InitLeagueResponse response = InitLeagueResponse.builder()
                 .league( leagueDto )
-                .rounds( leagueRounds )
+                .matchDays( leagueMatchDays )
                 .build();
         return responseResolver.prepareResponse(response);
+    }
+
+    @LogEvent
+    public ResponseEntity<BaseResponse> completeLeague(StoredLeague request) {
+        leagueServiceDb.completeLeague(request.getLeagueId());
+        return responseResolver.prepareResponse( request );
     }
 }

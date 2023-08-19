@@ -8,10 +8,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 @Builder
-public class RoundDto {
+public class MatchDayDto {
 
     private Integer id;
     private Integer leagueId;
     private LocalDate date;
+    private Integer leagueMatchDayNumber;
+    private String location;
+    private Boolean isFinished;
 
 }

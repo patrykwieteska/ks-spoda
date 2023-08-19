@@ -1,4 +1,4 @@
-package pl.spoda.ks.api.round.model;
+package pl.spoda.ks.api.matchday.model;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -10,8 +10,8 @@ import pl.spoda.ks.api.commons.BaseResponse;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoundCreatedResponse extends BaseResponse {
+public class MatchDayStored extends BaseResponse {
 
-    private Integer roundId;
+    private Integer matchDayId;
 
 }

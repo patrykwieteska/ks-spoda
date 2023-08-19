@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.spoda.ks.api.commons.BaseResponse;
+import pl.spoda.ks.api.league.model.StoredLeague;
 import pl.spoda.ks.api.league.model.LeagueRequest;
 import pl.spoda.ks.comons.aspects.LogEvent;
 
@@ -30,9 +31,17 @@ public class LeagueController {
 
     @GetMapping("/{id}")
     @LogEvent
-    public ResponseEntity<BaseResponse> getSingleLeague(
+    public ResponseEntity<BaseResponse> initLeague(
             @PathVariable(name = "id") Integer leagueId
     ) {
-        return leagueService.getLeagueWithRoundList(leagueId);
+        return leagueService.initLeague(leagueId);
+    }
+
+    @PutMapping("/complete")
+    @LogEvent
+    public ResponseEntity<BaseResponse> completeLeague(
+            @RequestBody StoredLeague request
+    ) {
+        return leagueService.completeLeague(request);
     }
 }
