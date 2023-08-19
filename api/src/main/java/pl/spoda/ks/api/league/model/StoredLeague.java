@@ -10,6 +10,6 @@ import pl.spoda.ks.api.commons.BaseResponse;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LeagueCreatedResponse extends BaseResponse {
+public class StoredLeague extends BaseResponse {
     private Integer leagueId;
 }

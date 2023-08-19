@@ -11,4 +11,6 @@ spring:
   jpa.database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console.enabled: true
+  liquibase:
+    change-log: classpath:database/changelog/changelog-master.yaml
 #---

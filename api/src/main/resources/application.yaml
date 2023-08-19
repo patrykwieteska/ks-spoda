@@ -3,8 +3,6 @@ spring:
     active: dev
   config:
     import:
-      - classpath:config/database.yaml
-  liquibase:
-    change-log: classpath:database/changelog/changelog-master.yaml
+      - classpath:database/database-config.yaml
 
 base.request: "/api/v1"

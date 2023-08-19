@@ -28,15 +28,25 @@ public class League extends BaseEntity {
     private LocalDate startDate;
     @Column(name = "END_DATE")
     private LocalDate endDate;
-    @Column(name="IS_FINISHED")
+    @Column(name = "IS_FINISHED")
     private Boolean isFinished;
 
-    @OneToMany (mappedBy = "league", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
     @ToString.Exclude
-    private List<Round> roundList;
+    private List<MatchDay> matchDayList;
 
-    public void setRoundList(List<Round> roundList) {
-        this.roundList = roundList;
+    public League matchDayList(List<MatchDay> matchDayList) {
+        this.matchDayList = matchDayList;
+        return this;
     }
 
+    public League isFinished(Boolean isFinished) {
+        this.isFinished = isFinished;
+        return this;
+    }
+
+    public League endDate(LocalDate endDate) {
+        this.endDate = endDate;
+        return this;
+    }
 }

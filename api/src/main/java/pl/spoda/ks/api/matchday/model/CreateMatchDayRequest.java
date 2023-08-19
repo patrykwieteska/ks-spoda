@@ -1,4 +1,4 @@
-package pl.spoda.ks.api.round.model;
+package pl.spoda.ks.api.matchday.model;
 
 import lombok.*;
 
@@ -10,9 +10,10 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRoundRequest {
+public class CreateMatchDayRequest {
 
     private Integer leagueId;
-    private LocalDate roundDate;
+    private LocalDate matchDayDate;
+    private String location;
 
 }

@@ -16,11 +16,14 @@ import java.time.LocalDateTime;
 @SuperBuilder
 public abstract class BaseEntity {
 
-    @Column(name = "CREATION_DATE")
+    @Column(name = "CREATION_DATE",nullable = false)
     private LocalDateTime creationDate;
-    @Column(name = "LAST_MODIFICATION_DATE")
+    @Column(name = "LAST_MODIFICATION_DATE",nullable = false)
     private LocalDateTime lastModificationDate;
-    @Column(name = "CREATED_BY")
+    @Column(name = "CREATED_BY",nullable = false)
     private String createdBy;
+    @Column(name="IS_DELETED",nullable = true)
+    private Boolean isDeleted;
+
 
 }

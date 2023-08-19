@@ -13,8 +13,8 @@ import pl.spoda.ks.database.dto.LeagueDto;
 import pl.spoda.ks.database.mapper.EntityMapper;
 import pl.spoda.ks.database.entity.League;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +22,7 @@ import java.util.Optional;
 public class LeagueServiceDb {
 
     private final LeagueRepository leagueRepository;
+    private final MatchDayServiceDb matchDayServiceDb;
     private final DbService dbService;
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
@@ -51,9 +52,26 @@ public class LeagueServiceDb {
     }
 
     public LeagueDto getSingleLeague(Integer leagueId) {
-        Optional<League> storedLeague = leagueRepository.findById( leagueId );
-        if(storedLeague.isEmpty())
-            throw new SpodaApplicationException( InfoMessage.getMessage( InfoMessage.LEAGUE_NOT_FOUND,leagueId.toString() ) );
-        return mapper.mapToLeagueDto( storedLeague.get() );
+        League storedLeague = leagueRepository.findById( leagueId ).orElse( null );
+        checkIfLeagueExists( leagueId, storedLeague );
+        return mapper.mapToLeagueDto( storedLeague );
+    }
+
+    private void checkIfLeagueExists(Integer leagueId, League storedLeague) {
+        if(storedLeague == null)
+            throw new SpodaApplicationException( InfoMessage.getMessage( InfoMessage.LEAGUE_NOT_FOUND, leagueId.toString() ) );
+    }
+
+    @Transactional
+    public void completeLeague(Integer leagueId) {
+        if(matchDayServiceDb.isAnyMatchDayUnfinished(leagueId))
+            throw new SpodaApplicationException( InfoMessage.ROUNDS_NOT_FINISHED );
+
+        League storedLeague = leagueRepository.findById( leagueId ).orElse( null );
+        checkIfLeagueExists(leagueId, storedLeague );
+        storedLeague.isFinished( true );
+        storedLeague.endDate( LocalDate.now());
+        dbService.updateEntity( storedLeague );
+        leagueRepository.save( storedLeague );
     }
 }
