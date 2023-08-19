@@ -30,6 +30,7 @@
         <module>database</module>
         <module>api</module>
         <module>commons</module>
+        <module>rating</module>
     </modules>
     <packaging>pom</packaging>
 
