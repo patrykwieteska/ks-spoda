@@ -3,6 +3,7 @@ package pl.spoda.ks.rating.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.comons.aspects.LogEvent;
+import pl.spoda.ks.rating.model.enums.RatingMode;
 import pl.spoda.ks.rating.model.request.GamePlayerData;
 import pl.spoda.ks.rating.model.request.GameTeamData;
 import pl.spoda.ks.rating.model.request.RatingRequest;
@@ -34,7 +35,8 @@ public class RatingService {
         GameTeamData teamB = request.getTeamB();
 
         Map<String, BigDecimal> actualScores = actualScoreService.calculateActualScores( teamA, teamB );
-        Map<String, BigDecimal> expectedScores = expectedScoreService.calculateExpectedScores( teamA, teamB );
+        Map<String, BigDecimal> expectedScores = expectedScoreService.calculateExpectedScores( teamA, teamB,
+                RatingMode.valueOf( request.getMode() ));
         BigDecimal goalsDifferenceIndex = goalsService.calculateGoalsDifferenceIndex( teamA, teamB );
         List<GamePlayerData> players = Stream.concat(
                 request.getTeamA().getPlayers().stream(),

@@ -9,10 +9,11 @@ import java.math.BigDecimal;
 @Builder
 public class GamePlayerData {
 
-    @NotNull(message = "Rating cannot be null")
-    private BigDecimal rating;
-    private BigDecimal difference;
-
     @NotNull(message = "Player id cannot be null")
     private String id;
+
+    @NotNull(message = "Rating cannot be null")
+    private BigDecimal rating;
+
+    private BigDecimal difference;
 }

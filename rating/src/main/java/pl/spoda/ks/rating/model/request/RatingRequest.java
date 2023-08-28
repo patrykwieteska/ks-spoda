@@ -19,4 +19,7 @@ public class RatingRequest {
     @NotNull(message = "Team A cannot be null")
     private GameTeamData teamB;
 
+    @NotNull(message = "")
+    private String mode;
+
 }

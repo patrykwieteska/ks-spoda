@@ -1,6 +1,7 @@
 package pl.spoda.ks.rating.service;
 
 import org.springframework.stereotype.Service;
+import pl.spoda.ks.rating.model.enums.RatingMode;
 import pl.spoda.ks.rating.model.request.GameTeamData;
 
 import java.math.BigDecimal;
@@ -16,27 +17,42 @@ public class ExpectedScoreService {
 
     public Map<String, BigDecimal> calculateExpectedScores(
             GameTeamData teamA,
-            GameTeamData teamB
+            GameTeamData teamB,
+            RatingMode ratingMode
     ) {
-        Map<String,BigDecimal> expectedScores = new HashMap<>();
+        Map<String, BigDecimal> expectedScores = new HashMap<>();
 
         BigDecimal teamRatingA = prepareTeamBaseRating( teamA );
         BigDecimal teamRatingB = prepareTeamBaseRating( teamB );
 
-        double poweredGoalsA = Math.pow( 10, preparePower( teamRatingA, teamRatingB ) );
-        BigDecimal expectedScoreTeamA =
-                BigDecimal.ONE.divide( (BigDecimal.ONE.add( BigDecimal.valueOf( poweredGoalsA ) )), 5,RoundingMode.CEILING );
-        BigDecimal expectedScoreTeamB = BigDecimal.ONE.subtract( expectedScoreTeamA );
-
-        teamA.getPlayers().forEach( player -> expectedScores.put( player.getId(),expectedScoreTeamA ) );
-        teamB.getPlayers().forEach( player -> expectedScores.put( player.getId(),expectedScoreTeamB ) );
+        teamA.getPlayers().forEach( player -> expectedScores.put( player.getId(),
+                prepareExpectedScore( player.getRating(), teamRatingA, teamRatingB, ratingMode )
+        ) );
+        teamB.getPlayers().forEach( player -> expectedScores.put( player.getId(),
+                prepareExpectedScore( player.getRating(), teamRatingB, teamRatingA, ratingMode )
+        ) );
 
         return expectedScores;
     }
 
+    private BigDecimal prepareExpectedScore(
+            BigDecimal playerRating,
+            BigDecimal playerTeamRating,
+            BigDecimal opponentTeamRating,
+            RatingMode ratingMode
+    ) {
+        BigDecimal playerBaseRating = switch (ratingMode) {
+            case SINGLE -> playerRating;
+            case TEAM -> playerTeamRating;
+        };
+        double poweredGoals = Math.pow( 10, preparePower( playerBaseRating, opponentTeamRating ) );
+        return BigDecimal.ONE
+                .divide( (BigDecimal.ONE.add( BigDecimal.valueOf( poweredGoals ) )), 5, RoundingMode.CEILING );
+    }
+
     private static Double preparePower(BigDecimal teamRating, BigDecimal opponentRating) {
         return (opponentRating.subtract( teamRating ))
-                .divide(  RATING_DIFFERENCE_INDEX ,
+                .divide( RATING_DIFFERENCE_INDEX,
                         5,
                         RoundingMode.CEILING
                 ).doubleValue();
