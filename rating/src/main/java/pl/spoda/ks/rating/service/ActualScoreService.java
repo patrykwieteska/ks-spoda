@@ -1,16 +1,40 @@
 package pl.spoda.ks.rating.service;
 
 import org.springframework.stereotype.Service;
-import pl.spoda.ks.rating.model.request.RatingRequest;
+import pl.spoda.ks.rating.model.enums.GameResult;
+import pl.spoda.ks.rating.model.request.GameTeamData;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class ActualScoreService {
 
+    public Map<String, BigDecimal> calculateActualScores(GameTeamData teamA, GameTeamData teamB) {
+        Map<String, BigDecimal> actualPlayersScore = new HashMap<>();
 
-    public Map<String, BigDecimal> calculateActualScores(RatingRequest request, Map<String, BigDecimal> expectedScores) {
-        throw new IllegalArgumentException("Not implemented yet");
+        BigDecimal teamAScore = prepareScore( teamA.getGoals(), teamB.getGoals() );
+        BigDecimal teamBScore = prepareScore( teamB.getGoals(), teamA.getGoals() );
+
+        teamA.getPlayers().forEach( player -> actualPlayersScore.put( player.getId(), teamAScore ) );
+        teamB.getPlayers().forEach( player -> actualPlayersScore.put( player.getId(), teamBScore ) );
+
+        return actualPlayersScore;
+    }
+
+    private BigDecimal prepareScore(
+            Integer teamGoals,
+            Integer opponentGoals
+    ) {
+        int result = teamGoals.compareTo( opponentGoals );
+        GameResult gameResult = switch (result) {
+            case 0 -> GameResult.DRAW;
+            case 1 -> GameResult.WIN;
+            case -1 -> GameResult.LOSE;
+            default -> throw new RatingException( "Unexpected error while preparing score" );
+        };
+
+        return BigDecimal.valueOf(gameResult.getResultValue());
     }
 }
