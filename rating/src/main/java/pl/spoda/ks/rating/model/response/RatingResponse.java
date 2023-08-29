@@ -1,11 +1,13 @@
 package pl.spoda.ks.rating.model.response;
 
+import lombok.Builder;
 import lombok.Data;
+import pl.spoda.ks.rating.model.request.GamePlayerData;
 
-import java.math.BigDecimal;
-import java.util.Map;
+import java.util.List;
 
 @Data
+@Builder
 public class RatingResponse {
-    private Map<String, BigDecimal> playersRating;
+    private List<GamePlayerData> players;
 }
