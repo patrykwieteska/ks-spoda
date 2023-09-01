@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 
 @ToString(callSuper = true)
-@Table(name = "ROUND")
+@Table(name = "MATCH_DAY")
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -19,23 +19,25 @@ public class MatchDay extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="LEAGUE_ID",nullable = false,insertable = false,updatable = false)
-    private Integer leagueId;
+    @Column(name="SEASON_ID",nullable = false,insertable = false,updatable = false)
+    private Integer seasonId;
     @Column(name = "DATE", nullable = false)
     private LocalDate date;
     @Column(name="LOCATION")
     private String location;
     @Column(name="IS_FINISHED")
     private Boolean isFinished;
+    @Column(name="SEASON_MATCH_DAY")
+    private Integer seasonMatchDay;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="LEAGUE_ID")
+    @JoinColumn(name="SEASON_ID")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private League league;
+    private Season season;
 
-    public MatchDay league(League league) {
-        this.league = league;
+    public MatchDay season(Season season) {
+        this.season = season;
         return this;
     }
 
@@ -44,4 +46,8 @@ public class MatchDay extends BaseEntity {
         return this;
     }
 
+    public MatchDay seasonMatchDay(Integer seasonMatchDay) {
+        this.seasonMatchDay = seasonMatchDay;
+        return this;
+    }
 }

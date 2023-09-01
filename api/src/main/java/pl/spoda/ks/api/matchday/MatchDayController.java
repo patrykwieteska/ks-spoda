@@ -19,24 +19,31 @@ public class MatchDayController {
     @LogEvent
     public ResponseEntity<BaseResponse> createMatchDay(
             @RequestBody CreateMatchDayRequest request
-            ) {
-        return matchDayService.createMatchDay(request);
+    ) {
+        return matchDayService.createMatchDay( request );
     }
-
 
     @PutMapping("/complete")
     @LogEvent
     public ResponseEntity<BaseResponse> completeLeague(
             @RequestBody MatchDayStored request
-            ) {
-        return matchDayService.completeMatchDay(request);
+    ) {
+        return matchDayService.completeMatchDay( request );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("init/{id}")
     @LogEvent
     public ResponseEntity<BaseResponse> initMatchDay(
-            @PathVariable(name="id") Integer matchDayId
+            @PathVariable(name = "id") Integer matchDayId
     ) {
-        return matchDayService.initMatchDay(matchDayId);
+        return matchDayService.initMatchDay( matchDayId );
+    }
+
+    @DeleteMapping("/{id}")
+    @LogEvent
+    public ResponseEntity<BaseResponse> deleteMatchDay(
+            @PathVariable("id") Integer matchDayId
+    ) {
+       return matchDayService.deleteMatchDay(matchDayId);
     }
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CreateMatchDayRequest {
 
-    private Integer leagueId;
+    private Integer seasonId;
     private LocalDate matchDayDate;
     private String location;
 

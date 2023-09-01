@@ -9,10 +9,8 @@ public class LeagueMapper {
     public LeagueDto mapLeague(LeagueRequest request) {
 
         return LeagueDto.builder()
-                .startDate( request.getStartDate() )
                 .name( request.getName() )
                 .description( request.getDescription() )
-                .isFinished( false )
                 .build();
     }
 }
