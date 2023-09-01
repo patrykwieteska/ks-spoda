@@ -1,4 +1,5 @@
 package pl.spoda.ks.database.dto;
+
 import lombok.*;
 
 import java.time.LocalDate;
@@ -8,13 +9,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 @Builder
-public class MatchDayDto {
+public class SeasonDto {
 
     private Integer id;
-    private Integer seasonId;
-    private LocalDate date;
-    private Integer seasonMatchDay;
-    private String location;
+    private Integer leagueId;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private Boolean isFinished;
 
 }

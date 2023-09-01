@@ -10,11 +10,9 @@ import pl.spoda.ks.api.matchday.model.CreateMatchDayRequest;
 @RequiredArgsConstructor
 public class MatchDayValidator {
 
-    private final MatchDayServiceDb matchDayServiceDb;
-
     public void validateMatchDay(CreateMatchDayRequest request) {
-        if (request.getLeagueId() == null)
-            throw new SpodaApplicationException("Parameter leagueId is required");
+        if (request.getSeasonId() == null)
+            throw new SpodaApplicationException("Parameter seasonId is required");
 
         if (request.getMatchDayDate() == null)
             throw new SpodaApplicationException("Parameter matchDayDate is required");

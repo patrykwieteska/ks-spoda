@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface MatchDayRepository extends JpaRepository<MatchDay,Integer> {
 
-    List<MatchDay> findByLeagueId(Integer leagueId);
+    List<MatchDay> findBySeasonId(Integer seasonId);
     Optional<MatchDay> findByDate(LocalDate date);
 }
+

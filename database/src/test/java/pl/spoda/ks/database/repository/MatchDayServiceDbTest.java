@@ -18,37 +18,35 @@ import static org.mockito.Mockito.*;
 class MatchDayServiceDbTest {
 
 
-    private static final LocalDate ROUND_1_DATE = LocalDate.of( 2021, 3, 3 );
-    private static final LocalDate ROUND_2_DATE = LocalDate.of( 2022, 2, 2 );
-    private static final LocalDate ROUND_3_DATE = LocalDate.of( 2023, 1, 1 );
-    @Mock
-    private DbService dbService;
+    private static final LocalDate MATCH_DAY_1_DATE = LocalDate.of( 2021, 3, 3 );
+    private static final LocalDate MATCH_DAY_2_DATE = LocalDate.of( 2022, 2, 2 );
+    private static final LocalDate MATCH_DAY_3_DATE = LocalDate.of( 2023, 1, 1 );
     @Mock
     private MatchDayRepository matchDayRepository;
     @InjectMocks
     private MatchDayServiceDb matchDayServiceDb;
 
-    private static final Integer LEAGUE_ID = 1;
+    private static final Integer SEASON_ID = 1;
 
     @Test
     void getMatchDaysByLeagueId_test() {
-        when( matchDayRepository.findByLeagueId( LEAGUE_ID ) ).thenReturn( stubMatchDays() );
-        List<MatchDayDto> result = matchDayServiceDb.getMatchDaysByLeagueId( LEAGUE_ID );
+        when( matchDayRepository.findBySeasonId( SEASON_ID ) ).thenReturn( stubMatchDays() );
+        List<MatchDayDto> result = matchDayServiceDb.getMatchDaysBySeasonId( SEASON_ID );
         Assertions.assertThat( result ).containsExactly(
                 MatchDayDto.builder()
-                        .date( ROUND_3_DATE )
-                        .leagueMatchDayNumber( 3 )
-                        .leagueId( LEAGUE_ID )
+                        .date( MATCH_DAY_3_DATE )
+                        .seasonMatchDay( 3 )
+                        .seasonId( SEASON_ID )
                         .build(),
                 MatchDayDto.builder()
-                        .date( ROUND_2_DATE )
-                        .leagueMatchDayNumber( 2 )
-                        .leagueId( LEAGUE_ID )
+                        .date( MATCH_DAY_2_DATE )
+                        .seasonMatchDay( 2 )
+                        .seasonId( SEASON_ID )
                         .build(),
                 MatchDayDto.builder()
-                        .date( ROUND_1_DATE )
-                        .leagueMatchDayNumber( 1 )
-                        .leagueId( LEAGUE_ID )
+                        .date( MATCH_DAY_1_DATE )
+                        .seasonMatchDay( 1 )
+                        .seasonId( SEASON_ID )
                         .build()
         );
     }
@@ -56,16 +54,19 @@ class MatchDayServiceDbTest {
     private List<MatchDay> stubMatchDays() {
         return List.of(
                 MatchDay.builder()
-                        .date( ROUND_1_DATE )
-                        .leagueId( LEAGUE_ID )
+                        .date( MATCH_DAY_1_DATE )
+                        .seasonId( SEASON_ID )
+                        .seasonMatchDay( 1 )
                         .build(),
                 MatchDay.builder()
-                        .date( ROUND_3_DATE )
-                        .leagueId( LEAGUE_ID )
+                        .date( MATCH_DAY_3_DATE )
+                        .seasonId( SEASON_ID )
+                        .seasonMatchDay( 3 )
                         .build(),
                 MatchDay.builder()
-                        .date( ROUND_2_DATE )
-                        .leagueId( LEAGUE_ID )
+                        .date( MATCH_DAY_2_DATE )
+                        .seasonId( SEASON_ID )
+                        .seasonMatchDay( 2 )
                         .build()
         );
     }

@@ -6,16 +6,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.api.commons.BaseResponse;
 import pl.spoda.ks.api.commons.ResponseResolver;
+import pl.spoda.ks.api.league.model.InitLeagueResponse;
+import pl.spoda.ks.api.league.model.LeagueListResponse;
 import pl.spoda.ks.api.league.model.LeagueRequest;
 import pl.spoda.ks.api.league.model.StoredLeague;
-import pl.spoda.ks.api.league.model.LeagueListResponse;
-import pl.spoda.ks.api.league.model.InitLeagueResponse;
 import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
-import pl.spoda.ks.database.dto.MatchDayDto;
+import pl.spoda.ks.database.dto.SeasonDto;
 import pl.spoda.ks.database.repository.LeagueServiceDb;
-import pl.spoda.ks.database.repository.MatchDayServiceDb;
+import pl.spoda.ks.database.repository.SeasonServiceDb;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class LeagueService {
     private final LeagueMapper leagueMapper;
     private final LeagueServiceDb leagueServiceDb;
     private final ResponseResolver responseResolver;
-    private final MatchDayServiceDb matchDayServiceDb;
+    private final SeasonServiceDb seasonServiceDb;
 
     @LogEvent
     public ResponseEntity<BaseResponse> createLeague(LeagueRequest request) {
@@ -45,7 +45,7 @@ public class LeagueService {
                 .leagues( storedLeagues )
                 .build();
         if(storedLeagues.isEmpty()) {
-            response.setMessage( InfoMessage.NO_LEAGUES_FOUND );
+            response.setMessage( InfoMessage.NO_SEASONS_FOUND );
         }
        return  responseResolver.prepareResponse( response );
     }
@@ -53,17 +53,11 @@ public class LeagueService {
     @LogEvent
     public ResponseEntity<BaseResponse> initLeague(Integer leagueId) {
         LeagueDto leagueDto = leagueServiceDb.getSingleLeague(leagueId);
-        List<MatchDayDto> leagueMatchDays = matchDayServiceDb.getMatchDaysByLeagueId(leagueId);
+        List<SeasonDto> leagueSeasons = seasonServiceDb.getSeasonsByLeague(leagueId);
         InitLeagueResponse response = InitLeagueResponse.builder()
                 .league( leagueDto )
-                .matchDays( leagueMatchDays )
+                .seasons( leagueSeasons )
                 .build();
         return responseResolver.prepareResponse(response);
-    }
-
-    @LogEvent
-    public ResponseEntity<BaseResponse> completeLeague(StoredLeague request) {
-        leagueServiceDb.completeLeague(request.getLeagueId());
-        return responseResolver.prepareResponse( request );
     }
 }
