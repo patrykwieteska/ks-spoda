@@ -20,12 +20,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SeasonServiceDb {
+public class SeasonServiceDB {
 
     private final SeasonRepository seasonRepository;
     private final LeagueRepository leagueRepository;
-    private final MatchDayServiceDb matchDayServiceDb;
-    private final DbService dbService;
+    private final MatchDayServiceDB matchDayServiceDb;
+    private final BaseServiceDB baseServiceDB;
     private final DateService dateService;
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
@@ -39,7 +39,7 @@ public class SeasonServiceDb {
 
         Season season = mapper.mapToSeason( seasonDto );
         season.league( storedLeague );
-        dbService.createEntity( season );
+        baseServiceDB.createEntity( season );
 
         try {
             seasonRepository.save( season );
@@ -83,7 +83,7 @@ public class SeasonServiceDb {
         storedSeason
                 .isFinished( true )
                 .endDate( dateService.getCurrentDate());
-        dbService.updateEntity( storedSeason );
+        baseServiceDB.updateEntity( storedSeason );
         seasonRepository.save( storedSeason );
     }
 

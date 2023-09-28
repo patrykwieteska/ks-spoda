@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Service
-public class GoalsService {
-    public BigDecimal calculateGoalsDifferenceIndex(GameTeamData teamA, GameTeamData teamB) {
+class GoalsService {
+    BigDecimal calculateGoalsDifferenceIndex(GameTeamData teamA, GameTeamData teamB) {
         int goalsDifference = Math.abs( teamA.getGoals() - teamB.getGoals() );
 
         if (goalsDifference <= 1)

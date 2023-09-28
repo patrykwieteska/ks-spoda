@@ -14,9 +14,9 @@ import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
 import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.dto.SeasonDto;
-import pl.spoda.ks.database.repository.LeagueServiceDb;
-import pl.spoda.ks.database.repository.MatchDayServiceDb;
-import pl.spoda.ks.database.repository.SeasonServiceDb;
+import pl.spoda.ks.database.repository.LeagueServiceDB;
+import pl.spoda.ks.database.repository.MatchDayServiceDB;
+import pl.spoda.ks.database.repository.SeasonServiceDB;
 
 import java.util.List;
 
@@ -25,10 +25,10 @@ import java.util.List;
 public class SeasonService {
 
     private final SeasonMapper seasonMapper;
-    private final SeasonServiceDb seasonServiceDb;
+    private final SeasonServiceDB seasonServiceDb;
     private final ResponseResolver responseResolver;
-    private final MatchDayServiceDb matchDayServiceDb;
-    private final LeagueServiceDb leagueServiceDb;
+    private final MatchDayServiceDB matchDayServiceDb;
+    private final LeagueServiceDB leagueServiceDb;
     private final InitSeasonMapper initSeasonMapper;
 
     @LogEvent

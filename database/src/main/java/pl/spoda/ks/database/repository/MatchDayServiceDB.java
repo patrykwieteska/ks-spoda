@@ -23,9 +23,9 @@ import java.util.stream.IntStream;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MatchDayServiceDb {
+public class MatchDayServiceDB {
 
-    private final DbService dbService;
+    private final BaseServiceDB baseServiceDB;
     private final MatchDayRepository matchDayRepository;
     private final EntityMapper entityMapper = Mappers.getMapper( EntityMapper.class );
     private final SeasonRepository seasonRepository;
@@ -43,7 +43,7 @@ public class MatchDayServiceDb {
         matchDay.isFinished( false );
         matchDay.season( storedSeason );
         matchDay.seasonMatchDay( storedMatchDay.size() + 1 );
-        dbService.createEntity( matchDay );
+        baseServiceDB.createEntity( matchDay );
 
         MatchDay save = matchDayRepository.save( matchDay );
         return entityMapper.mapToMatchDayDto( save );
@@ -123,7 +123,7 @@ public class MatchDayServiceDb {
         MatchDay storedMatchDay = matchDayRepository.findById( matchDayId ).orElse( null );
         checkIfMatchDayExists( matchDayId, storedMatchDay );
         storedMatchDay.isFinished( true );
-        dbService.updateEntity( storedMatchDay );
+        baseServiceDB.updateEntity( storedMatchDay );
         matchDayRepository.save( storedMatchDay );
     }
 

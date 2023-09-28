@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class ActualScoreService {
+class ActualScoreService {
 
-    public Map<String, BigDecimal> calculateActualScores(GameTeamData teamA, GameTeamData teamB) {
+    Map<String, BigDecimal> calculateActualScores(GameTeamData teamA, GameTeamData teamB) {
         Map<String, BigDecimal> actualPlayersScore = new HashMap<>();
 
         BigDecimal teamAScore = prepareScore( teamA.getGoals(), teamB.getGoals() );

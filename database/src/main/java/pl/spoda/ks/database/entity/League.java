@@ -22,6 +22,10 @@ public class League extends BaseEntity {
     private String name;
     @Column(name = "DESCRIPTION")
     private String description;
+    @Column(name = "TYPE")
+    private String type;
+    @Column(name = "TEAM_STRUCTURE")
+    private String teamStructure;
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
     @ToString.Exclude

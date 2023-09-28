@@ -3,6 +3,8 @@ spring:
     active: dev
   config:
     import:
-      - classpath:database/database-config.yaml
+      - classpath:database-config.yaml
 
 base.request: "/api/v1"
+application:
+  initial-rating: "1000.0"

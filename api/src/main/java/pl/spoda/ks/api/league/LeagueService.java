@@ -14,8 +14,8 @@ import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
 import pl.spoda.ks.database.dto.SeasonDto;
-import pl.spoda.ks.database.repository.LeagueServiceDb;
-import pl.spoda.ks.database.repository.SeasonServiceDb;
+import pl.spoda.ks.database.repository.LeagueServiceDB;
+import pl.spoda.ks.database.repository.SeasonServiceDB;
 
 import java.util.List;
 
@@ -24,9 +24,9 @@ import java.util.List;
 public class LeagueService {
 
     private final LeagueMapper leagueMapper;
-    private final LeagueServiceDb leagueServiceDb;
+    private final LeagueServiceDB leagueServiceDb;
     private final ResponseResolver responseResolver;
-    private final SeasonServiceDb seasonServiceDb;
+    private final SeasonServiceDB seasonServiceDb;
 
     @LogEvent
     public ResponseEntity<BaseResponse> createLeague(LeagueRequest request) {

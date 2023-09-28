@@ -11,6 +11,8 @@ public class LeagueMapper {
         return LeagueDto.builder()
                 .name( request.getName() )
                 .description( request.getDescription() )
+                .teamStructure( request.getTeamStructure().name() )
+                .type( request.getType().name() )
                 .build();
     }
 }

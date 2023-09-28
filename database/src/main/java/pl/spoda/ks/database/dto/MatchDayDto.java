@@ -2,6 +2,7 @@ package pl.spoda.ks.database.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,5 +17,6 @@ public class MatchDayDto {
     private Integer seasonMatchDay;
     private String location;
     private Boolean isFinished;
+    private List<MatchDto> matchList;
 
 }

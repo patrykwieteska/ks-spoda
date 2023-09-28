@@ -3,7 +3,6 @@ package pl.spoda.ks.api.matchday;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
-import pl.spoda.ks.database.repository.MatchDayServiceDb;
 import pl.spoda.ks.api.matchday.model.CreateMatchDayRequest;
 
 @Service

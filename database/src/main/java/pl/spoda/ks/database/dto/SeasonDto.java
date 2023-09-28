@@ -2,6 +2,7 @@ package pl.spoda.ks.database.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -16,5 +17,6 @@ public class SeasonDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private Boolean isFinished;
+    private BigDecimal initialRating;
 
 }

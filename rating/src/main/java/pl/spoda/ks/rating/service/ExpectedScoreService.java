@@ -11,11 +11,11 @@ import java.util.Map;
 
 
 @Service
-public class ExpectedScoreService {
+class ExpectedScoreService {
 
     private static final BigDecimal RATING_DIFFERENCE_INDEX = BigDecimal.valueOf( 400 );
 
-    public Map<String, BigDecimal> calculateExpectedScores(
+    Map<String, BigDecimal> calculateExpectedScores(
             GameTeamData teamA,
             GameTeamData teamB,
             RatingMode ratingMode
