@@ -5,6 +5,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @ToString(callSuper = true)
 @Table(name = "MATCH_DAY")
@@ -36,6 +38,15 @@ public class MatchDay extends BaseEntity {
     @EqualsAndHashCode.Exclude
     private Season season;
 
+    @OneToMany(mappedBy = "matchDay", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private List<Match> matchList;
+
+    public MatchDay setMatchList(List<Match> matchList) {
+        this.matchList = matchList;
+        return this;
+    }
+
     public MatchDay season(Season season) {
         this.season = season;
         return this;
@@ -48,6 +59,14 @@ public class MatchDay extends BaseEntity {
 
     public MatchDay seasonMatchDay(Integer seasonMatchDay) {
         this.seasonMatchDay = seasonMatchDay;
+        return this;
+    }
+
+    public MatchDay addToMatchList(Match match) {
+        if (this.matchList.isEmpty()) {
+            this.matchList = new ArrayList<>();
+        }
+        this.matchList.add( match );
         return this;
     }
 }

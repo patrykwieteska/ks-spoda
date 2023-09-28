@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import pl.spoda.ks.api.commons.BaseResponse;
+import pl.spoda.ks.api.league.enums.TeamStructure;
+import pl.spoda.ks.api.league.enums.LeagueType;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -12,8 +14,10 @@ import pl.spoda.ks.api.commons.BaseResponse;
 @SuperBuilder
 public class InitSeasonResponse extends BaseResponse {
 
-    private String leagueName;
-    private String leagueDescription;
+    private String name;
+    private String description;
     private SeasonData seasonData;
     private Integer leagueId;
+    private TeamStructure teamStructure;
+    private LeagueType type;
 }

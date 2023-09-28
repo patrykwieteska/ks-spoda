@@ -17,17 +17,17 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class LeagueServiceDb {
+public class LeagueServiceDB {
 
     private final LeagueRepository leagueRepository;
-    private final DbService dbService;
+    private final BaseServiceDB baseServiceDB;
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
     @LogEvent
     @Transactional
     public LeagueDto save(LeagueDto leagueDto) {
         League league = mapper.mapToLeagueEntity( leagueDto );
-        dbService.createEntity( league );
+        baseServiceDB.createEntity( league );
         League storedLeague;
 
         try {

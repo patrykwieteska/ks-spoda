@@ -15,5 +15,5 @@ public class GamePlayerData {
     @NotNull(message = "Rating cannot be null")
     private BigDecimal rating;
 
-    private BigDecimal difference;
+    private BigDecimal ratingDifference;
 }

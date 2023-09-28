@@ -15,7 +15,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MatchDayServiceDbTest {
+class MatchDayBaseServiceDBTest {
 
 
     private static final LocalDate MATCH_DAY_1_DATE = LocalDate.of( 2021, 3, 3 );
@@ -24,7 +24,7 @@ class MatchDayServiceDbTest {
     @Mock
     private MatchDayRepository matchDayRepository;
     @InjectMocks
-    private MatchDayServiceDb matchDayServiceDb;
+    private MatchDayServiceDB matchDayServiceDb;
 
     private static final Integer SEASON_ID = 1;
 

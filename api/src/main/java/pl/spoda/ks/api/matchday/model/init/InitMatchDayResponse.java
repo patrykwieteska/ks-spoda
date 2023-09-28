@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import pl.spoda.ks.api.commons.BaseResponse;
+import pl.spoda.ks.api.league.enums.TeamStructure;
+import pl.spoda.ks.api.league.enums.LeagueType;
 
 import java.time.LocalDate;
 
@@ -19,4 +21,6 @@ public class InitMatchDayResponse extends BaseResponse {
     private LocalDate seasonStartDate;
     private LocalDate seasonEndDate;
     private MatchDayData matchDay;
+    private LeagueType leagueType;
+    private TeamStructure leagueTeamStructure;
 }

@@ -6,6 +6,8 @@ import pl.spoda.ks.api.matchday.InitMatchDayMapper;
 import pl.spoda.ks.api.matchday.model.init.MatchDayData;
 import pl.spoda.ks.api.season.model.init.InitSeasonResponse;
 import pl.spoda.ks.api.season.model.init.SeasonData;
+import pl.spoda.ks.api.league.enums.TeamStructure;
+import pl.spoda.ks.api.league.enums.LeagueType;
 import pl.spoda.ks.database.dto.LeagueDto;
 import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.dto.SeasonDto;
@@ -19,12 +21,10 @@ public class InitSeasonMapper {
     private final InitMatchDayMapper initMatchDayMapper;
 
     public InitSeasonResponse mapResponse(SeasonDto seasonDto, List<MatchDayDto> seasonMatchDays, LeagueDto leagueDto) {
-
-
         return InitSeasonResponse.builder()
                 .leagueId( leagueDto.getId() )
-                .leagueName( leagueDto.getName() )
-                .leagueDescription( leagueDto.getDescription() )
+                .name( leagueDto.getName() )
+                .description( leagueDto.getDescription() )
                 .seasonData( SeasonData.builder()
                         .seasonId( seasonDto.getId() )
                         .startDate( seasonDto.getStartDate() )
@@ -32,6 +32,8 @@ public class InitSeasonMapper {
                         .isFinished( seasonDto.getIsFinished() )
                         .matchDays( mapMatchDays( seasonMatchDays ) )
                         .build() )
+                .teamStructure( TeamStructure.getByName( leagueDto.getTeamStructure() ) )
+                .type( LeagueType.getByName( leagueDto.getType() ) )
                 .build();
     }
 

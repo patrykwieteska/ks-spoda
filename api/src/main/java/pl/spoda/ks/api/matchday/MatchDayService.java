@@ -13,21 +13,21 @@ import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.database.dto.LeagueDto;
 import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.dto.SeasonDto;
-import pl.spoda.ks.database.repository.LeagueServiceDb;
-import pl.spoda.ks.database.repository.MatchDayServiceDb;
-import pl.spoda.ks.database.repository.SeasonServiceDb;
+import pl.spoda.ks.database.repository.LeagueServiceDB;
+import pl.spoda.ks.database.repository.MatchDayServiceDB;
+import pl.spoda.ks.database.repository.SeasonServiceDB;
 
 @Service
 @RequiredArgsConstructor
 public class MatchDayService {
 
-    private final MatchDayServiceDb matchDayServiceDb;
+    private final MatchDayServiceDB matchDayServiceDb;
     private final MatchDayValidator matchDayValidator;
     private final MatchDayMapper matchDayMapper;
     private final ResponseResolver responseResolver;
     private final InitMatchDayMapper initMatchDayMapper;
-    private final SeasonServiceDb seasonServiceDb;
-    private final LeagueServiceDb leagueServiceDb;
+    private final SeasonServiceDB seasonServiceDb;
+    private final LeagueServiceDB leagueServiceDb;
 
     @LogEvent
     public ResponseEntity<BaseResponse> createMatchDay(CreateMatchDayRequest request) {

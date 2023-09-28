@@ -6,7 +6,7 @@ import pl.spoda.ks.database.entity.BaseEntity;
 import java.time.LocalDateTime;
 
 @Service
-public class DbService {
+public class BaseServiceDB {
 
     public static final String DEFAULT_USER = "SYSTEM";
 

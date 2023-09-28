@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class Season extends BaseEntity {
     private LocalDate endDate;
     @Column(name = "IS_FINISHED")
     private Boolean isFinished;
+    @Column(name = "INITIAL_RATING",updatable = false, insertable = false, nullable = false)
+    private BigDecimal initialRating;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @ToString.Exclude

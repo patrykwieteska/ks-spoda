@@ -65,7 +65,7 @@ public class RatingService {
                     return GamePlayerData.builder()
                             .id( player.getId() )
                             .rating( prepareRating( player.getRating(), ratingDifference ) )
-                            .difference( ratingDifference )
+                            .ratingDifference( ratingDifference )
                             .build();
                 } )
                 .toList();
