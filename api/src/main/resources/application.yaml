@@ -8,3 +8,6 @@ spring:
 base.request: "/api/v1"
 application:
   initial-rating: "1000.0"
+rating:
+  controller:
+    enabled: true
