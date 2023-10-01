@@ -2,6 +2,7 @@ package pl.spoda.ks.api.season;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.spoda.ks.api.league.model.LeagueData;
 import pl.spoda.ks.api.matchday.InitMatchDayMapper;
 import pl.spoda.ks.api.matchday.model.init.MatchDayData;
 import pl.spoda.ks.api.season.model.init.InitSeasonResponse;
@@ -22,18 +23,21 @@ public class InitSeasonMapper {
 
     public InitSeasonResponse mapResponse(SeasonDto seasonDto, List<MatchDayDto> seasonMatchDays, LeagueDto leagueDto) {
         return InitSeasonResponse.builder()
-                .leagueId( leagueDto.getId() )
-                .name( leagueDto.getName() )
-                .description( leagueDto.getDescription() )
+                .leagueData( LeagueData.builder()
+                        .leagueId( leagueDto.getId() )
+                        .name( leagueDto.getName() )
+                        .description( leagueDto.getDescription() )
+                        .teamStructure( TeamStructure.getByName( leagueDto.getTeamStructure() ) )
+                        .type( LeagueType.getByName( leagueDto.getType() ) )
+                        .build() )
                 .seasonData( SeasonData.builder()
                         .seasonId( seasonDto.getId() )
                         .startDate( seasonDto.getStartDate() )
                         .endDate( seasonDto.getEndDate() )
                         .isFinished( seasonDto.getIsFinished() )
                         .matchDays( mapMatchDays( seasonMatchDays ) )
+                        .initialRating( seasonDto.getInitialRating() )
                         .build() )
-                .teamStructure( TeamStructure.getByName( leagueDto.getTeamStructure() ) )
-                .type( LeagueType.getByName( leagueDto.getType() ) )
                 .build();
     }
 

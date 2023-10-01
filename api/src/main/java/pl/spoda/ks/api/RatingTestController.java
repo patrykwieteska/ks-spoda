@@ -1,6 +1,7 @@
 package pl.spoda.ks.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +12,10 @@ import pl.spoda.ks.rating.model.response.RatingResponse;
 import pl.spoda.ks.rating.service.RatingService;
 
 @RestController
-@RequestMapping("/test/rating")
+@RequestMapping("/api/test/rating")
+@ConditionalOnProperty("rating.controller.enabled")
 @RequiredArgsConstructor
-public class TestController {
+public class RatingTestController {
 
     private final RatingService ratingService;
 
@@ -25,6 +27,4 @@ public class TestController {
     ) {
         return ratingService.calculateRating( request );
     }
-
-
 }

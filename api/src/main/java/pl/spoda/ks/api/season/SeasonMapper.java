@@ -19,12 +19,11 @@ public class SeasonMapper {
     public String initialRating;
 
     public SeasonDto mapSeason(SeasonRequest request) {
-
         return SeasonDto.builder()
                 .startDate( dateService.dateOf( request.getStartDate() ) )
                 .leagueId( request.getLeagueId() )
                 .isFinished( false )
-                .initialRating( BigDecimal.valueOf( Long.parseLong( initialRating ) ) )
+                .initialRating( new BigDecimal( initialRating ) )
                 .build();
     }
 }
