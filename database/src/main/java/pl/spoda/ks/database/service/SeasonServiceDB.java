@@ -1,4 +1,4 @@
-package pl.spoda.ks.database.repository;
+package pl.spoda.ks.database.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +15,9 @@ import pl.spoda.ks.database.dto.SeasonDto;
 import pl.spoda.ks.database.entity.League;
 import pl.spoda.ks.database.entity.Season;
 import pl.spoda.ks.database.mapper.EntityMapper;
+import pl.spoda.ks.database.repository.LeagueRepository;
+import pl.spoda.ks.database.repository.SeasonRepository;
+
 import java.util.List;
 
 @Service

@@ -1,5 +1,6 @@
 package pl.spoda.ks.rating.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.comons.aspects.LogEvent;
@@ -9,7 +10,6 @@ import pl.spoda.ks.rating.model.request.GameTeamData;
 import pl.spoda.ks.rating.model.request.RatingRequest;
 import pl.spoda.ks.rating.model.response.RatingResponse;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;

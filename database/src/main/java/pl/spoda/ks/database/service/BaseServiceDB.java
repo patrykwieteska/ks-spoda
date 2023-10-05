@@ -1,4 +1,4 @@
-package pl.spoda.ks.database.repository;
+package pl.spoda.ks.database.service;
 
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.database.entity.BaseEntity;

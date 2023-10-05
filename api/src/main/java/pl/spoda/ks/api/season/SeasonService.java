@@ -14,9 +14,9 @@ import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
 import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.dto.SeasonDto;
-import pl.spoda.ks.database.repository.LeagueServiceDB;
-import pl.spoda.ks.database.repository.MatchDayServiceDB;
-import pl.spoda.ks.database.repository.SeasonServiceDB;
+import pl.spoda.ks.database.service.LeagueServiceDB;
+import pl.spoda.ks.database.service.MatchDayServiceDB;
+import pl.spoda.ks.database.service.SeasonServiceDB;
 
 import java.util.List;
 
