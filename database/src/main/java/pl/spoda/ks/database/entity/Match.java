@@ -36,7 +36,7 @@ public class Match extends BaseEntity {
     @Column(name = "TYPE")
     private String type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "MATCH_DAY_ID")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

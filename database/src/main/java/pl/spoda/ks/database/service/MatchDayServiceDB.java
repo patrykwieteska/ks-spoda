@@ -1,4 +1,4 @@
-package pl.spoda.ks.database.repository;
+package pl.spoda.ks.database.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +14,8 @@ import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.entity.MatchDay;
 import pl.spoda.ks.database.entity.Season;
 import pl.spoda.ks.database.mapper.EntityMapper;
+import pl.spoda.ks.database.repository.MatchDayRepository;
+import pl.spoda.ks.database.repository.SeasonRepository;
 
 import java.util.Comparator;
 import java.util.List;

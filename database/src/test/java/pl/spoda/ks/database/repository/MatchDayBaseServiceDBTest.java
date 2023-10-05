@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import pl.spoda.ks.database.service.MatchDayServiceDB;
 import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.entity.MatchDay;
 

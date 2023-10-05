@@ -1,10 +1,7 @@
 package pl.spoda.ks.database.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @ToString(callSuper = true)
@@ -14,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Getter
+@Setter
 public class Player extends BaseEntity {
 
     @Column(name = "ID")

@@ -14,8 +14,8 @@ import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
 import pl.spoda.ks.database.dto.SeasonDto;
-import pl.spoda.ks.database.repository.LeagueServiceDB;
-import pl.spoda.ks.database.repository.SeasonServiceDB;
+import pl.spoda.ks.database.service.LeagueServiceDB;
+import pl.spoda.ks.database.service.SeasonServiceDB;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class LeagueService {
     public ResponseEntity<BaseResponse> getLeagues() {
         List<LeagueDto> storedLeagues = leagueServiceDb.getLeagues();
         LeagueListResponse response = LeagueListResponse.builder()
-                .leagues( storedLeagues )
+                .leagues( leagueMapper.mapLeagueList(storedLeagues) )
                 .build();
         if(storedLeagues.isEmpty()) {
             response.setMessage( InfoMessage.NO_SEASONS_FOUND );

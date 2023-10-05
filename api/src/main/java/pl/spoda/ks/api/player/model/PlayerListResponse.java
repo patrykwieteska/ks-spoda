@@ -1,4 +1,4 @@
-package pl.spoda.ks.api.league.model;
+package pl.spoda.ks.api.player.model;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -12,7 +12,7 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LeagueListResponse extends BaseResponse {
+public class PlayerListResponse extends BaseResponse {
 
-    private List<LeagueData> leagues;
+    List<PlayerData> players;
 }
