@@ -11,9 +11,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "pl.spoda.ks, pl.spoda.ks.database, pl.spoda.ks.api, pl.spoda")
-@EnableJpaRepositories(basePackages = {"pl.spoda.ks.database.repository"})
-@EntityScan(basePackages = {"pl.spoda.ks.database.entity"})
+@ComponentScan(basePackages = "pl.spoda.ks.*")
+@EnableJpaRepositories(basePackages = {"pl.spoda.ks.database.*"})
+@EntityScan(basePackages = {"pl.spoda.ks.database.*"})
 public class KsSpodaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(KsSpodaApplication.class, args);
