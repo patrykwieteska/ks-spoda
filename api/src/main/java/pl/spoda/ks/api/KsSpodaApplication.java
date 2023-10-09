@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "pl.spoda.ks.*")
-@EnableJpaRepositories(basePackages = {"pl.spoda.ks.database.*"}, entityManagerFactoryRef="entityManagerFactory")
+@EnableJpaRepositories(basePackages = {"pl.spoda.ks.database.*"})
 @EntityScan(basePackages = {"pl.spoda.ks.database.*"})
 public class KsSpodaApplication {
 	public static void main(String[] args) {
