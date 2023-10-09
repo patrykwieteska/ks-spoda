@@ -11,6 +11,7 @@
         <projectlombok.version>1.18.28</projectlombok.version>
         <snakeyaml.version>2.0</snakeyaml.version>
         <h2.version>2.2.224</h2.version>
+        <start-class>pl.spoda.ks.api.KsSpodaApplication</start-class>
     </properties>
 
     <parent>
@@ -160,6 +161,17 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <mainClass>pl.spoda.ks.api.KsSpodaApplication</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
