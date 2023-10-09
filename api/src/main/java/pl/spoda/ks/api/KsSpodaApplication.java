@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "pl.spoda.ks, pl.spoda.ks.database, pl.spoda.ks.api, pl.spoda")
@@ -31,5 +32,10 @@ public class KsSpodaApplication {
 								.name( "Apache 2.0" )
 								.url( "http://springdoc.org" )
 						) );
+	}
+
+	@Bean
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+		return new LocalContainerEntityManagerFactoryBean();
 	}
 }
