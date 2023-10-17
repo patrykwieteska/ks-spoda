@@ -1,0 +1,43 @@
+--- # h2
+spring:
+  config:
+    activate:
+      on-profile: h2
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa.database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled: true
+  liquibase:
+    change-log: ./database/changelog/changelog-master.yaml
+    contexts: dev
+  jpa:
+    show-sql: true
+  hibernate:
+      ddl-auto: none
+rating:
+  controller:
+    enabled: true
+--- # postgres
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: jdbc:postgresql://dpg-cklcobou1l6c73adu0i0-a.oregon-postgres.render.com/ks_spoda_db_95m6
+    username: pw_admin
+    password: U2K29fo46kHx4Ne2VjbAlmIomEP0hrSa
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: ./database/changelog/postgres/changelog-master.yaml
+    contexts: postgres
+---
