@@ -17,6 +17,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
+        <start-class>pl.spoda.ks.api.KsSpodaApplication</start-class>
     </properties>
     <dependencies>
         <dependency>
@@ -50,6 +51,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>${main.class}</mainClass>
+                    <layout>JAR</layout>
                 </configuration>
             </plugin>
 <!--            <plugin>-->
