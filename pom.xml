@@ -11,6 +11,7 @@
         <projectlombok.version>1.18.28</projectlombok.version>
         <snakeyaml.version>2.0</snakeyaml.version>
         <h2.version>2.2.224</h2.version>
+        <main.class>pl.spoda.ks.api.KsSpodaApplication</main.class>
     </properties>
 
     <parent>
