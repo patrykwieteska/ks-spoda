@@ -17,7 +17,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <start-class>pl.spoda.ks.api.KsSpodaApplication</start-class>
+<!--        <start-class>pl.spoda.ks.api.KsSpodaApplication</start-class>-->
     </properties>
     <dependencies>
         <dependency>
@@ -53,6 +53,13 @@
                     <mainClass>${main.class}</mainClass>
                     <layout>JAR</layout>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 <!--            <plugin>-->
 <!--                <groupId>org.apache.maven.plugins</groupId>-->
