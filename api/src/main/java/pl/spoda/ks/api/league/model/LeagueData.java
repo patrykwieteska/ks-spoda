@@ -6,6 +6,8 @@ import lombok.ToString;
 import pl.spoda.ks.api.league.enums.LeagueType;
 import pl.spoda.ks.api.league.enums.TeamStructure;
 
+import java.time.LocalDateTime;
+
 @Data
 @ToString
 @Builder
@@ -16,4 +18,5 @@ public class LeagueData {
     private String description;
     private TeamStructure teamStructure;
     private LeagueType type;
+    private LocalDateTime creationDate;
 }

@@ -10,7 +10,7 @@ public class CollectionUtils {
     }
 
     public static <T> Collection<T> emptyIfNull(Collection<T> collection) {
-        return collection.isEmpty()
+        return collection==null || collection.isEmpty()
                 ? new ArrayList<>()
                 : collection;
     }

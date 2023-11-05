@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Set;
+
 @ToString(callSuper = true)
 @Table(name = "PLAYER")
 @NoArgsConstructor
@@ -28,4 +30,12 @@ public class Player extends BaseEntity {
 
     @OneToOne(mappedBy = "player")
     private LeagueRating leagueRating;
+
+    @ManyToMany
+    @JoinTable(
+            name="LEAGUES_PLAYERS",
+            joinColumns = @JoinColumn(name="player_id"),
+            inverseJoinColumns = @JoinColumn(name="league_id"))
+    @ToString.Exclude
+    private Set<League> leagues;
 }
