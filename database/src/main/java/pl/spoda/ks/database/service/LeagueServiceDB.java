@@ -10,11 +10,15 @@ import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.comons.exceptions.SpodaDatabaseException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
+import pl.spoda.ks.database.entity.LeaguesPlayers;
+import pl.spoda.ks.database.entity.Player;
 import pl.spoda.ks.database.mapper.EntityMapper;
 import pl.spoda.ks.database.entity.League;
 import pl.spoda.ks.database.repository.LeagueRepository;
+import pl.spoda.ks.database.repository.LeaguesPlayersRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -22,22 +26,41 @@ import java.util.List;
 public class LeagueServiceDB {
 
     private final LeagueRepository leagueRepository;
+    private final PlayerServiceDB playerServiceDB;
     private final BaseServiceDB baseServiceDB;
+    private final LeaguesPlayersRepository leaguesPlayersRepository;
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
     @LogEvent
     @Transactional
     public LeagueDto save(LeagueDto leagueDto) {
+        Set<Player> players = playerServiceDB.savePlayerList(leagueDto.getPlayerList());
         League league = mapper.mapToLeagueEntity( leagueDto );
+        league.setPlayers( players );
         baseServiceDB.createEntity( league );
         League storedLeague;
-
         try {
             storedLeague = leagueRepository.save( league );
         } catch (Exception e) {
             throw new SpodaDatabaseException( "Error during saving a league" );
         }
+        saveLeaguePlayersRelations( players, storedLeague.getId() );
         return mapper.mapToLeagueDto( storedLeague );
+    }
+
+    private void saveLeaguePlayersRelations(Set<Player> players, Integer leagueId) {
+        leaguesPlayersRepository.saveAll( players.stream()
+                .map( player -> mapToLeaguePlayersEntity( leagueId, player ) )
+                .toList());
+    }
+
+    private LeaguesPlayers mapToLeaguePlayersEntity( Integer leagueId, Player player) {
+        LeaguesPlayers leaguesPlayersEntity = LeaguesPlayers.builder()
+                .playerId( player.getId() )
+                .leagueId( leagueId )
+                .build();
+        baseServiceDB.createEntity( leaguesPlayersEntity );
+        return leaguesPlayersEntity;
     }
 
     public boolean isLeagueAlreadyExists(String name) {
@@ -46,7 +69,11 @@ public class LeagueServiceDB {
 
     public List<LeagueDto> getLeagues() {
         return leagueRepository.findAll().stream()
-                .map( mapper::mapToLeagueDto )
+                .map( league -> {
+                    LeagueDto leagueDto = mapper.mapToLeagueDto( league );
+                    leagueDto.setCreationDate( league.getCreationDate() );
+                    return leagueDto;
+                } )
                 .toList();
     }
 

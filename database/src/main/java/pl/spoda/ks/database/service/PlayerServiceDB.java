@@ -9,14 +9,16 @@ import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.comons.exceptions.SpodaDatabaseException;
 import pl.spoda.ks.comons.messages.InfoMessage;
+import pl.spoda.ks.comons.utils.CollectionUtils;
 import pl.spoda.ks.database.dto.PlayerDto;
+import pl.spoda.ks.database.entity.LeaguesPlayers;
 import pl.spoda.ks.database.entity.Player;
 import pl.spoda.ks.database.mapper.EntityMapper;
+import pl.spoda.ks.database.repository.LeaguesPlayersRepository;
 import pl.spoda.ks.database.repository.PlayerRepository;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class PlayerServiceDB {
 
     private final PlayerRepository playerRepository;
     private final BaseServiceDB baseServiceDB;
+    private final LeaguesPlayersRepository leaguesPlayersRepository;
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
     @LogEvent
@@ -35,6 +38,11 @@ public class PlayerServiceDB {
             throw new SpodaDatabaseException( String.format( InfoMessage.ALIAS_ALREADY_EXISTS,
                     playerDto.getAlias() ) );
         }
+        Player newPlayer = savePlayer( playerDto );
+        return newPlayer.getId();
+    }
+
+    private Player savePlayer(PlayerDto playerDto) {
         Player player = mapper.mapToPlayer( playerDto );
         baseServiceDB.createEntity( player );
 
@@ -45,7 +53,7 @@ public class PlayerServiceDB {
             log.error( e.getMessage(),e );
             throw new SpodaDatabaseException( "Error during saving player" );
         }
-        return newPlayer.getId();
+        return newPlayer;
     }
 
     @LogEvent
@@ -101,5 +109,33 @@ public class PlayerServiceDB {
         // Dodać walidacje usunięcia, gdy gracz jest przypisany do jakiegokolwiek meczu
         Player storedPlayer = readPlayer( playerId );
         playerRepository.delete( storedPlayer );
+    }
+    @Transactional
+    public Set<Player> savePlayerList(Set<PlayerDto> players) {
+        Set<Player> newPlayers = prepareNewPlayerSet( players );
+        Set<Player> existingPlayers = prepareExistingPlayers(players);
+        newPlayers.addAll( existingPlayers );
+        return newPlayers;
+    }
+
+    private Set<Player> prepareNewPlayerSet(Set<PlayerDto> players) {
+        return players.stream()
+                .filter( player -> player.getId() == null )
+                .map( this::savePlayer )
+                .collect( Collectors.toSet());
+    }
+
+    private Set<Player> prepareExistingPlayers(Set<PlayerDto> players) {
+        return players.stream()
+                .filter( player -> player.getId()!= null )
+                .map( player ->readPlayer(player.getId()))
+                .collect( Collectors.toSet());
+    }
+
+    public List<PlayerDto> getPlayerListByLeagueId(Integer leagueId) {
+        List<LeaguesPlayers> leaguePlayers = leaguesPlayersRepository.findByLeagueId( leagueId );
+        return CollectionUtils.emptyIfNull( leaguePlayers ).stream()
+                .map( data -> getPlayer( data.getPlayerId() ) )
+                .toList();
     }
 }
