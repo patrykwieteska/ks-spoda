@@ -3,7 +3,7 @@
 
 -- LEAGUE
 insert into LEAGUE ("NAME","CREATION_DATE","LAST_MODIFICATION_DATE", "CREATED_BY", "TEAM_STRUCTURE","TYPE")
-values ('TEST_LEAGUE', '2023-10-10','2023-10-10','TEST_DATA','DOUBLE','SEASON');
+values ('Liga testowa', '2023-10-10','2023-10-10','TEST_DATA','DOUBLE','SEASON');
 
 -- SEASON
 insert into SEASON ("LEAGUE_ID","START_DATE","INITIAL_RATING","CREATION_DATE","LAST_MODIFICATION_DATE", "CREATED_BY")
@@ -25,10 +25,10 @@ values ('2023-10-10','2023-10-10','TEST_DATA','Aston Villa','83');
 
 -- PLAYERS
 insert into  PLAYER ("CREATION_DATE","LAST_MODIFICATION_DATE", "CREATED_BY","NAME","ALIAS")
-values ('2023-10-10','2023-10-10','TEST_DATA','Wacław','Baldek');
+values ('2023-10-10','2023-10-10','TEST_DATA','Waldemar','Baldek');
 insert into  PLAYER ("CREATION_DATE","LAST_MODIFICATION_DATE", "CREATED_BY","NAME","ALIAS")
-values ('2023-10-10','2023-10-10','TEST_DATA','Lucjan','Łysy');
+values ('2023-10-10','2023-10-10','TEST_DATA','Michał','Łysy');
 insert into  PLAYER ("CREATION_DATE","LAST_MODIFICATION_DATE", "CREATED_BY","NAME","ALIAS")
-values ('2023-10-10','2023-10-10','TEST_DATA','Kazik','Kaźmirz');
+values ('2023-10-10','2023-10-10','TEST_DATA','Kazik','Jałowy');
 insert into  PLAYER ("CREATION_DATE","LAST_MODIFICATION_DATE", "CREATED_BY","NAME","ALIAS")
-values ('2023-10-10','2023-10-10','TEST_DATA','Wacław', 'Test');
+values ('2023-10-10','2023-10-10','TEST_DATA','Wacław', 'Testowy');

@@ -19,11 +19,12 @@ public class LeagueMapper {
 
     public LeagueDto mapLeague(LeagueRequest request) {
         return LeagueDto.builder()
-                .name( request.getName() )
+                .name( request.getName().toUpperCase() )
                 .description( request.getDescription() )
                 .teamStructure( request.getTeamStructure().name() )
                 .type( request.getType().name() )
                 .playerList(playerMapper.mapToPlayerDtoList( request.getPlayerList() ))
+                .logoUrl( request.getLogoUrl() )
                 .build();
     }
 
@@ -41,6 +42,7 @@ public class LeagueMapper {
                 .type( LeagueType.getByName( leagueDto.getType()) )
                 .teamStructure( TeamStructure.getByName(  leagueDto.getTeamStructure() ))
                 .creationDate( leagueDto.getCreationDate() )
+                .logoUrl( leagueDto.getLogoUrl() )
                 .build();
 
     }

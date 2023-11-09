@@ -64,7 +64,7 @@ public class LeagueServiceDB {
     }
 
     public boolean isLeagueAlreadyExists(String name) {
-        return leagueRepository.findByName( name ).isPresent();
+        return leagueRepository.findByName( name.toUpperCase() ).isPresent();
     }
 
     public List<LeagueDto> getLeagues() {

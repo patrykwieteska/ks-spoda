@@ -14,6 +14,7 @@ public class LeagueController {
 
     private final LeagueService leagueService;
 
+    @CrossOrigin
     @PostMapping
     @LogEvent
     public ResponseEntity<BaseResponse> createLeague(
@@ -24,11 +25,13 @@ public class LeagueController {
 
     @GetMapping
     @LogEvent
+    @CrossOrigin
     public ResponseEntity<BaseResponse> getLeagues() {
         return leagueService.getLeagues();
     }
 
     @GetMapping("init/{id}")
+    @CrossOrigin
     @LogEvent
     public ResponseEntity<BaseResponse> initLeague(
             @PathVariable(name = "id") Integer leagueId

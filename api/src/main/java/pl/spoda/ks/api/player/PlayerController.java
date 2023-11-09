@@ -24,6 +24,7 @@ public class PlayerController {
         return playerService.addPlayer(playerRequest);
     }
 
+    @CrossOrigin
     @GetMapping
     @LogEvent
     public ResponseEntity<BaseResponse> getPlayers(

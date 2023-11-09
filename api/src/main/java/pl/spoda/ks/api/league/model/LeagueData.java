@@ -19,4 +19,5 @@ public class LeagueData {
     private TeamStructure teamStructure;
     private LeagueType type;
     private LocalDateTime creationDate;
+    private String logoUrl;
 }
