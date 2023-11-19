@@ -16,4 +16,5 @@ public class Match {
     private Boolean isFinished;
     private String type;
 
+
 }

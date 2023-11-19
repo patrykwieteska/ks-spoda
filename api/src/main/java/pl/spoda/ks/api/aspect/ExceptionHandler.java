@@ -33,7 +33,7 @@ public class ExceptionHandler {
         return ResponseEntity.status( httpStatus ).body(
                 BaseResponse.builder()
                         .status( httpStatus.value() )
-                        .message( ex )
+                        .errorMessage( ex )
                         .build()
         );
     }

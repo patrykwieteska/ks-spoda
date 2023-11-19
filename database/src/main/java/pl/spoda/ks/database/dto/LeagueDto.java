@@ -2,6 +2,7 @@ package pl.spoda.ks.database.dto;
 
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -19,5 +20,8 @@ public class LeagueDto {
     private String teamStructure;
     private LocalDateTime creationDate;
     private Set<PlayerDto> playerList;
+    private Boolean isPrivate;
+    private List<SeasonDto> seasonList;
+    private List<LeagueTableRowDto> leagueTableRowList;
 
 }

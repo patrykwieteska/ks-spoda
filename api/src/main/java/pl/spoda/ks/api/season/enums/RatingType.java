@@ -1,7 +1,17 @@
 package pl.spoda.ks.api.season.enums;
 
+
+
+import java.util.Arrays;
+
 public enum RatingType {
-    //TODO
     TEAM,
-    SINGLE
+    SINGLE;
+
+    public static RatingType getByName(String ratingType) {
+        return Arrays.stream( values() )
+                .filter( value -> value.name().equals( ratingType ) )
+                .findFirst()
+                .orElse(null);
+    }
 }

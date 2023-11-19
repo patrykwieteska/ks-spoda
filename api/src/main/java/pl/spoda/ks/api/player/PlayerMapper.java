@@ -6,6 +6,7 @@ import pl.spoda.ks.api.player.model.PlayerRequest;
 import pl.spoda.ks.comons.utils.CollectionUtils;
 import pl.spoda.ks.database.dto.PlayerDto;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class PlayerMapper {
                         .id( playerData.getId() )
                         .alias( playerData.getAlias() )
                         .name( playerData.getName() )
+                        .desc( playerData.getDesc() )
                         .build() )
                 .collect( Collectors.toSet());
     }
@@ -35,12 +37,15 @@ public class PlayerMapper {
                 .alias( playerDto.getAlias() )
                 .id( playerDto.getId() )
                 .name( playerDto.getName() )
+                .playerImg( playerDto.getPlayerImg() )
+                .desc( playerDto.getDesc() )
+                .joinDate( playerDto.getJoinDate() )
                 .build();
     }
 
-    public List<PlayerData> mapToPlayerDataList(List<PlayerDto> playerList) {
+    public Set<PlayerData> mapToPlayerDataList(Collection<PlayerDto> playerList) {
        return playerList.stream()
                 .map( this::mapToPlayerData )
-                .toList();
+                .collect( Collectors.toSet());
     }
 }

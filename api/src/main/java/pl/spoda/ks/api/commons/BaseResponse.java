@@ -15,5 +15,5 @@ import lombok.experimental.SuperBuilder;
 public class BaseResponse {
     private int status;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String message;
+    private String errorMessage;
 }

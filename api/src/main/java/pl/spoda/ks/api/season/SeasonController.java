@@ -1,5 +1,6 @@
 package pl.spoda.ks.api.season;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +16,16 @@ public class SeasonController {
 
     private final SeasonService seasonService;
 
+    @CrossOrigin
     @PostMapping
     @LogEvent
     public ResponseEntity<BaseResponse> createSeason(
-            @RequestBody SeasonRequest request
+            @RequestBody @Valid SeasonRequest request
     ) {
-        return seasonService.createLeague( request );
+        return seasonService.createSeason( request );
     }
 
+    @CrossOrigin
     @GetMapping()
     @LogEvent
     public ResponseEntity<BaseResponse> getSeasonsByLeague(
@@ -39,6 +42,7 @@ public class SeasonController {
         return seasonService.initSeason( seasonId );
     }
 
+    @CrossOrigin
     @PutMapping("/complete")
     @LogEvent
     public ResponseEntity<BaseResponse> completeSeason(

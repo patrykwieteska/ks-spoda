@@ -20,4 +20,5 @@ public class LeagueData {
     private LeagueType type;
     private LocalDateTime creationDate;
     private String logoUrl;
+    private Boolean isPrivate;
 }

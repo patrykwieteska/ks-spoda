@@ -11,7 +11,7 @@ public class ResponseResolver {
         return ResponseEntity.status( status ).body(
                 BaseResponse.builder()
                         .status( status.value() )
-                        .message( message )
+                        .errorMessage( message )
                         .build() );
     }
 

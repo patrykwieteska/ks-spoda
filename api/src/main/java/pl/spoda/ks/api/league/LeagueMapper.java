@@ -25,6 +25,7 @@ public class LeagueMapper {
                 .type( request.getType().name() )
                 .playerList(playerMapper.mapToPlayerDtoList( request.getPlayerList() ))
                 .logoUrl( request.getLogoUrl() )
+                .isPrivate(request.getIsPrivate())
                 .build();
     }
 
@@ -34,7 +35,7 @@ public class LeagueMapper {
                 .toList();
     }
 
-    private LeagueData mapToLeagueData(LeagueDto leagueDto) {
+    public LeagueData mapToLeagueData(LeagueDto leagueDto) {
         return LeagueData.builder()
                 .leagueId( leagueDto.getId() )
                 .description( leagueDto.getDescription() )
@@ -43,6 +44,7 @@ public class LeagueMapper {
                 .teamStructure( TeamStructure.getByName(  leagueDto.getTeamStructure() ))
                 .creationDate( leagueDto.getCreationDate() )
                 .logoUrl( leagueDto.getLogoUrl() )
+                .isPrivate( leagueDto.getIsPrivate() )
                 .build();
 
     }

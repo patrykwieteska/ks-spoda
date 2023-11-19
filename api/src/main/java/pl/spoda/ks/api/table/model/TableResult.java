@@ -1,10 +1,10 @@
-package pl.spoda.ks.api.player.model;
+package pl.spoda.ks.api.table.model;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.spoda.ks.api.commons.BaseResponse;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,7 +12,8 @@ import java.util.Set;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlayerListResponse extends BaseResponse {
+public class TableResult extends BaseResponse {
 
-    Set<PlayerData> players;
+    private String header;
+    private List<TableResultRow> tableRows;
 }
