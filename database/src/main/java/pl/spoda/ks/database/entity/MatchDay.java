@@ -3,6 +3,8 @@ package pl.spoda.ks.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class MatchDay extends BaseEntity {
     private Season season;
 
     @OneToMany(mappedBy = "matchDay", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<Match> matchList;
 

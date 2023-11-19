@@ -38,9 +38,10 @@ public class SeasonServiceDB {
         League storedLeague = leagueRepository.findById( seasonDto.getLeagueId() ).orElse( null );
         validateLeague( seasonDto.getLeagueId(), storedLeague );
 
-        validateUnfinishedSeasonsInTheLeague( storedLeague.getId() );
+        int storedSeasonCount = validateUnfinishedSeasonsInTheLeague( storedLeague.getId() );
 
         Season season = mapper.mapToSeason( seasonDto );
+        season.setLeagueSeasonCount( storedSeasonCount+1 );
         season.league( storedLeague );
         baseServiceDB.createEntity( season );
 
@@ -52,11 +53,14 @@ public class SeasonServiceDB {
         return mapper.mapToSeasonDto( season );
     }
 
-    private void validateUnfinishedSeasonsInTheLeague(Integer leagueId) {
-        if (seasonRepository.findByLeagueId( leagueId ).stream()
+    private int validateUnfinishedSeasonsInTheLeague(Integer leagueId) {
+        List<Season> seasons = seasonRepository.findByLeagueId( leagueId );
+        if (seasons.stream()
                 .anyMatch( season -> BooleanUtils.isNotTrue( season.getIsFinished() ) ))
             throw new SpodaApplicationException(InfoMessage.getMessage( InfoMessage.UNFINISHED_SEASONS_IN_LEAGUE,
                     leagueId.toString() ));
+
+        return seasons.size();
     }
 
     public List<SeasonDto> getSeasonsByLeague(Integer leagueId) {

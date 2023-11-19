@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import pl.spoda.ks.api.commons.BaseResponse;
 import pl.spoda.ks.api.league.model.LeagueData;
+import pl.spoda.ks.api.season.model.SeasonData;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

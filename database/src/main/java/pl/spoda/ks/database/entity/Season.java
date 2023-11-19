@@ -3,6 +3,9 @@ package pl.spoda.ks.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import pl.spoda.ks.database.entity.table.SeasonTableRow;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,6 +18,7 @@ import java.util.List;
 @SuperBuilder
 @Entity
 @Getter
+@Setter
 public class Season extends BaseEntity {
 
     @Column(name = "ID")
@@ -31,8 +35,15 @@ public class Season extends BaseEntity {
     private Boolean isFinished;
     @Column(name = "INITIAL_RATING",updatable = false, insertable = false, nullable = false)
     private BigDecimal initialRating;
+    @Column(name="POINT_COUNTING_METHOD")
+    private String pointCountingMethod;
+    @Column(name="RATING_TYPE")
+    private String ratingType;
+    @Column(name="LEAGUE_SEASON_COUNT")
+    private Integer leagueSeasonCount;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<MatchDay> matchDayList;
 
@@ -41,6 +52,15 @@ public class Season extends BaseEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private League league;
+
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
+    @Fetch(FetchMode.SUBSELECT)
+    @ToString.Exclude
+    private List<SeasonTableRow> seasonTableRowList;
+
+    public void setSeasonTableRowList(List<SeasonTableRow> seasonTableRowList) {
+        this.seasonTableRowList = seasonTableRowList;
+    }
 
     public Season isFinished(boolean isFinished) {
         this.isFinished=isFinished;

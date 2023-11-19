@@ -66,7 +66,9 @@ public class PlayerServiceDB {
     @LogEvent
     public PlayerDto getPlayer(Integer playerId) {
         Player storedPlayer = readPlayer( playerId );
-        return mapper.mapToPlayerDto(storedPlayer);
+        PlayerDto playerDto = mapper.mapToPlayerDto( storedPlayer );
+        playerDto.setJoinDate( storedPlayer.getCreationDate().toLocalDate() );
+        return playerDto;
     }
 
     @Transactional

@@ -24,6 +24,10 @@ public class Player extends BaseEntity {
     private String name;
     @Column(name="ALIAS", unique = true)
     private String alias;
+    @Column(name="PLAYER_IMG", nullable = true)
+    private String playerImg;
+    @Column(name="DESCRIPTION", nullable = true)
+    private String desc;
 
     @OneToOne(mappedBy = "player")
     private SeasonRating seasonRating;

@@ -15,6 +15,7 @@ import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.PlayerDto;
 import pl.spoda.ks.database.service.PlayerServiceDB;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class PlayerService {
                 .build();
 
         if(playerList.isEmpty()) {
-            response.setMessage( InfoMessage.NO_PLAYERS_FOUND );
+            response.setErrorMessage( InfoMessage.NO_PLAYERS_FOUND );
         }
 
         return responseResolver.prepareResponse( response );
@@ -73,5 +74,12 @@ public class PlayerService {
     public ResponseEntity<BaseResponse> deletePlayer(Integer playerId) {
         playerServiceDB.deletePlayer(playerId);
         return responseResolver.prepareResponse( DeleteResponse.builder().deletedId( playerId ).build() );
+    }
+
+    @LogEvent
+    public ResponseEntity<BaseResponse> getPlayersByLeague(Integer leagueId) {
+        List<PlayerDto> playerDtos = playerServiceDB.getPlayerListByLeagueId(leagueId);
+        Set<PlayerData> players = playerMapper.mapToPlayerDataList( playerDtos );
+        return responseResolver.prepareResponse( PlayerListResponse.builder().players( players ).build() );
     }
 }

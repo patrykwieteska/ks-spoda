@@ -1,5 +1,6 @@
 package pl.spoda.ks.api.league;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +14,13 @@ import pl.spoda.ks.comons.aspects.LogEvent;
 public class LeagueController {
 
     private final LeagueService leagueService;
+    private final InitLeagueService initLeagueService;
 
     @CrossOrigin
     @PostMapping
     @LogEvent
     public ResponseEntity<BaseResponse> createLeague(
-            @RequestBody LeagueRequest request
+            @RequestBody @Valid LeagueRequest request
     ) {
         return leagueService.createLeague(request);
     }
@@ -36,6 +38,6 @@ public class LeagueController {
     public ResponseEntity<BaseResponse> initLeague(
             @PathVariable(name = "id") Integer leagueId
     ) {
-        return leagueService.initLeague(leagueId);
+        return initLeagueService.initLeague(leagueId);
     }
 }

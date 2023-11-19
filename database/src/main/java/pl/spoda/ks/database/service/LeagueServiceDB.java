@@ -10,10 +10,10 @@ import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.comons.exceptions.SpodaDatabaseException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.LeagueDto;
+import pl.spoda.ks.database.entity.League;
 import pl.spoda.ks.database.entity.LeaguesPlayers;
 import pl.spoda.ks.database.entity.Player;
 import pl.spoda.ks.database.mapper.EntityMapper;
-import pl.spoda.ks.database.entity.League;
 import pl.spoda.ks.database.repository.LeagueRepository;
 import pl.spoda.ks.database.repository.LeaguesPlayersRepository;
 
@@ -29,6 +29,7 @@ public class LeagueServiceDB {
     private final PlayerServiceDB playerServiceDB;
     private final BaseServiceDB baseServiceDB;
     private final LeaguesPlayersRepository leaguesPlayersRepository;
+    private final TableServiceDB tableServiceDB;
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
     @LogEvent
@@ -45,6 +46,7 @@ public class LeagueServiceDB {
             throw new SpodaDatabaseException( "Error during saving a league" );
         }
         saveLeaguePlayersRelations( players, storedLeague.getId() );
+        tableServiceDB.createTable( storedLeague,players );
         return mapper.mapToLeagueDto( storedLeague );
     }
 
@@ -69,6 +71,7 @@ public class LeagueServiceDB {
 
     public List<LeagueDto> getLeagues() {
         return leagueRepository.findAll().stream()
+                .filter(league -> !league.getIsPrivate())
                 .map( league -> {
                     LeagueDto leagueDto = mapper.mapToLeagueDto( league );
                     leagueDto.setCreationDate( league.getCreationDate() );

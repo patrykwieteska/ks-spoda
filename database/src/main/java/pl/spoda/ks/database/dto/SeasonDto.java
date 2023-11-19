@@ -18,5 +18,8 @@ public class SeasonDto {
     private LocalDate endDate;
     private Boolean isFinished;
     private BigDecimal initialRating;
+    private String pointCountingMethod;
+    private String ratingType;
+    private Integer leagueSeasonCount;
 
 }
