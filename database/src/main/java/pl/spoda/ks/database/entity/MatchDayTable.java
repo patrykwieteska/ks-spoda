@@ -8,24 +8,20 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @ToString(callSuper = true)
-@Table(name = "LEAGUES_PLAYERS")
+@Table(name = "MATCH_DAY_TABLE")
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 @Getter
 @Entity
-public class LeaguesPlayers extends BaseEntity {
+public class MatchDayTable extends TableBase {
 
-    @Column(name = "ID")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", nullable = false)
     private Integer id;
 
-    @Column(name = "league_id")
-    private Integer leagueId;
+    @Column(name = "MATCH_DAY_ID", nullable = false)
+    private Integer matchDayId;
 
-    @Column(name = "player_id")
-    private Integer playerId;
 }
-
-

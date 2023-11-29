@@ -16,7 +16,8 @@ public class TableResultRow {
     private PlayerData player;
     private Integer matches;
     private BigDecimal rating;
-    private Integer pointsTotal;
+    private BigDecimal previousRating;
+    private BigDecimal pointsTotal;
     private BigDecimal pointsPerMatch;
     private Integer wins;
     private Integer draws;
@@ -25,5 +26,9 @@ public class TableResultRow {
     private Integer goalsConceded;
     private Integer goalsDiff;
     private List<String> playerForm;
+    private Integer currentPosition;
+    private Integer previousPosition;
+    private String previousPositionReference;
+    private boolean matchInProgress;
 
 }

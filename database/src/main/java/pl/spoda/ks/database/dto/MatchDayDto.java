@@ -1,15 +1,17 @@
 package pl.spoda.ks.database.dto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Builder
-public class MatchDayDto {
+@ToString(callSuper = true)
+@SuperBuilder
+public class MatchDayDto extends BaseDto {
 
     private Integer id;
     private Integer seasonId;
@@ -18,5 +20,6 @@ public class MatchDayDto {
     private String location;
     private Boolean isFinished;
     private List<MatchDto> matchList;
+    private SeasonDto season;
 
 }

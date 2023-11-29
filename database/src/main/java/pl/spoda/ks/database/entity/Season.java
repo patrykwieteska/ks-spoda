@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import pl.spoda.ks.database.entity.table.SeasonTableRow;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,7 +32,7 @@ public class Season extends BaseEntity {
     private LocalDate endDate;
     @Column(name = "IS_FINISHED")
     private Boolean isFinished;
-    @Column(name = "INITIAL_RATING",updatable = false, insertable = false, nullable = false)
+    @Column(name = "INITIAL_RATING",updatable = false)
     private BigDecimal initialRating;
     @Column(name="POINT_COUNTING_METHOD")
     private String pointCountingMethod;
@@ -53,14 +52,6 @@ public class Season extends BaseEntity {
     @EqualsAndHashCode.Exclude
     private League league;
 
-    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    @ToString.Exclude
-    private List<SeasonTableRow> seasonTableRowList;
-
-    public void setSeasonTableRowList(List<SeasonTableRow> seasonTableRowList) {
-        this.seasonTableRowList = seasonTableRowList;
-    }
 
     public Season isFinished(boolean isFinished) {
         this.isFinished=isFinished;

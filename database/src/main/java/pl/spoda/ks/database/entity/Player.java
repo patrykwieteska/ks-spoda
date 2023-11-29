@@ -24,22 +24,27 @@ public class Player extends BaseEntity {
     private String name;
     @Column(name="ALIAS", unique = true)
     private String alias;
-    @Column(name="PLAYER_IMG", nullable = true)
+    @Column(name="PLAYER_IMG")
     private String playerImg;
-    @Column(name="DESCRIPTION", nullable = true)
+    @Column(name="DESCRIPTION")
     private String desc;
 
     @OneToOne(mappedBy = "player")
-    private SeasonRating seasonRating;
+    private SeasonTable seasonTable;
 
     @OneToOne(mappedBy = "player")
-    private LeagueRating leagueRating;
+    private LeagueTable leagueTable;
 
     @ManyToMany
     @JoinTable(
-            name="LEAGUES_PLAYERS",
+            name="LEAGUE_TABLE",
             joinColumns = @JoinColumn(name="player_id"),
             inverseJoinColumns = @JoinColumn(name="league_id"))
     @ToString.Exclude
     private Set<League> leagues;
+
+    @ManyToMany(mappedBy = "teamPlayers")
+    @ToString.Exclude
+    @Transient
+    private Set<MatchTeam> matchTeams;
 }

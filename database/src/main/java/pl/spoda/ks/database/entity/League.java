@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import pl.spoda.ks.database.entity.table.LeagueTableRow;
 
 import java.util.List;
 import java.util.Set;
@@ -44,11 +43,6 @@ public class League extends BaseEntity {
     @ManyToMany(mappedBy = "leagues")
     @ToString.Exclude
     private Set<Player> players;
-
-    @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    @ToString.Exclude
-    private List<LeagueTableRow> leagueTableRowList;
 
     public void setPlayers(Set<Player> players) {
         this.players = players;

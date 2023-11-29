@@ -13,28 +13,21 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @Entity
 @Getter
+@Setter
 public class Match extends BaseEntity {
 
     @Column(name = "ID")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "MATCH_DAY_ID", nullable = false, insertable = false, updatable = false)
-    private Integer matchDayId;
     @Column(name = "MATCH_TIME", nullable = false)
     private LocalDateTime matchTime;
-    @Column(name = "HOME_TEAM_ID", nullable = false, insertable = false, updatable = false)
-    private Integer homeTeamId;
-    @Column(name = "AWAY_TEAM_ID", nullable = false, insertable = false, updatable = false)
-    private Integer awayTeamId;
-    @Column(name = "HOME_GOALS")
+    @Column(name = "HOME_GOALS", nullable = false)
     private Integer homeGoals;
-    @Column(name = "AWAY_GOALS")
+    @Column(name = "AWAY_GOALS", nullable = false)
     private Integer awayGoals;
     @Column(name = "IS_FINISHED")
     private Boolean isFinished;
-    @Column(name = "TYPE")
-    private String type;
 
     @ManyToOne
     @JoinColumn(name = "MATCH_DAY_ID")
@@ -42,5 +35,10 @@ public class Match extends BaseEntity {
     @EqualsAndHashCode.Exclude
     private MatchDay matchDay;
 
+    @OneToOne(cascade = CascadeType.ALL) @JoinColumn( name = "home_team_id" )
+    private MatchTeam homeTeam;
+
+    @OneToOne(cascade = CascadeType.ALL) @JoinColumn( name = "away_team_id" )
+    private MatchTeam awayTeam;
 
 }

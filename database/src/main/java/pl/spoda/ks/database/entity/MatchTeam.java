@@ -1,10 +1,13 @@
 package pl.spoda.ks.database.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.util.Set;
 
 @ToString(callSuper = true)
 @Table(name = "MATCH_TEAM")
@@ -19,12 +22,15 @@ public class MatchTeam extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="FIRST_PLAYER_ID",nullable = false,insertable = false,updatable = false)
-    private Integer firstPlayerId;
-    @Column(name="SECOND_PLAYER_ID", nullable = true,insertable = false,updatable = false)
-    private LocalDateTime secondPlayerId;
-    @Column(name="GAME_TEAM_ID", nullable = true,insertable = false,updatable = false)
+    @Column(name="GAME_TEAM_ID")
     private Integer gameTeamId;
 
+    @ManyToMany
+    @JoinTable(
+            name="MATCH_TEAM_PLAYER",
+            joinColumns = @JoinColumn(name="match_team_id"),
+            inverseJoinColumns = @JoinColumn(name="player_id"))
+    @ToString.Exclude
+    private Set<Player> teamPlayers;
 
 }
