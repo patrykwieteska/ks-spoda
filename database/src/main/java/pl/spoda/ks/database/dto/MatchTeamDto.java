@@ -1,17 +1,18 @@
 package pl.spoda.ks.database.dto;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Builder
-public class MatchTeamDto {
+@ToString(callSuper = true)
+@SuperBuilder
+public class MatchTeamDto extends BaseDto {
 
     private Integer id;
-    private Integer firstPlayerId;
-    private LocalDateTime secondPlayerId;
     private Integer gameTeamId;
+    private Set<PlayerDto> teamPlayers;
 }

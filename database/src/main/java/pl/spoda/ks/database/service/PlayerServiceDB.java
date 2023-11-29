@@ -11,10 +11,10 @@ import pl.spoda.ks.comons.exceptions.SpodaDatabaseException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.comons.utils.CollectionUtils;
 import pl.spoda.ks.database.dto.PlayerDto;
-import pl.spoda.ks.database.entity.LeaguesPlayers;
+import pl.spoda.ks.database.entity.LeagueTable;
 import pl.spoda.ks.database.entity.Player;
 import pl.spoda.ks.database.mapper.EntityMapper;
-import pl.spoda.ks.database.repository.LeaguesPlayersRepository;
+import pl.spoda.ks.database.repository.LeagueTableRepository;
 import pl.spoda.ks.database.repository.PlayerRepository;
 
 import java.util.*;
@@ -27,7 +27,7 @@ public class PlayerServiceDB {
 
     private final PlayerRepository playerRepository;
     private final BaseServiceDB baseServiceDB;
-    private final LeaguesPlayersRepository leaguesPlayersRepository;
+    private final LeagueTableRepository leagueTableRepository;
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
     @LogEvent
@@ -135,9 +135,9 @@ public class PlayerServiceDB {
     }
 
     public List<PlayerDto> getPlayerListByLeagueId(Integer leagueId) {
-        List<LeaguesPlayers> leaguePlayers = leaguesPlayersRepository.findByLeagueId( leagueId );
+        List<LeagueTable> leaguePlayers = leagueTableRepository.findByLeagueId( leagueId );
         return CollectionUtils.emptyIfNull( leaguePlayers ).stream()
-                .map( data -> getPlayer( data.getPlayerId() ) )
+                .map( data -> getPlayer( data.getPlayer().getId() ) )
                 .toList();
     }
 }

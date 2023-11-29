@@ -31,6 +31,7 @@ public class MatchDayServiceDB {
     private final MatchDayRepository matchDayRepository;
     private final EntityMapper entityMapper = Mappers.getMapper( EntityMapper.class );
     private final SeasonRepository seasonRepository;
+    private final MatchServiceDB matchServiceDB;
 
     @Transactional
     @LogEvent
@@ -55,7 +56,7 @@ public class MatchDayServiceDB {
     public List<MatchDayDto> getMatchDaysBySeasonId(Integer seasonId) {
         List<MatchDay> storedMatchDay = matchDayRepository.findBySeasonId( seasonId );
 
-        return  storedMatchDay.stream()
+        return storedMatchDay.stream()
                 .map( entityMapper::mapToMatchDayDto )
                 .sorted( Comparator.comparing( MatchDayDto::getSeasonMatchDay ).reversed() )
                 .toList();
@@ -94,7 +95,6 @@ public class MatchDayServiceDB {
         }
     }
 
-
     private void validateSeason(MatchDayDto matchDayDto, Season storedSeason) {
         if (storedSeason == null)
             throw new SpodaApplicationException( String.format( "Season with id: %d is not exist",
@@ -116,11 +116,7 @@ public class MatchDayServiceDB {
     }
 
     public void completeMatchDay(Integer matchDayId) {
-      /*
-        TODO gameMatchServiceDb - sprawdzenie czy istnieje jakikolwiek niezakończony mecz w danej kolejce.
-           if(gameMatchServiceDb.isAnyMatchDayUnfinished(matchDayId))
-           throw new SpodaApplicationException( InfoMessage.MATCH_DAY_NOT_FINISHED );
-      */
+        matchServiceDB.validateUnfinishedMatchDayMatches( matchDayId );
 
         MatchDay storedMatchDay = matchDayRepository.findById( matchDayId ).orElse( null );
         checkIfMatchDayExists( matchDayId, storedMatchDay );

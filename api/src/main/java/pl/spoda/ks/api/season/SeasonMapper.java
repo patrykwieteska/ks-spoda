@@ -27,20 +27,20 @@ public class SeasonMapper {
     public String initialRating;
 
     public SeasonDto mapSeason(SeasonRequest request) {
-        SeasonDto.SeasonDtoBuilder seasonDto = SeasonDto.builder()
+        SeasonDto seasonDto = SeasonDto.builder()
                 .startDate( dateService.dateOf( request.getStartDate() ) )
                 .leagueId( request.getLeagueId() )
                 .isFinished( false )
-                .pointCountingMethod( request.getPointCountingMethod().name() );
+                .pointCountingMethod( request.getPointCountingMethod().name() )
+                .build();
 
         if (PointCountingMethod.RATING.equals( request.getPointCountingMethod() )) {
 
-            seasonDto
-                    .initialRating( new BigDecimal( initialRating ) )
-                    .ratingType( Optional.ofNullable(request.getRatingType()).map( Enum::name )
-                            .orElseThrow(() -> new SpodaApplicationException( InfoMessage.RATING_TYPE_REQUIRED ) ));
+            seasonDto.setInitialRating( new BigDecimal( initialRating ) );
+            seasonDto.setRatingType( Optional.ofNullable( request.getRatingType() ).map( Enum::name )
+                    .orElseThrow( () -> new SpodaApplicationException( InfoMessage.RATING_TYPE_REQUIRED ) ) );
         }
-        return seasonDto.build();
+        return seasonDto;
     }
 
     public List<SeasonData> mapToSeasonList(List<SeasonDto> seasonDtoList) {

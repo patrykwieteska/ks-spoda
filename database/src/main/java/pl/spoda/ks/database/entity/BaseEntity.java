@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public abstract class BaseEntity {
+public class BaseEntity {
 
     @Column(name = "CREATION_DATE",nullable = false)
     private LocalDateTime creationDate;
@@ -22,7 +22,7 @@ public abstract class BaseEntity {
     private LocalDateTime lastModificationDate;
     @Column(name = "CREATED_BY",nullable = false)
     private String createdBy;
-    @Column(name="IS_DELETED",nullable = true)
+    @Column(name="IS_DELETED")
     private Boolean isDeleted;
 
 

@@ -47,7 +47,6 @@ public class MatchDayService {
         MatchDayDto matchDayDto =  matchDayServiceDb.getMatchDay(matchDayId );
         SeasonDto seasonDto = seasonServiceDb.getSingleSeason( matchDayDto.getSeasonId() );
         LeagueDto leagueDto = leagueServiceDb.getSingleLeague( seasonDto.getLeagueId() );
-
         InitMatchDayResponse response = initMatchDayMapper.mapToResponse(matchDayDto,seasonDto,leagueDto);
         return responseResolver.prepareResponse( response );
     }
