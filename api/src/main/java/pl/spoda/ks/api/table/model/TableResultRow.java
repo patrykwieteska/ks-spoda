@@ -29,6 +29,5 @@ public class TableResultRow {
     private Integer currentPosition;
     private Integer previousPosition;
     private String previousPositionReference;
-    private boolean matchInProgress;
-
+    private Boolean matchInProgress;
 }

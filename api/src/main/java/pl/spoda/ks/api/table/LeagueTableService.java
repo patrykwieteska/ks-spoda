@@ -29,17 +29,17 @@ public class LeagueTableService {
             List<MatchDetailsDto> matchDetailsList,
             PointCountingMethod pointCountingMethod
     ) {
-        Set<LeagueTableDto> currentMatchDayTable = leagueTableServiceDB.getCurrentLeagueTable( leagueId );
-        List<LeagueTableDto> updatedMatchTable = new ArrayList<>( currentMatchDayTable );
+        Set<LeagueTableDto> currentLeagueTable = leagueTableServiceDB.getCurrentLeagueTable( leagueId );
+        List<LeagueTableDto> updatedLeagueTable = new ArrayList<>( currentLeagueTable );
 
         matchDetailsList.forEach( matchDetail -> {
-            if (isPlayerInTable( currentMatchDayTable, matchDetail.getPlayerId() )) {
-                updateTableRow( matchDetail, updatedMatchTable );
+            if (isPlayerInTable( currentLeagueTable, matchDetail.getPlayerId() )) {
+                updateTableRow( matchDetail, updatedLeagueTable );
             } else {
-                updatedMatchTable.add( getNewRow( matchDetail, currentMatchDayTable.size(), pointCountingMethod ) );
+                updatedLeagueTable.add( getNewRow( matchDetail, currentLeagueTable.size(), pointCountingMethod ) );
             }
         } );
-        return sortTableService.getSortedTable( updatedMatchTable, pointCountingMethod, true );
+        return sortTableService.getSortedTable( updatedLeagueTable, pointCountingMethod, true );
     }
 
     private void updateTableRow(MatchDetailsDto matchDetail, List<LeagueTableDto> updatedLeagueTable) {
@@ -47,9 +47,10 @@ public class LeagueTableService {
                 .filter( tableRow -> tableRow.getPlayer().getId().equals( matchDetail.getPlayerId() ) )
                 .findFirst()
                 .ifPresent( row -> {
-                    row.setCurrentRating( matchDetail.getMatchDayRatingAfterMatch() );
+                    row.setCurrentRating( matchDetail.getLeagueRatingAfterMatch() );
                     row.setMatches( row.getMatches().add( BigDecimal.ONE ) );
                     row.setPointsTotal( row.getPointsTotal().add( new BigDecimal( matchDetail.getMatchPoints() ) ) );
+                    row.setMatchInProgress( matchDetail.getMatchInProgress() );
                 } );
     }
 
@@ -64,6 +65,8 @@ public class LeagueTableService {
                 .previousPosition( defaultPosition )
                 .standbyPosition( defaultPosition )
                 .currentRating( preparePointCountingMethod( pointCountingMethod, matchDetail.getLeagueRatingAfterMatch() ) )
+                .isNewPlayer( true )
+                .matchInProgress( matchDetail.getMatchInProgress() )
                 .build();
     }
 

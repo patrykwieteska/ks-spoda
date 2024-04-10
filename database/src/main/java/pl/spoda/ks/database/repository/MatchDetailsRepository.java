@@ -17,7 +17,7 @@ public interface MatchDetailsRepository extends JpaRepository<MatchDetails, Inte
             SELECT md.id from match_details md
                         where md.league_Id =:leagueId and md.player_Id=:playerId
                         order by md.id desc
-                        fetch first row only
+                        limit 1
             """,
     nativeQuery = true)
     Integer findNewestPlayerMatchInLeague(@Param("playerId") Integer playerId, @Param("leagueId") Integer leagueId);

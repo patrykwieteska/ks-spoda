@@ -71,14 +71,14 @@ public class TableRowsService {
                 wins = wins + calculateWins( match.getHomeGoals(), match.getAwayGoals() );
                 draws = draws + calculateDraws( match.getHomeGoals(), match.getAwayGoals() );
                 loses = loses + calculateLoses( match.getHomeGoals(), match.getAwayGoals() );
-                goalsScored = match.getHomeGoals();
-                goalsConceded = match.getAwayGoals();
+                goalsScored = goalsScored + match.getHomeGoals();
+                goalsConceded = goalsConceded + match.getAwayGoals();
             } else {
                 wins = wins + calculateWins( match.getAwayGoals(), match.getHomeGoals() );
                 draws = draws + calculateDraws( match.getAwayGoals(), match.getHomeGoals() );
                 loses = loses + calculateLoses( match.getAwayGoals(), match.getHomeGoals() );
-                goalsScored = match.getAwayGoals();
-                goalsConceded = match.getHomeGoals();
+                goalsScored = goalsScored +match.getAwayGoals();
+                goalsConceded = goalsConceded + match.getHomeGoals();
             }
         }
 
@@ -103,7 +103,7 @@ public class TableRowsService {
                         .getValue() )
                 .currentPosition( tablePlayerDetails.getCurrentPosition() )
                 .previousPosition( tablePlayerDetails.getPreviousPosition() )
-//                .matchInProgress( tablePlayerDetails != null )
+                .matchInProgress( tablePlayerDetails.getMatchInProgress())
                 .build();
     }
 
@@ -121,12 +121,12 @@ public class TableRowsService {
             return BigDecimal.ZERO;
         }
 
-        return pointsTotal.divide( BigDecimal.valueOf( matchCount ), RoundingMode.HALF_UP );
+        return pointsTotal.divide( BigDecimal.valueOf( matchCount ), 2,RoundingMode.HALF_UP );
     }
 
     private List<String> calculatePlayerForm(PlayerDto player, List<MatchDto> playerMatches) {
         return playerMatches.stream().
-                sorted( Comparator.comparing( MatchDto::getMatchTime ) )
+                sorted( Comparator.comparing( MatchDto::getMatchTime ).reversed() )
                 .limit( 5 )
                 .map( match -> mapMatchToForm( match, player ) )
                 .toList();

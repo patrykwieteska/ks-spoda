@@ -34,6 +34,9 @@ public class TableBase extends BaseEntity {
     @Column(name = "POINTS_TOTAL")
     private BigDecimal pointsTotal;
 
+    @Column(name = "MATCH_IN_PROGRESS")
+    private Boolean matchInProgress;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player_id", referencedColumnName = "id")
     @ToString.Exclude

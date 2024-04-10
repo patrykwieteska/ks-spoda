@@ -18,6 +18,7 @@ public class PlayerMapper {
         return PlayerDto.builder()
                 .alias( request.getAlias() )
                 .name( request.getName() )
+                .playerImg( request.getPlayerImg() )
                 .build();
     }
 
@@ -27,6 +28,7 @@ public class PlayerMapper {
                         .id( playerData.getId() )
                         .alias( playerData.getAlias() )
                         .name( playerData.getName() )
+                        .playerImg( playerData.getPlayerImg() )
                         .desc( playerData.getDesc() )
                         .build() )
                 .collect( Collectors.toSet());

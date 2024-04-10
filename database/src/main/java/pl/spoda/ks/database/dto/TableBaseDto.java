@@ -22,5 +22,7 @@ public abstract class TableBaseDto extends BaseDto implements Competition{
     private Integer standbyPosition;
     private BigDecimal matches;
     private BigDecimal pointsTotal;
+    private Boolean matchInProgress;
+    private Boolean isNewPlayer;
 }
 

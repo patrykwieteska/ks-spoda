@@ -50,6 +50,7 @@ public class MatchDayTableService {
                     row.setCurrentRating( matchDetail.getMatchDayRatingAfterMatch() );
                     row.setMatches( row.getMatches().add( BigDecimal.ONE ) );
                     row.setPointsTotal( row.getPointsTotal().add( new BigDecimal( matchDetail.getMatchPoints() ) ) );
+                    row.setMatchInProgress( matchDetail.getMatchInProgress() );
                 } );
     }
 
@@ -64,6 +65,8 @@ public class MatchDayTableService {
                 .previousPosition( defaultPosition )
                 .standbyPosition( defaultPosition )
                 .currentRating( preparePointCountingMethod( pointCountingMethod, matchDetail.getMatchDayRatingAfterMatch() ) )
+                .isNewPlayer( true )
+                .matchInProgress( matchDetail.getMatchInProgress() )
                 .build();
     }
 

@@ -51,6 +51,7 @@ public class SeasonTableService {
                     row.setCurrentRating( matchDetail.getSeasonRatingAfterMatch() );
                     row.setMatches( row.getMatches().add( BigDecimal.ONE ) );
                     row.setPointsTotal( row.getPointsTotal().add( new BigDecimal( matchDetail.getMatchPoints() ) ) );
+                    row.setMatchInProgress( matchDetail.getMatchInProgress() );
                 } );
     }
 
@@ -65,6 +66,8 @@ public class SeasonTableService {
                 .previousPosition( defaultPosition )
                 .standbyPosition( defaultPosition )
                 .currentRating( preparePointCountingMethod( pointCountingMethod, matchDetail.getSeasonRatingAfterMatch()) )
+                .isNewPlayer( true )
+                .matchInProgress( matchDetail.getMatchInProgress() )
                 .build();
     }
 

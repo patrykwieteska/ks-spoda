@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.api.commons.BaseResponse;
 import pl.spoda.ks.api.commons.ResponseResolver;
+import pl.spoda.ks.api.league.enums.TeamStructure;
 import pl.spoda.ks.api.match.matchdetails.MatchDetailsService;
 import pl.spoda.ks.api.match.model.*;
 import pl.spoda.ks.api.match.validator.MatchValidator;
@@ -12,15 +13,17 @@ import pl.spoda.ks.api.season.enums.PointCountingMethod;
 import pl.spoda.ks.api.table.LeagueTableService;
 import pl.spoda.ks.api.table.MatchDayTableService;
 import pl.spoda.ks.api.table.SeasonTableService;
+import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.*;
-import pl.spoda.ks.database.service.MatchDayServiceDB;
-import pl.spoda.ks.database.service.MatchDetailsServiceDB;
-import pl.spoda.ks.database.service.MatchServiceDB;
+import pl.spoda.ks.database.service.*;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -36,12 +39,13 @@ public class MatchService {
     private final SeasonTableService seasonTableService;
     private final LeagueTableService leagueTableService;
     private final MatchDetailsServiceDB matchDetailsServiceDB;
+    private final LeagueServiceDB leagueServiceDB;
+    private final GameTeamServiceDB gameTeamServiceDB;
 
     public ResponseEntity<BaseResponse> getMatchesByLeague(Integer leagueId) {
         List<MatchDto> leagueMatches = matchServiceDB.findMatchesByLeague( leagueId );
         List<Match> matches = matchMapper.mapToMatchList( leagueMatches );
         return responseResolver.prepareResponse( MatchListResponse.builder()
-                .leagueId( leagueId )
                 .matchList( matches )
                 .build() );
     }
@@ -50,21 +54,22 @@ public class MatchService {
         Integer matchDayId = request.getMatchDayId();
         MatchDayDto matchDay = matchDayServiceDB.getMatchDay( matchDayId );
         SeasonDto season = matchDay.getSeason();
+        LeagueDto league = leagueServiceDB.getSingleLeague( season.getLeagueId() );
         Integer leagueId = season.getLeagueId();
         List<Integer> requestPlayerIds = prepareMatchPlayerList( request );
         List<MatchDetailsDto> latestMatchDetails = matchDetailsService.getLatestMatchDetails( requestPlayerIds, leagueId );
         PointCountingMethod pointCountingMethod = PointCountingMethod.getByName( season.getPointCountingMethod() );
-
-        matchValidator.validateCreate( request, requestPlayerIds, leagueId, latestMatchDetails, matchDay );
+        TeamStructure teamStructure = TeamStructure.getByName( league.getTeamStructure() );
+        matchValidator.validateCreate( request, requestPlayerIds, leagueId, latestMatchDetails, matchDay,teamStructure );
 
         List<MatchDetailsDto> newMatchDetails = matchDetailsService.createNewMatchDetails( requestPlayerIds, request, latestMatchDetails, season, leagueId );
 
         List<MatchDayTableDto> matchDayTable = matchDayTableService.getCurrentTable( matchDayId, newMatchDetails,
-                pointCountingMethod );
+                PointCountingMethod.POINTS_TOTAL );
         List<SeasonTableDto> seasonTable = seasonTableService.getCurrentTable( season.getId(), newMatchDetails,
                 pointCountingMethod );
         List<LeagueTableDto> leagueTable = leagueTableService.getCurrentTable( leagueId, newMatchDetails,
-                pointCountingMethod );
+                PointCountingMethod.RATING );
 
         MatchDto matchDto = matchMapper.mapToNewDto( request, matchDayTable );
 
@@ -138,5 +143,27 @@ public class MatchService {
         matchServiceDB.removeMatch( matchDto.getId(), storedMatchDetails, matchDayTable, seasonTable, leagueTable );
 
         return responseResolver.prepareResponse( MatchCreated.builder().matchId( matchId ).build() );
+    }
+
+    @LogEvent
+    public ResponseEntity<BaseResponse> getMatchesByMatchDay(Integer matchDayId) {
+        List<MatchDto> matchDtoList = matchServiceDB.findMatchesByMatchDay( matchDayId );
+        List<Match> matches = matchMapper.mapToMatchList( matchDtoList ).stream()
+                .sorted( Comparator.comparing( Match::getId,Comparator.naturalOrder() ).reversed()).toList();
+        return responseResolver.prepareResponse( MatchListResponse.builder()
+                .matchList( matches )
+                .build() );
+    }
+
+    public ResponseEntity<BaseResponse> initGameTeams(Integer matchDayId) {
+        List<GameTeamDto> gameTeams = gameTeamServiceDB.getGameTeams();
+        List<Integer> usedGameTeams = gameTeamServiceDB.getUsedGameTeams(matchDayId);
+        List<GameTeam> finalList = gameTeams.stream()
+                .filter( gt -> !usedGameTeams.contains( gt.getId() ) )
+                .map( matchMapper::mapToGameTeam )
+                .sorted(Comparator.comparing( GameTeam::getName,Collator.getInstance(new Locale("pl") )))
+                .toList();
+
+        return responseResolver.prepareResponse( AvailableGameTeams.builder().gameTeams( finalList ).build() );
     }
 }

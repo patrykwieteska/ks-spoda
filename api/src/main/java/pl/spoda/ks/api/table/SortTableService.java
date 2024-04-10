@@ -31,7 +31,7 @@ public class SortTableService {
         for (int i = 0; i < sortedTable.size(); i++) {
             if (isNewMatch) {
                 sortedTable.get( i ).setStandbyPosition( sortedTable.get( i ).getPreviousPosition() );
-                sortedTable.get( i ).setPreviousPosition( sortedTable.get( i ).getCurrentPosition() );
+                sortedTable.get( i ).setPreviousPosition( getPreviousPosition( sortedTable, i ) );
             }
             sortedTable.get( i ).setCurrentPosition( i + 1 );
         }
@@ -39,11 +39,18 @@ public class SortTableService {
         return sortedTable;
     }
 
+    private static <T extends TableBaseDto> Integer getPreviousPosition(List<T> sortedTable, int i) {
+        T row = sortedTable.get( i );
+        return Boolean.TRUE.equals(row.getIsNewPlayer())
+                ? i + 1
+                : row.getCurrentPosition();
+    }
+
     private <T extends TableBaseDto> Function<T, BigDecimal> getComparingFunction(PointCountingMethod pointCountingMethod) {
         return switch (pointCountingMethod) {
             case RATING -> TableBaseDto::getCurrentRating;
             case POINTS_TOTAL -> TableBaseDto::getPointsTotal;
-            case POINTS_PER_MATCH -> x -> x.getMatches().divide( x.getPointsTotal(), RoundingMode.HALF_UP );
+            case POINTS_PER_MATCH -> x -> x.getPointsTotal().divide( x.getMatches(), 2,RoundingMode.HALF_UP );
         };
     }
 

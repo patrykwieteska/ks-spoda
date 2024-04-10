@@ -76,15 +76,14 @@ public class MatchDayServiceDB {
             List<MatchDay> storedMatchDays,
             Integer seasonId
     ) {
-        if (matchDayRepository.findByDate( matchDayDto.getDate() ).isPresent()) {
-            throw new SpodaApplicationException( String.format( "MatchDay with date: %s already exists",
+        if (matchDayRepository.findByDateAndSeasonId( matchDayDto.getDate(),seasonId ).isPresent()) {
+            throw new SpodaApplicationException( String.format( "Istnieje już kolejka z dnia %s",
                     matchDayDto.getDate() ) );
         }
 
 
         if (isAnyMatchDayUnfinished( storedMatchDays ))
-            throw new SpodaApplicationException( String.format( "There are some matchDays unfinished in season: %d",
-                    seasonId ) );
+            throw new SpodaApplicationException(  InfoMessage.UNFINISHED_MATCH_DAYS);
 
         if (storedMatchDays.stream()
                 .map( MatchDay::getDate )
@@ -133,10 +132,6 @@ public class MatchDayServiceDB {
 
     @Transactional
     public void deleteMatchDay(Integer matchDayId) {
-      /*
-        TODO dodanie walidacji na istniejące mecze po dodaniu meczów
-      */
-
         Optional<MatchDay> storedMatchDay = matchDayRepository.findById( matchDayId );
 
         if (storedMatchDay.isEmpty())

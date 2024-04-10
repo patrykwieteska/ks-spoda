@@ -84,4 +84,24 @@ public class LeagueTableServiceDB {
                 .map( mapper::mapToLeagueTableDto )
                 .toList();
     }
+
+    public void addPlayerToLeague(
+            Player newPlayer,
+            Integer leagueId
+    ) {
+        List<LeagueTable> leagueTable = leagueTableRepository.findByLeagueId( leagueId );
+        LeagueTable newPlayerTable = LeagueTable.builder()
+                .leagueId( leagueId )
+                .currentPosition( leagueTable.size()+1 )
+                .previousPosition( leagueTable.size()+1 )
+                .player( newPlayer )
+                .currentRating( new BigDecimal( initialRating ) )
+                .matches( BigDecimal.ZERO )
+                .pointsTotal( BigDecimal.ZERO )
+                .build();
+
+        baseServiceDB.createEntity( newPlayerTable );
+        leagueTableRepository.save( newPlayerTable );
+
+    }
 }

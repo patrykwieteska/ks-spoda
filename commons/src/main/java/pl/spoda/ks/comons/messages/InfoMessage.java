@@ -18,6 +18,9 @@ public class InfoMessage {
             "zakończeniem kolejki";
     public static final String REMOVE_NEWEST_MATCHES = "Istnieją nowsze mecze w tej lidze. Możliwe jest usunięcie " +
             "jedynie najnowszego meczu w danej lidze";
+    public static final String INVALID_TEAM_STRUCTURE = "Dla wybranej struktury drużyn liczba graczy w drużynie musi " +
+            "być równa";
+    public static final String UNFINISHED_MATCH_DAYS = "Istnieją niezakończone kolejki w sezonie";
 
     private InfoMessage() {
         throw new IllegalStateException( "Utility class" );

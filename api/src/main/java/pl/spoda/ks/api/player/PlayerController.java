@@ -18,6 +18,7 @@ public class PlayerController {
 
     @PostMapping("/create")
     @LogEvent
+    @CrossOrigin
     public ResponseEntity<BaseResponse> addPlayer(
             @Valid @RequestBody PlayerRequest playerRequest
     ) {
@@ -55,5 +56,14 @@ public class PlayerController {
             @PathVariable(name="playerId") Integer playerId
     ) {
         return playerService.deletePlayer(playerId);
+    }
+
+    @GetMapping("/league")
+    @LogEvent
+    @CrossOrigin
+    public ResponseEntity<BaseResponse> getLeaguePlayersBySeason(
+            @RequestParam(name="seasonId") Integer seasonId
+    ) {
+        return playerService.getLeaguePlayersBySeason( seasonId );
     }
 }
