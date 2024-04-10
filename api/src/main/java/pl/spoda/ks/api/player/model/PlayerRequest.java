@@ -13,4 +13,6 @@ public class PlayerRequest {
     @NotNull(message = "Alias cannot be null")
     @Size(min = 3, max=30, message = "Alias size is between 3 and 20 characters")
     private String alias;
+    private Integer leagueId;
+    private String playerImg;
 }

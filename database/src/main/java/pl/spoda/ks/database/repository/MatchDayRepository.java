@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface MatchDayRepository extends JpaRepository<MatchDay,Integer> {
 
     List<MatchDay> findBySeasonId(Integer seasonId);
-    Optional<MatchDay> findByDate(LocalDate date);
+    Optional<MatchDay> findByDateAndSeasonId(LocalDate date, Integer seasonId);
 
     @Query(nativeQuery = true,value = """
             SELECT DISTINCT ID FROM MATCH_DAY WHERE SEASON_ID IN (:seasonIds);

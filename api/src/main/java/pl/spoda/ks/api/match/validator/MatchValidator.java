@@ -3,6 +3,7 @@ package pl.spoda.ks.api.match.validator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Service;
+import pl.spoda.ks.api.league.enums.TeamStructure;
 import pl.spoda.ks.api.match.model.CreateMatchRequest;
 import pl.spoda.ks.api.match.model.EditMatchRequest;
 import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
@@ -21,12 +22,40 @@ public class MatchValidator {
 
     private final LeagueTableServiceDB leagueTableServiceDB;
 
-    public void validateCreate(CreateMatchRequest request, List<Integer> playerList, Integer leagueId, List<MatchDetailsDto> latestMatchDetails, MatchDayDto matchDay) {
+    public void validateCreate(CreateMatchRequest request, List<Integer> playerList, Integer leagueId, List<MatchDetailsDto> latestMatchDetails, MatchDayDto matchDay, TeamStructure teamStructure) {
         validatePlayersInLeague( playerList, leagueId );
         validateMatchesInProgress( latestMatchDetails );
         validateMatchDay( matchDay );
         validatePlayers( request.getHomePlayers(), request.getAwayPlayers() );
         validateGameTeams( request.getHomeGameTeamId(), request.getAwayGameTeamId() );
+        validateTeamStructure( request, teamStructure );
+    }
+
+    private void validateTeamStructure(CreateMatchRequest request, TeamStructure teamStructure) {
+        boolean isValid = false;
+        String errorMessage = "Nieprawidłowa ilość graczy";
+        List<Integer> homePlayers = request.getHomePlayers();
+        List<Integer> awayPlayers = request.getAwayPlayers();
+        switch (teamStructure) {
+            case MIXED -> isValid =
+                    !homePlayers.isEmpty() && homePlayers.size() <= 2 && !awayPlayers.isEmpty() && awayPlayers.size() <= 2;
+
+            case DOUBLE -> {
+                isValid = homePlayers.size() == 2 && awayPlayers.size() == 2;
+                errorMessage = InfoMessage.getMessage( InfoMessage.INVALID_TEAM_STRUCTURE,"2" );
+            }
+            case SINGLE -> {
+                isValid = homePlayers.size() == 1 && awayPlayers.size() == 1;
+                errorMessage = InfoMessage.getMessage( InfoMessage.INVALID_TEAM_STRUCTURE,"1" );
+            }
+        }
+
+
+        if (!isValid) {
+            throw new SpodaApplicationException( errorMessage );
+        }
+
+
     }
 
     private void validateGameTeams(Integer homeGameTeamId, Integer awayGameTeamId) {
@@ -76,7 +105,7 @@ public class MatchValidator {
     public void validateEdit(MatchDto matchDto, MatchDayDto matchDayDto, EditMatchRequest request) {
         validateMatchIsFinished( matchDto.getIsFinished() );
         validateMatchDay( matchDayDto );
-        validateGameTeams( request.getHomeGameTeamId(), request.getAwayGameTeamId() );
+//        validateGameTeams( request.getHomeGameTeamId(), request.getAwayGameTeamId() );
 
     }
 

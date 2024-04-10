@@ -1,4 +1,5 @@
 package pl.spoda.ks.database.dto;
+
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

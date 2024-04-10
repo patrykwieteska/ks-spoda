@@ -26,5 +26,6 @@ public class SeasonData extends BaseResponse {
     private BigDecimal initialRating;
     private PointCountingMethod pointCountingMethod;
     private RatingType ratingType;
+    private Boolean hasNoActiveMatchDay;
 
 }

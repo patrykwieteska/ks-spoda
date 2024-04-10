@@ -6,10 +6,10 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import pl.spoda.ks.api.commons.BaseResponse;
 import pl.spoda.ks.api.league.model.LeagueData;
-import pl.spoda.ks.api.matchday.model.init.MatchDayData;
+import pl.spoda.ks.api.player.model.PlayerData;
 import pl.spoda.ks.api.season.model.SeasonData;
 
-import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -17,7 +17,8 @@ import java.util.List;
 @SuperBuilder
 public class InitSeasonResponse extends BaseResponse {
 
+    private Integer seasonId;
     private LeagueData leagueData;
     private SeasonData seasonData;
-    private List<MatchDayData> matchDayList;
+    private Set<PlayerData> leaguePlayers;
 }

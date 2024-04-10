@@ -8,6 +8,8 @@ import pl.spoda.ks.database.dto.GameTeamDto;
 import pl.spoda.ks.database.mapper.EntityMapper;
 import pl.spoda.ks.database.repository.GameTeamRepository;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class GameTeamServiceDB {
@@ -23,5 +25,15 @@ public class GameTeamServiceDB {
                 .orElseThrow(
                         () -> new SpodaApplicationException( "Nie znaleziono drużyny o id=" + gameTeamId ) )
         );
+    }
+
+    public List<GameTeamDto> getGameTeams() {
+        return gameTeamRepository.findAll().stream()
+                .map( mapper::mapToGameTeamDto )
+                .toList();
+    }
+
+    public List<Integer> getUsedGameTeams(Integer matchDayId) {
+        return gameTeamRepository.getUsedGameTeam(matchDayId);
     }
 }

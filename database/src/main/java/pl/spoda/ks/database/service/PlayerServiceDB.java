@@ -10,7 +10,9 @@ import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.comons.exceptions.SpodaDatabaseException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.comons.utils.CollectionUtils;
+import pl.spoda.ks.database.dto.LeagueTableDto;
 import pl.spoda.ks.database.dto.PlayerDto;
+import pl.spoda.ks.database.dto.TableBaseDto;
 import pl.spoda.ks.database.entity.LeagueTable;
 import pl.spoda.ks.database.entity.Player;
 import pl.spoda.ks.database.mapper.EntityMapper;
@@ -27,18 +29,22 @@ public class PlayerServiceDB {
 
     private final PlayerRepository playerRepository;
     private final BaseServiceDB baseServiceDB;
-    private final LeagueTableRepository leagueTableRepository;
+    private final LeagueTableServiceDB leagueTableServiceDB;
     private final EntityMapper mapper = Mappers.getMapper( EntityMapper.class );
 
     @LogEvent
     @Transactional
-    public Integer add(PlayerDto playerDto) {
+    public Integer add(
+            PlayerDto playerDto,
+            Integer leagueId
+    ) {
         Optional<Player> existingPlayer = playerRepository.findByAlias( playerDto.getAlias() );
         if (existingPlayer.isPresent()) {
             throw new SpodaDatabaseException( String.format( InfoMessage.ALIAS_ALREADY_EXISTS,
                     playerDto.getAlias() ) );
         }
         Player newPlayer = savePlayer( playerDto );
+        leagueTableServiceDB.addPlayerToLeague(newPlayer,leagueId);
         return newPlayer.getId();
     }
 
@@ -135,9 +141,9 @@ public class PlayerServiceDB {
     }
 
     public List<PlayerDto> getPlayerListByLeagueId(Integer leagueId) {
-        List<LeagueTable> leaguePlayers = leagueTableRepository.findByLeagueId( leagueId );
+        List<LeagueTableDto> leaguePlayers = leagueTableServiceDB.getLeagueTable( leagueId );
         return CollectionUtils.emptyIfNull( leaguePlayers ).stream()
-                .map( data -> getPlayer( data.getPlayer().getId() ) )
+                .map( TableBaseDto::getPlayer )
                 .toList();
     }
 }

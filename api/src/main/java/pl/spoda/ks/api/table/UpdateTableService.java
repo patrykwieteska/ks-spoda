@@ -42,11 +42,14 @@ public class UpdateTableService {
 
         row.setPointsTotal( updatedPointsValue );
         row.setCurrentRating( updatedRating );
+        row.setMatchInProgress( updatedPlayerMatch.getMatchInProgress() );
     }
 
     private BigDecimal getUpdatedRatingValue(MatchDetailsDto updatedPlayerMatch, CompetitionType competitionType, PointCountingMethod pointCountingMethod) {
         if (!pointCountingMethod.equals( PointCountingMethod.RATING )) {
-            return null;
+            return competitionType.equals( CompetitionType.LEAGUE )
+                    ? updatedPlayerMatch.getLeagueRatingAfterMatch()
+                    : null;
         }
 
         return switch (competitionType) {
@@ -93,10 +96,11 @@ public class UpdateTableService {
         BigDecimal updatedRating = getRatingBefore( matchPlayerDetails, row.getCompetitionType() );
         BigDecimal updatedPointsTotal = row.getPointsTotal().subtract( new BigDecimal( matchPlayerDetails.getMatchPoints() ) );
         row.setCurrentRating( updatedRating );
-        row.setCurrentPosition( row.getPreviousPosition());
+        row.setCurrentPosition( row.getPreviousPosition() );
         row.setPreviousPosition( row.getStandbyPosition() );
         row.setMatches( row.getMatches().subtract( BigDecimal.ONE ) );
         row.setPointsTotal( updatedPointsTotal );
+        row.setMatchInProgress( false );
     }
 
     private BigDecimal getRatingBefore(

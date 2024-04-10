@@ -116,4 +116,11 @@ public class MatchServiceDB {
         matchDayTableServiceDB.saveTable( matchDayTable );
         leagueTableServiceDB.saveTable( leagueTable );
     }
+
+    public List<MatchDto> findMatchesByMatchDay(Integer matchDayId) {
+        List<Match> leagueMatches = matchRepository.findMatchesByMatchDayIds( List.of(matchDayId) );
+        return leagueMatches.stream()
+                .map( mapper::mapToMatchDto )
+                .toList();
+    }
 }

@@ -40,10 +40,20 @@ public class MatchMapper {
                 .build();
     }
 
-    private GameTeamDto mapGameTeam(MatchTeamDto matchTeam) {
+    private GameTeam mapGameTeam(MatchTeamDto matchTeam) {
         return Optional.ofNullable( matchTeam.getGameTeamId() )
                 .map( gameTeamServiceDB::getGameTeamById )
+                .map(this::mapToGameTeam )
                 .orElse( null );
+    }
+
+    public GameTeam mapToGameTeam(GameTeamDto gameTeamDto) {
+
+        return GameTeam.builder()
+                .id( gameTeamDto.getId() )
+                .name( gameTeamDto.getName() )
+                .badgeImg( gameTeamDto.getBadgeImg() )
+                .build();
     }
 
     public MatchDto mapToNewDto(
@@ -94,7 +104,7 @@ public class MatchMapper {
         matchDto.setHomeGoals( request.getHomeGoals() );
         matchDto.setIsFinished( Optional.ofNullable( request.getIsComplete() ).orElse( matchDto.getIsFinished() ) );
         matchDto.getAwayTeam().setGameTeamId( Optional.ofNullable( request.getAwayGameTeamId() ).orElse( matchDto.getAwayTeam().getGameTeamId() ) );
-        matchDto.getHomeTeam().setGameTeamId( Optional.ofNullable( request.getHomeGameTeamId() ).orElse( matchDto.getAwayTeam().getGameTeamId() ) );
+        matchDto.getHomeTeam().setGameTeamId( Optional.ofNullable( request.getHomeGameTeamId() ).orElse( matchDto.getHomeTeam().getGameTeamId() ) );
         return matchDto;
     }
 }

@@ -4,16 +4,26 @@ spring:
     activate:
       on-profile: dev
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
-  jpa.database-platform: org.hibernate.dialect.H2Dialect
+# h2:
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+#    password:
+#    driverClassName: org.h2.Driver
+# mysql:
+#    url: jdbc:mysql://localhost:3306/KS_SPODA_DB?allowPublicKeyRetrieval=true&useSSL=false # URL PROD
+#    username: ks_spoda_test_user #PROD
+#    password: PASS@!TEST2 #PROD
+    url: jdbc:mysql://localhost:3306/KS_SPODA_DB_DEV?allowPublicKeyRetrieval=true&useSSL=false # URL DEV
+    username: ks_spoda_user_dev # DEV
+    password: PASS@!DEV # DEV
+    driverClassName: com.mysql.cj.jdbc.Driver
   h2:
     console.enabled: true
   liquibase:
     change-log: ./database/changelog/changelog-master.yaml
     contexts: dev
   jpa:
+    hibernate:
+      ddl-auto: none
     show-sql: true
 #---

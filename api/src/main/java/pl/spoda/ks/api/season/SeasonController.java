@@ -36,6 +36,7 @@ public class SeasonController {
 
     @GetMapping("init/{id}")
     @LogEvent
+    @CrossOrigin
     public ResponseEntity<BaseResponse> initSeason(
             @PathVariable(name = "id") Integer seasonId
     ) {

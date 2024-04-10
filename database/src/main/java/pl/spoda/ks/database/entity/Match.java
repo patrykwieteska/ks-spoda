@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
 
 @ToString(callSuper = true)
-@Table(name = "MATCH")
+@Table(name = "MATCH_GAME")
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder

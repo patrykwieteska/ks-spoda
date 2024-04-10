@@ -13,8 +13,6 @@ import java.util.List;
 @ToString(callSuper = true)
 @SuperBuilder
 public class MatchListResponse extends BaseResponse {
-
-    private Integer leagueId;
     private List<Match> matchList;
 
 }

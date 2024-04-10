@@ -8,7 +8,6 @@ import pl.spoda.ks.database.entity.*;
 @Mapper
 public interface EntityMapper {
 
-    @Mapping( target = "playerList", source = "players")
     LeagueDto mapToLeagueDto(League league);
     League mapToLeagueEntity(LeagueDto leagueDto);
     MatchDayDto mapToMatchDayDto(MatchDay matchDay);

@@ -50,4 +50,16 @@ public class TableController {
         }
         return tableService.getSeasonTable( seasonId );
     }
+
+    @GetMapping("/initMatchDayTable")
+    @LogEvent
+    @CrossOrigin
+    public ResponseEntity<BaseResponse> initMatchDayTable(
+            @RequestParam(name = "matchDayId") Integer matchDayId
+    ) {
+        if (matchDayId == null) {
+            throw new SpodaApplicationException( "matchDayId is null" );
+        }
+        return tableService.getMatchDayTable( matchDayId );
+    }
 }

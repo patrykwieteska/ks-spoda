@@ -41,7 +41,7 @@ public class SeasonServiceDB {
         int storedSeasonCount = validateUnfinishedSeasonsInTheLeague( storedLeague.getId() );
 
         Season season = mapper.mapToSeason( seasonDto );
-        season.setLeagueSeasonCount( storedSeasonCount+1 );
+        season.setLeagueSeasonCount( storedSeasonCount + 1 );
         season.league( storedLeague );
         baseServiceDB.createEntity( season );
 
@@ -57,14 +57,14 @@ public class SeasonServiceDB {
         List<Season> seasons = seasonRepository.findByLeagueId( leagueId );
         if (seasons.stream()
                 .anyMatch( season -> BooleanUtils.isNotTrue( season.getIsFinished() ) ))
-            throw new SpodaApplicationException(InfoMessage.getMessage( InfoMessage.UNFINISHED_SEASONS_IN_LEAGUE,
-                    leagueId.toString() ));
+            throw new SpodaApplicationException( InfoMessage.getMessage( InfoMessage.UNFINISHED_SEASONS_IN_LEAGUE,
+                    leagueId.toString() ) );
 
         return seasons.size();
     }
 
     public List<SeasonDto> getSeasonsByLeague(Integer leagueId) {
-        return seasonRepository.findByLeagueId(leagueId).stream()
+        return seasonRepository.findByLeagueId( leagueId ).stream()
                 .map( mapper::mapToSeasonDto )
                 .toList();
     }
@@ -89,7 +89,7 @@ public class SeasonServiceDB {
         checkIfSeasonExists( seasonId, storedSeason );
         storedSeason
                 .isFinished( true )
-                .endDate( dateService.getCurrentDate());
+                .endDate( dateService.getCurrentDate() );
         baseServiceDB.updateEntity( storedSeason );
         seasonRepository.save( storedSeason );
     }
@@ -97,5 +97,16 @@ public class SeasonServiceDB {
     private void validateLeague(Integer leagueId, League storedLeague) {
         if (storedLeague == null)
             throw new SpodaApplicationException( String.format( "League with id: %d is not exist", leagueId ) );
+    }
+
+    public Integer findLeagueForSeason(Integer seasonId) {
+        return seasonRepository.findById( seasonId ).map( Season::getLeagueId ).orElseThrow(
+                () -> new SpodaApplicationException( "LeagueId for season: " + seasonId + " not found." )
+        );
+    }
+
+
+    public boolean hasNoActiveMatchDay(Integer seasonId) {
+        return seasonRepository.countActiveMatchDays( seasonId ).equals( 0 );
     }
 }

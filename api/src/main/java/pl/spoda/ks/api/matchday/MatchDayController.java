@@ -15,14 +15,26 @@ public class MatchDayController {
 
     private final MatchDayService matchDayService;
 
+    @GetMapping("/list")
+    @LogEvent
+    @CrossOrigin
+    public ResponseEntity<BaseResponse> getMatchDayList(
+            @RequestParam(name = "seasonId") Integer seasonId
+    ) {
+        return matchDayService.getMatchDayList( seasonId );
+    }
+
+
     @PostMapping
     @LogEvent
+    @CrossOrigin
     public ResponseEntity<BaseResponse> createMatchDay(
             @RequestBody CreateMatchDayRequest request
     ) {
         return matchDayService.createMatchDay( request );
     }
 
+    @CrossOrigin
     @PutMapping("/complete")
     @LogEvent
     public ResponseEntity<BaseResponse> completeLeague(
@@ -44,6 +56,16 @@ public class MatchDayController {
     public ResponseEntity<BaseResponse> deleteMatchDay(
             @PathVariable("id") Integer matchDayId
     ) {
-       return matchDayService.deleteMatchDay(matchDayId);
+        return matchDayService.deleteMatchDay( matchDayId );
+    }
+
+
+    @GetMapping("/players")
+    @LogEvent
+    @CrossOrigin
+    public  ResponseEntity <BaseResponse> getMatchDayPlayers(
+            @RequestParam("matchDayId") Integer matchDayId
+    ) {
+        return matchDayService.getMatchDayPlayers(matchDayId);
     }
 }

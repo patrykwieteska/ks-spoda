@@ -14,6 +14,8 @@ import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.PlayerDto;
 import pl.spoda.ks.database.service.PlayerServiceDB;
+import pl.spoda.ks.database.service.SeasonServiceDB;
+
 import java.util.List;
 import java.util.Set;
 
@@ -25,16 +27,18 @@ public class PlayerService {
     private final PlayerServiceDB playerServiceDB;
     private final PlayerMapper playerMapper;
     private final ResponseResolver responseResolver;
+    private final SeasonServiceDB seasonServiceDB;
 
     @LogEvent
     public ResponseEntity<BaseResponse> addPlayer(PlayerRequest playerRequest) {
         Integer newPlayerId;
         try {
-            newPlayerId = playerServiceDB.add( playerMapper.mapToPlayerDto( playerRequest ) );
+            newPlayerId = playerServiceDB.add( playerMapper.mapToPlayerDto( playerRequest ),playerRequest.getLeagueId() );
         } catch (SpodaApplicationException e) {
             log.error( e.getMessage(), e );
             return responseResolver.prepareResponse( HttpStatus.CONFLICT, InfoMessage.ALIAS_ALREADY_EXISTS );
         }
+
         return responseResolver.prepareResponseCreated( StoredPlayer.builder().playerId( newPlayerId ).build() );
     }
 
@@ -77,9 +81,18 @@ public class PlayerService {
     }
 
     @LogEvent
-    public ResponseEntity<BaseResponse> getPlayersByLeague(Integer leagueId) {
-        List<PlayerDto> playerDtos = playerServiceDB.getPlayerListByLeagueId(leagueId);
-        Set<PlayerData> players = playerMapper.mapToPlayerDataList( playerDtos );
+    public ResponseEntity<BaseResponse> getResponseOfLeaguePlayers(Integer leagueId) {
+        Set<PlayerData> players = getPlayersByLeague( leagueId );
         return responseResolver.prepareResponse( PlayerListResponse.builder().players( players ).build() );
+    }
+
+    public Set<PlayerData> getPlayersByLeague(Integer leagueId) {
+        List<PlayerDto> playerDtos = playerServiceDB.getPlayerListByLeagueId(leagueId);
+        return playerMapper.mapToPlayerDataList( playerDtos );
+    }
+
+    public ResponseEntity<BaseResponse> getLeaguePlayersBySeason(Integer seasonId) {
+        Integer leagueId = seasonServiceDB.findLeagueForSeason(seasonId);
+        return getResponseOfLeaguePlayers( leagueId );
     }
 }
