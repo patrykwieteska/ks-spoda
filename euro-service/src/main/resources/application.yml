@@ -1,0 +1,3 @@
+euro:
+  service:
+    url: http://localhost:8024/api/euro

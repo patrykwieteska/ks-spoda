@@ -23,5 +23,8 @@ public class SeasonRequest {
     private RatingType ratingType;
     @NotNull(message = "request.pointCountingMethod is null")
     private PointCountingMethod pointCountingMethod;
+    private Boolean isEuro;
+    private String image;
+    private String seasonName;
 
 }

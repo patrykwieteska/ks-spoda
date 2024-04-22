@@ -38,7 +38,13 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.7.0</version>
+            <version>1.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.spoda.ks.euro</groupId>
+            <artifactId>euro-service</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

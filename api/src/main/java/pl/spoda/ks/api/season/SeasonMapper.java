@@ -32,6 +32,9 @@ public class SeasonMapper {
                 .leagueId( request.getLeagueId() )
                 .isFinished( false )
                 .pointCountingMethod( request.getPointCountingMethod().name() )
+                .isEuro( request.getIsEuro() )
+                .image( request.getImage() )
+                .seasonName(request.getSeasonName())
                 .build();
 
         if (PointCountingMethod.RATING.equals( request.getPointCountingMethod() )) {
@@ -61,6 +64,9 @@ public class SeasonMapper {
                 .pointCountingMethod( PointCountingMethod.getByName( seasonDto.getPointCountingMethod() ) )
                 .seasonCount( seasonDto.getLeagueSeasonCount() )
                 .ratingType( RatingType.getByName( seasonDto.getRatingType() ) )
+                .isEuro( seasonDto.getIsEuro() )
+                .image(seasonDto.getImage())
+                .seasonName(seasonDto.getSeasonName())
                 .build();
     }
 }
