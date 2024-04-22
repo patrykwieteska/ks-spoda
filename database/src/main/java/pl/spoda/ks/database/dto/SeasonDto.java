@@ -23,5 +23,8 @@ public class SeasonDto extends BaseDto {
     private String pointCountingMethod;
     private String ratingType;
     private Integer leagueSeasonCount;
+    private Boolean isEuro;
+    private String image;
+    private String seasonName;
 
 }

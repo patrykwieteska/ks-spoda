@@ -24,7 +24,7 @@ public class Season extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="LEAGUE_ID",nullable = false,insertable = false,updatable = false)
+    @Column(name = "LEAGUE_ID", nullable = false, insertable = false, updatable = false)
     private Integer leagueId;
     @Column(name = "START_DATE")
     private LocalDate startDate;
@@ -32,14 +32,20 @@ public class Season extends BaseEntity {
     private LocalDate endDate;
     @Column(name = "IS_FINISHED")
     private Boolean isFinished;
-    @Column(name = "INITIAL_RATING",updatable = false)
+    @Column(name = "INITIAL_RATING", updatable = false)
     private BigDecimal initialRating;
-    @Column(name="POINT_COUNTING_METHOD")
+    @Column(name = "POINT_COUNTING_METHOD")
     private String pointCountingMethod;
-    @Column(name="RATING_TYPE")
+    @Column(name = "RATING_TYPE")
     private String ratingType;
-    @Column(name="LEAGUE_SEASON_COUNT")
+    @Column(name = "LEAGUE_SEASON_COUNT")
     private Integer leagueSeasonCount;
+    @Column(name = "IS_EURO")
+    private Boolean isEuro;
+    @Column(name = "IMAGE")
+    private String image;
+    @Column(name="SEASON_NAME")
+    private String seasonName;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
@@ -47,24 +53,24 @@ public class Season extends BaseEntity {
     private List<MatchDay> matchDayList;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="LEAGUE_ID")
+    @JoinColumn(name = "LEAGUE_ID")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private League league;
 
 
     public Season isFinished(boolean isFinished) {
-        this.isFinished=isFinished;
+        this.isFinished = isFinished;
         return this;
     }
 
     public Season endDate(LocalDate endDate) {
-        this.endDate=endDate;
+        this.endDate = endDate;
         return this;
     }
 
     public Season league(League league) {
-        this.league=league;
+        this.league = league;
         return this;
     }
 }

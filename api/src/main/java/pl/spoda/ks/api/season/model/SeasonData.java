@@ -27,5 +27,8 @@ public class SeasonData extends BaseResponse {
     private PointCountingMethod pointCountingMethod;
     private RatingType ratingType;
     private Boolean hasNoActiveMatchDay;
+    private Boolean isEuro;
+    private String image;
+    private String seasonName;
 
 }
