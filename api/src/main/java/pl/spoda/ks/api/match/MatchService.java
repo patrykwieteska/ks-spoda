@@ -1,8 +1,10 @@
 package pl.spoda.ks.api.match;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.spoda.ks.api.commons.BaseResponse;
 import pl.spoda.ks.api.commons.ResponseResolver;
 import pl.spoda.ks.api.league.enums.TeamStructure;
@@ -41,6 +43,8 @@ public class MatchService {
     private final MatchDetailsServiceDB matchDetailsServiceDB;
     private final LeagueServiceDB leagueServiceDB;
     private final GameTeamServiceDB gameTeamServiceDB;
+    private final EuroMatchService euroMatchService;
+    private final MatchTeamsResolver matchTeamsResolver;
 
     public ResponseEntity<BaseResponse> getMatchesByLeague(Integer leagueId) {
         List<MatchDto> leagueMatches = matchServiceDB.findMatchesByLeague( leagueId );
@@ -50,8 +54,16 @@ public class MatchService {
                 .build() );
     }
 
+    @Transactional
     public ResponseEntity<BaseResponse> createMatch(CreateMatchRequest request) {
         Integer matchDayId = request.getMatchDayId();
+        Pair<Integer,Integer> matchTeams = matchTeamsResolver.prepareMatchTeams(request.getHomeGameTeamId(),
+                request.getAwayGameTeamId()
+                , request.getEuroMatchId());
+
+        request.setHomeGameTeamId( matchTeams.getFirst() );
+        request.setAwayGameTeamId( matchTeams.getSecond() );
+
         MatchDayDto matchDay = matchDayServiceDB.getMatchDay( matchDayId );
         SeasonDto season = matchDay.getSeason();
         LeagueDto league = leagueServiceDB.getSingleLeague( season.getLeagueId() );
@@ -79,7 +91,7 @@ public class MatchService {
                 seasonTable,
                 matchDayTable,
                 newMatchDetails );
-
+        euroMatchService.updateEuroMatch(matchDto, season.getIsEuro(), false);
         return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( newMatchId ).build() );
     }
 
@@ -92,10 +104,17 @@ public class MatchService {
         return requestedPlayers;
     }
 
+    @Transactional
     public ResponseEntity<BaseResponse> editMatch(Integer matchId, EditMatchRequest request) {
+        Pair<Integer,Integer> matchTeams = matchTeamsResolver.prepareMatchTeams(request.getHomeGameTeamId(),
+                request.getAwayGameTeamId()
+                , request.getEuroMatchId());
+
+        request.setHomeGameTeamId( matchTeams.getFirst() );
+        request.setAwayGameTeamId( matchTeams.getSecond() );
+
         MatchDto matchDto = matchServiceDB.getMatchById( matchId );
         MatchDayDto matchDayDto = matchDayServiceDB.getMatchDay( matchDto.getMatchDayId() );
-
         matchValidator.validateEdit( matchDto, matchDayDto, request );
         List<MatchDetailsDto> findMatchDetailsList = matchDetailsServiceDB.findMatchDetailsList( matchId );
         List<MatchDetailsDto> storedMatchDetails = new ArrayList<>(findMatchDetailsList);
@@ -120,10 +139,11 @@ public class MatchService {
                 matchDayTable,
                 updatedMatchDetailsList
         );
-
+        euroMatchService.updateEuroMatch(updatedMatch, matchDayDto.getSeason().getIsEuro(), request.getIsComplete());
         return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( updatedMatchId ).build() );
     }
 
+    @Transactional
     public ResponseEntity<BaseResponse> removeMatch(Integer matchId) {
         MatchDto matchDto = matchServiceDB.getMatchById( matchId );
         List<MatchDetailsDto> storedMatchDetails = matchDetailsServiceDB.findMatchDetailsList( matchDto.getId() );
@@ -141,7 +161,7 @@ public class MatchService {
         List<LeagueTableDto> leagueTable = leagueTableService.updateBeforeRemoveMatch( storedMatchDetails, leagueId );
 
         matchServiceDB.removeMatch( matchDto.getId(), storedMatchDetails, matchDayTable, seasonTable, leagueTable );
-
+        euroMatchService.resetEuroMatch(matchDto.getEuroMatchId());
         return responseResolver.prepareResponse( MatchCreated.builder().matchId( matchId ).build() );
     }
 

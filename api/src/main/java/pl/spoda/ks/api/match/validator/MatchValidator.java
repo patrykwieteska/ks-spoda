@@ -42,11 +42,11 @@ public class MatchValidator {
 
             case DOUBLE -> {
                 isValid = homePlayers.size() == 2 && awayPlayers.size() == 2;
-                errorMessage = InfoMessage.getMessage( InfoMessage.INVALID_TEAM_STRUCTURE,"2" );
+                errorMessage = InfoMessage.getMessage( InfoMessage.INVALID_TEAM_STRUCTURE, "2" );
             }
             case SINGLE -> {
                 isValid = homePlayers.size() == 1 && awayPlayers.size() == 1;
-                errorMessage = InfoMessage.getMessage( InfoMessage.INVALID_TEAM_STRUCTURE,"1" );
+                errorMessage = InfoMessage.getMessage( InfoMessage.INVALID_TEAM_STRUCTURE, "1" );
             }
         }
 
@@ -105,7 +105,7 @@ public class MatchValidator {
     public void validateEdit(MatchDto matchDto, MatchDayDto matchDayDto, EditMatchRequest request) {
         validateMatchIsFinished( matchDto.getIsFinished() );
         validateMatchDay( matchDayDto );
-//        validateGameTeams( request.getHomeGameTeamId(), request.getAwayGameTeamId() );
+        validateGameTeams( request.getHomeGameTeamId(), request.getAwayGameTeamId() );
 
     }
 

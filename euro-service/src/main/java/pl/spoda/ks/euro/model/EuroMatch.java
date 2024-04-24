@@ -15,9 +15,7 @@ public class EuroMatch {
     private TournamentGroup tournamentGroup;
     private boolean played;
     private Team homeTeam;
-    private Integer homeTeamId;
     private Team awayTeam;
-    private Integer awayTeamId;
     private Integer homeGoals;
     private Integer awayGoals;
     private List<Player> homePlayers;

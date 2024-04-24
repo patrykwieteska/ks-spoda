@@ -48,9 +48,9 @@ public class MatchController {
     @LogEvent
     public ResponseEntity<BaseResponse> editMatch(
             @RequestParam(value = "matchId") Integer matchId,
-            @RequestBody @Valid EditMatchRequest createMatchRequest
+            @RequestBody @Valid EditMatchRequest editMatchRequest
     ) {
-        return matchService.editMatch( matchId,createMatchRequest );
+        return matchService.editMatch( matchId,editMatchRequest );
     }
 
     @DeleteMapping("/remove-match")

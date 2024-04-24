@@ -28,6 +28,8 @@ public class Match extends BaseEntity {
     private Integer awayGoals;
     @Column(name = "IS_FINISHED")
     private Boolean isFinished;
+    @Column(name="EURO_MATCH_ID")
+    private Integer euroMatchId;
 
     @ManyToOne
     @JoinColumn(name = "MATCH_DAY_ID")

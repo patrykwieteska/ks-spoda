@@ -68,6 +68,7 @@ public class MatchMapper {
                 .isFinished( false )
                 .homeTeam( mapMatchTeam( createMatchRequest.getHomePlayers(), matchDayTable, createMatchRequest.getHomeGameTeamId() ) )
                 .awayTeam( mapMatchTeam( createMatchRequest.getAwayPlayers(), matchDayTable, createMatchRequest.getAwayGameTeamId() ) )
+                .euroMatchId( createMatchRequest.getEuroMatchId() )
                 .build();
     }
 
