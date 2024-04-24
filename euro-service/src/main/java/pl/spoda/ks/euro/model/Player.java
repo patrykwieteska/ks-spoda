@@ -11,4 +11,6 @@ public class Player {
     @NotNull
     private String alias;
     private String imageUrl;
+    @NotNull
+    private Integer externalPlayerId;
 }

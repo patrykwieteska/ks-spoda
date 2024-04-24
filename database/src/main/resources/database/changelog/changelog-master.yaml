@@ -13,6 +13,8 @@ databaseChangeLog:
       file: database/changelog/changelog-1.5.sql
   - include:
       file: database/changelog/changelog-1.6.sql
+  - include:
+      file: database/changelog/changelog-1.7.sql
 
 
 

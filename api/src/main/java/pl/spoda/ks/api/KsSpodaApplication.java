@@ -21,20 +21,6 @@ public class KsSpodaApplication {
 		SpringApplication.run(KsSpodaApplication.class, args);
 	}
 
-	/* TODO LISTA ZMIAN DO EURO
-	//	BE
-		1. Gdy euro pobieramy inną listę zespołów (Tylko uczestnicy ME2024). Zespoły w kolejce mogą się powtarzać.
-		2. Po dodaniu/ aktualziacji meczu należy zaktualizować rezultat w EuroService
-		3. Po usunięciu meczu należy zaktualizować rezultat w euroMeczu - zresetować (EuroService);
-		4. Po zakończeniu meczu należy ustawić flagę euroMeczu na finished (EuroService)
-		5. Zastanowić się co w przypadku zmiany nazwy gracza - jak to rozpropagować do EuroService? - funkcjonalnośc
-		opcjonalna
-	//	FE
-		1. Dostosować request createSeason + dodać wyświetlanie logo sezonu i nazwy
-
-
-
-	 */
 	@Bean
 	public OpenAPI openApi() {
 		return new OpenAPI()

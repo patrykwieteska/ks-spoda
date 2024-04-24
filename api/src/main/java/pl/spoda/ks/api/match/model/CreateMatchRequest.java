@@ -32,4 +32,5 @@ public class CreateMatchRequest {
     private Integer homeGameTeamId;
 
     private Integer awayGameTeamId;
+    private Integer euroMatchId;
 }

@@ -28,6 +28,7 @@ public class PlayerService {
     private final PlayerMapper playerMapper;
     private final ResponseResolver responseResolver;
     private final SeasonServiceDB seasonServiceDB;
+    private final EuroPlayerService euroPlayerService;
 
     @LogEvent
     public ResponseEntity<BaseResponse> addPlayer(PlayerRequest playerRequest) {
@@ -71,6 +72,7 @@ public class PlayerService {
             return responseResolver.prepareResponse( HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage() );
         }
 
+        euroPlayerService.updatePlayerData(playerId, playerRequest.getAlias(), playerRequest.getPlayerImg());
         return responseResolver.prepareResponse( StoredPlayer.builder().playerId( playerId ).build() );
     }
 
