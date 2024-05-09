@@ -57,9 +57,9 @@ public class MatchService {
     @Transactional
     public ResponseEntity<BaseResponse> createMatch(CreateMatchRequest request) {
         Integer matchDayId = request.getMatchDayId();
-        Pair<Integer,Integer> matchTeams = matchTeamsResolver.prepareMatchTeams(request.getHomeGameTeamId(),
+        Pair<Integer, Integer> matchTeams = matchTeamsResolver.prepareMatchTeams( request.getHomeGameTeamId(),
                 request.getAwayGameTeamId()
-                , request.getEuroMatchId());
+                , request.getEuroMatchId() );
 
         request.setHomeGameTeamId( matchTeams.getFirst() );
         request.setAwayGameTeamId( matchTeams.getSecond() );
@@ -72,7 +72,7 @@ public class MatchService {
         List<MatchDetailsDto> latestMatchDetails = matchDetailsService.getLatestMatchDetails( requestPlayerIds, leagueId );
         PointCountingMethod pointCountingMethod = PointCountingMethod.getByName( season.getPointCountingMethod() );
         TeamStructure teamStructure = TeamStructure.getByName( league.getTeamStructure() );
-        matchValidator.validateCreate( request, requestPlayerIds, leagueId, latestMatchDetails, matchDay,teamStructure );
+        matchValidator.validateCreate( request, requestPlayerIds, leagueId, latestMatchDetails, matchDay, teamStructure );
 
         List<MatchDetailsDto> newMatchDetails = matchDetailsService.createNewMatchDetails( requestPlayerIds, request, latestMatchDetails, season, leagueId );
 
@@ -91,7 +91,7 @@ public class MatchService {
                 seasonTable,
                 matchDayTable,
                 newMatchDetails );
-        euroMatchService.updateEuroMatch(matchDto, season.getIsEuro(), false);
+        euroMatchService.updateEuroMatch( matchDto, season.getIsEuro(), false );
         return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( newMatchId ).build() );
     }
 
@@ -106,18 +106,21 @@ public class MatchService {
 
     @Transactional
     public ResponseEntity<BaseResponse> editMatch(Integer matchId, EditMatchRequest request) {
-        Pair<Integer,Integer> matchTeams = matchTeamsResolver.prepareMatchTeams(request.getHomeGameTeamId(),
-                request.getAwayGameTeamId()
-                , request.getEuroMatchId());
+        MatchDto matchDto = matchServiceDB.getMatchById( matchId );
+
+        Pair<Integer, Integer> matchTeams = matchTeamsResolver.prepareMatchTeams(
+                matchDto.getHomeTeam().getGameTeamId(),
+                matchDto.getAwayTeam().getGameTeamId(),
+                request.getEuroMatchId()
+        );
 
         request.setHomeGameTeamId( matchTeams.getFirst() );
         request.setAwayGameTeamId( matchTeams.getSecond() );
 
-        MatchDto matchDto = matchServiceDB.getMatchById( matchId );
         MatchDayDto matchDayDto = matchDayServiceDB.getMatchDay( matchDto.getMatchDayId() );
         matchValidator.validateEdit( matchDto, matchDayDto, request );
         List<MatchDetailsDto> findMatchDetailsList = matchDetailsServiceDB.findMatchDetailsList( matchId );
-        List<MatchDetailsDto> storedMatchDetails = new ArrayList<>(findMatchDetailsList);
+        List<MatchDetailsDto> storedMatchDetails = new ArrayList<>( findMatchDetailsList );
         List<MatchDetailsDto> updatedMatchDetailsList = matchDetailsService.getUpdatedDetails( storedMatchDetails,
                 request, matchDto, matchDayDto );
 
@@ -139,7 +142,7 @@ public class MatchService {
                 matchDayTable,
                 updatedMatchDetailsList
         );
-        euroMatchService.updateEuroMatch(updatedMatch, matchDayDto.getSeason().getIsEuro(), request.getIsComplete());
+        euroMatchService.updateEuroMatch( updatedMatch, matchDayDto.getSeason().getIsEuro(), request.getIsComplete() );
         return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( updatedMatchId ).build() );
     }
 
@@ -161,7 +164,7 @@ public class MatchService {
         List<LeagueTableDto> leagueTable = leagueTableService.updateBeforeRemoveMatch( storedMatchDetails, leagueId );
 
         matchServiceDB.removeMatch( matchDto.getId(), storedMatchDetails, matchDayTable, seasonTable, leagueTable );
-        euroMatchService.resetEuroMatch(matchDto.getEuroMatchId());
+        euroMatchService.resetEuroMatch( matchDto.getEuroMatchId() );
         return responseResolver.prepareResponse( MatchCreated.builder().matchId( matchId ).build() );
     }
 
@@ -169,7 +172,7 @@ public class MatchService {
     public ResponseEntity<BaseResponse> getMatchesByMatchDay(Integer matchDayId) {
         List<MatchDto> matchDtoList = matchServiceDB.findMatchesByMatchDay( matchDayId );
         List<Match> matches = matchMapper.mapToMatchList( matchDtoList ).stream()
-                .sorted( Comparator.comparing( Match::getId,Comparator.naturalOrder() ).reversed()).toList();
+                .sorted( Comparator.comparing( Match::getId, Comparator.naturalOrder() ).reversed() ).toList();
         return responseResolver.prepareResponse( MatchListResponse.builder()
                 .matchList( matches )
                 .build() );
@@ -177,11 +180,11 @@ public class MatchService {
 
     public ResponseEntity<BaseResponse> initGameTeams(Integer matchDayId) {
         List<GameTeamDto> gameTeams = gameTeamServiceDB.getGameTeams();
-        List<Integer> usedGameTeams = gameTeamServiceDB.getUsedGameTeams(matchDayId);
+        List<Integer> usedGameTeams = gameTeamServiceDB.getUsedGameTeams( matchDayId );
         List<GameTeam> finalList = gameTeams.stream()
                 .filter( gt -> !usedGameTeams.contains( gt.getId() ) )
                 .map( matchMapper::mapToGameTeam )
-                .sorted(Comparator.comparing( GameTeam::getName,Collator.getInstance(new Locale("pl") )))
+                .sorted( Comparator.comparing( GameTeam::getName, Collator.getInstance( new Locale( "pl" ) ) ) )
                 .toList();
 
         return responseResolver.prepareResponse( AvailableGameTeams.builder().gameTeams( finalList ).build() );

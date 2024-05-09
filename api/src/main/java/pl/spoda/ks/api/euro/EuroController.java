@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import pl.spoda.ks.api.match.EuroMatchService;
 import pl.spoda.ks.euro.EuroService;
+import pl.spoda.ks.euro.model.EuroMatch;
 import pl.spoda.ks.euro.model.response.EuroCalendarResponse;
 import pl.spoda.ks.euro.model.response.GroupStageTables;
 
@@ -17,6 +18,7 @@ public class EuroController {
 
 
     @GetMapping("/calendar/{group}")
+    @CrossOrigin
     public EuroCalendarResponse getEuroCalendar(
             @PathVariable(required = false) String group
     ) {
@@ -24,18 +26,21 @@ public class EuroController {
     }
 
     @GetMapping("/tables/{group}")
+    @CrossOrigin
     public GroupStageTables getEuroGroupData(
             @PathVariable(required = false) String group
     ) {
         return euroService.getGroupsTables( group );
     }
 
-    @GetMapping("/next-matches/")
-    public EuroMatchSchedule getNextMatches() {
-        return euroMatchService.getNotPlayedMatches();
+    @GetMapping("/next-match")
+    @CrossOrigin
+    public EuroMatch getNextMatch() {
+        return euroMatchService.getNextEuroMatch();
     }
 
     @GetMapping("/group-matches/{group}")
+    @CrossOrigin
     public EuroMatchSchedule getPlayedMatches(
             @PathVariable(required = false) String group,
             @RequestParam(required = false) Integer limit

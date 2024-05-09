@@ -63,6 +63,10 @@ public class EuroMatchService {
     }
 
     public void resetEuroMatch(Integer euroMatchId) {
+        if(euroMatchId == null) {
+            return;
+        }
+
         euroService.clearEuroMatch( euroMatchId );
     }
 
@@ -76,6 +80,17 @@ public class EuroMatchService {
         return EuroMatchSchedule.builder()
                 .matches( nextMatches )
                 .build();
+    }
+
+    public EuroMatch getNextEuroMatch() {
+        return euroService.getEuroCalendar( null )
+                .getEuroMatches().stream()
+                .filter( euroMatch -> !euroMatch.isPlayed() )
+                .sorted( Comparator.comparing( EuroMatch::getMatchNumber ) )
+                .limit( 1 )
+                .findFirst()
+                .orElseThrow(() -> new SpodaApplicationException("Brak meczów, prawdopodobnie turniej został " +
+                        "zakończony"));
     }
 
     public EuroMatchSchedule getPlayedMatches(String group, long limit) {

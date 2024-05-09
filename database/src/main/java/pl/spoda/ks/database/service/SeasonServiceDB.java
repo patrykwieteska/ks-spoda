@@ -13,12 +13,15 @@ import pl.spoda.ks.comons.exceptions.SpodaDatabaseException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.SeasonDto;
 import pl.spoda.ks.database.entity.League;
+import pl.spoda.ks.database.entity.MatchDay;
 import pl.spoda.ks.database.entity.Season;
 import pl.spoda.ks.database.mapper.EntityMapper;
 import pl.spoda.ks.database.repository.LeagueRepository;
 import pl.spoda.ks.database.repository.SeasonRepository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -86,12 +89,24 @@ public class SeasonServiceDB {
             throw new SpodaApplicationException( InfoMessage.MATCHDAYS_NOT_FINISHED );
 
         Season storedSeason = seasonRepository.findById( seasonId ).orElse( null );
+
+        if (storedSeason != null && checkSeason( storedSeason )) {
+            seasonRepository.delete( storedSeason );
+            log.info( "Sezon nie miał kolejek, dlatego został usunięty" );
+            return;
+        }
+
         checkIfSeasonExists( seasonId, storedSeason );
         storedSeason
                 .isFinished( true )
                 .endDate( dateService.getCurrentDate() );
         baseServiceDB.updateEntity( storedSeason );
         seasonRepository.save( storedSeason );
+    }
+
+    private boolean checkSeason(Season storedSeason) {
+        List<MatchDay> matchDays = Optional.ofNullable( storedSeason ).map( Season::getMatchDayList ).orElse( Collections.emptyList() );
+        return matchDays.stream().allMatch( x -> x.getMatchList().isEmpty() );
     }
 
     private void validateLeague(Integer leagueId, League storedLeague) {
