@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.spoda.ks.euro.model.GroupStageTeam;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupStageTables {
+public class ThirdPlacesResponse {
 
-    private List<EuroGroup> groupList;
+    List<GroupStageTeam> teams;
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
 import java.util.Set;
 
 @ToString(callSuper = true)
@@ -29,11 +30,11 @@ public class Player extends BaseEntity {
     @Column(name="DESCRIPTION")
     private String desc;
 
-    @OneToOne(mappedBy = "player")
-    private SeasonTable seasonTable;
+    @OneToMany(mappedBy = "player")
+    private List<SeasonTable> seasonTable;
 
-    @OneToOne(mappedBy = "player")
-    private LeagueTable leagueTable;
+    @OneToMany(mappedBy = "player")
+    private List<LeagueTable> leagueTable;
 
     @ManyToMany
     @JoinTable(

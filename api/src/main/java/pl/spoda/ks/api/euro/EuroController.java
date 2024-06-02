@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import pl.spoda.ks.api.match.EuroMatchService;
 import pl.spoda.ks.euro.EuroService;
 import pl.spoda.ks.euro.model.EuroMatch;
+import pl.spoda.ks.euro.model.CurrentStage;
 import pl.spoda.ks.euro.model.response.EuroCalendarResponse;
 import pl.spoda.ks.euro.model.response.GroupStageTables;
+import pl.spoda.ks.euro.model.response.ThirdPlacesResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,18 +19,18 @@ public class EuroController {
     private final EuroMatchService euroMatchService;
 
 
-    @GetMapping("/calendar/{group}")
+    @GetMapping("/calendar")
     @CrossOrigin
     public EuroCalendarResponse getEuroCalendar(
-            @PathVariable(required = false) String group
+            @RequestParam(required = false) String stage
     ) {
-        return euroService.getEuroCalendar( group );
+        return euroService.getEuroCalendar( stage );
     }
 
-    @GetMapping("/tables/{group}")
+    @GetMapping("/tables")
     @CrossOrigin
     public GroupStageTables getEuroGroupData(
-            @PathVariable(required = false) String group
+            @RequestParam(required = false) String group
     ) {
         return euroService.getGroupsTables( group );
     }
@@ -39,12 +41,27 @@ public class EuroController {
         return euroMatchService.getNextEuroMatch();
     }
 
-    @GetMapping("/group-matches/{group}")
+    @CrossOrigin
+    @GetMapping("/third-places")
+    ThirdPlacesResponse getThirdPlacesTable() {
+        return euroService.getThirdPlacesTable();
+    }
+
+    @GetMapping("/group-matches")
     @CrossOrigin
     public EuroMatchSchedule getPlayedMatches(
-            @PathVariable(required = false) String group,
+            @RequestParam(required = false) String stage,
             @RequestParam(required = false) Integer limit
     ) {
-        return euroMatchService.getPlayedMatches( group, limit );
+        if (limit == null) {
+            limit = 0;
+        }
+        return euroMatchService.getPlayedMatches( stage, limit );
+    }
+
+    @GetMapping("/current-stage")
+    @CrossOrigin
+    public CurrentStage getCurrentStage() {
+        return euroService.getCurrentStage();
     }
 }

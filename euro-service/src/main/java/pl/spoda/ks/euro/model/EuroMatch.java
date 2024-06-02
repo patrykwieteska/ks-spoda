@@ -11,13 +11,14 @@ import java.util.List;
 public class EuroMatch {
 
     private Integer matchNumber; // numer meczu z oficjalnego kalendarza UEFA
-    private TournamentStage tournamentStage;
+    private CurrentStage tournamentStage;
     private TournamentGroup tournamentGroup;
     private boolean played;
     private Team homeTeam;
     private Team awayTeam;
     private Integer homeGoals;
     private Integer awayGoals;
+    private PenaltyKicks penaltyKicks;
     private List<Player> homePlayers;
     private List<Player> awayPlayers;
     private LocalDateTime dateTime;

@@ -13,7 +13,7 @@ public enum TournamentStage {
     FINAL( "Finał" ,5);
 
     @Getter
-    private final String name;
+    private final String description;
     private final int order;
 
 
