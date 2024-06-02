@@ -33,4 +33,5 @@ public class CreateMatchRequest {
 
     private Integer awayGameTeamId;
     private Integer euroMatchId;
+    private Boolean isPlayOffMatch;
 }

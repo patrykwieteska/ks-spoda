@@ -16,4 +16,5 @@ public class EditMatchRequest {
     private Integer awayGameTeamId;
     private Boolean isComplete;
     private Integer euroMatchId;
+    private PenaltyKicks penalties;
 }

@@ -52,4 +52,12 @@ public class MatchDetailsServiceDB {
                 });
         matchDetailsRepository.saveAll( matchDetailsEntities );
     }
+
+    public Integer getMatchDayMatchesCount(Integer matchDayId) {
+        return matchDetailsRepository.getMatchDayMatchesCount( matchDayId );
+    }
+
+    public Integer getSeasonMatchesCount(int seasonId) {
+        return matchDetailsRepository.getSeasonMatchesCount( seasonId );
+    }
 }

@@ -29,6 +29,7 @@ public class TableService {
     private final PlayerServiceDB playerServiceDB;
     private final MatchDayTableServiceDB matchDayTableServiceDB;
     private final MatchDayServiceDB matchDayServiceDB;
+    private final SortTableService sortTableService;
 
     public ResponseEntity<BaseResponse> getLeagueTable(Integer leagueId) {
         List<MatchDto> matchesByLeague = matchServiceDB.findMatchesByLeague( leagueId );
@@ -36,6 +37,9 @@ public class TableService {
         Set<LeagueTableDto> leagueRatings = leagueTableServiceDB.getCurrentLeagueTable( leagueId );
         Set<TableResultRow> tableRows = tableRowsService.getTableRows( matchesByLeague, leaguePlayer, leagueRatings );
         List<TableResultRow> result = getSortedTableRows( tableRows );
+
+
+
         return prepareTableResponse( result, "Tabela ligowa", null );
     }
 
@@ -80,15 +84,12 @@ public class TableService {
 
     public ResponseEntity<BaseResponse> getMatchDayTable(Integer matchDayId) {
         List<MatchDto> matchesBySeason = matchServiceDB.findMatchesByMatchDay( matchDayId );
-//        MatchDayDto matchDay = matchDayServiceDB.getMatchDay( matchDayId );
-//        SeasonDto season = seasonServiceDB.getSingleSeason( matchDay.getSeasonId() );
         Set<MatchDayTableDto> matchDayTableDtoSet = matchDayTableServiceDB.getCurrentMatchDayTable( matchDayId );
         Set<PlayerDto> matchDayPlayers = matchDayTableDtoSet.stream()
                 .map( MatchDayTableDto::getPlayer )
                 .collect( Collectors.toSet() );
         Set<TableResultRow> tableRows = tableRowsService.getTableRows( matchesBySeason, matchDayPlayers, matchDayTableDtoSet );
         List<TableResultRow> result = getSortedTableRows( tableRows );
-//        return prepareTableResponse( result,null,PointCountingMethod.getByName( season.getPointCountingMethod() ) );
         return prepareTableResponse( result, null, PointCountingMethod.POINTS_TOTAL );
     }
 }

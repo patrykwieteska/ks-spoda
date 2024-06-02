@@ -44,7 +44,9 @@ public class EuroMatchService {
                 matchDto.getHomeGoals(),
                 matchDto.getAwayGoals(),
                 euroMatchId,
-                isMatchComplete
+                isMatchComplete,
+                matchDto.getAwayPenaltyGoals(),
+                matchDto.getHomePenaltyGoals()
         );
     }
 
@@ -94,7 +96,7 @@ public class EuroMatchService {
     }
 
     public EuroMatchSchedule getPlayedMatches(String group, long limit) {
-        if(limit <0 || limit > 51) {
+        if(limit <=0 || limit > 51) {
             limit=51;
         }
 

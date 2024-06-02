@@ -22,4 +22,7 @@ public class MatchDto extends BaseDto {
     private MatchTeamDto homeTeam;
     private MatchTeamDto awayTeam;
     private Integer euroMatchId;
+    private Integer homePenaltyGoals;
+    private Integer awayPenaltyGoals;
+    private Boolean isPlayOffMatch;
 }

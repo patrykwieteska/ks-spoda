@@ -3,12 +3,9 @@ package pl.spoda.ks.euro;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import pl.spoda.ks.euro.model.Player;
-import pl.spoda.ks.euro.model.TournamentGroup;
+import pl.spoda.ks.euro.model.*;
 import pl.spoda.ks.euro.model.request.MatchRequest;
-import pl.spoda.ks.euro.model.response.EuroCalendarResponse;
-import pl.spoda.ks.euro.model.response.GroupStageTables;
-import pl.spoda.ks.euro.model.response.MatchSquadResponse;
+import pl.spoda.ks.euro.model.response.*;
 
 import java.util.List;
 
@@ -24,7 +21,10 @@ public class EuroService {
             Integer homeGoals,
             Integer awayGoals,
             Integer euroMatchId,
-            boolean isMatchComplete) {
+            boolean isMatchComplete,
+            Integer awayPenaltyGoals,
+            Integer homePenaltyGoals
+    ) {
         MatchRequest request = MatchRequest.builder()
                 .homePlayers( homePlayers )
                 .awayPlayers( awayPlayers )
@@ -32,9 +32,21 @@ public class EuroService {
                 .awayGoals( awayGoals )
                 .matchNumber( euroMatchId )
                 .isFinished( isMatchComplete )
+                .penalties( mapToPenaltyKicks(awayPenaltyGoals,homePenaltyGoals) )
                 .build();
 
         euroClient.addResult( request );
+    }
+
+    private PenaltyKicks mapToPenaltyKicks(Integer awayPenaltyGoals, Integer homePenaltyGoals) {
+        if(awayPenaltyGoals == null || homePenaltyGoals == null) {
+            return null;
+        }
+
+         return PenaltyKicks.builder()
+                 .homeGoals( homePenaltyGoals )
+                 .awayGoals( awayPenaltyGoals )
+                 .build();
     }
 
     public void clearEuroMatch(Integer euroMatchId) {
@@ -63,5 +75,17 @@ public class EuroService {
     public Pair<Integer,Integer> getMatchTeams(Integer matchNumber) {
         MatchSquadResponse matchTeams = euroClient.getMatchTeams( matchNumber );
         return Pair.of( matchTeams.getHomeTeamId(),matchTeams.getAwayTeamId() );
+    }
+
+    public ThirdPlacesResponse getThirdPlacesTable() {
+        return euroClient.getThirdPlacesTable();
+    }
+
+    public CurrentStage getCurrentStage() {
+        TournamentStage currentStage = euroClient.getCurrentStage();
+        return CurrentStage.builder()
+                .stage( currentStage )
+                .description( currentStage.getDescription() )
+                .build();
     }
 }

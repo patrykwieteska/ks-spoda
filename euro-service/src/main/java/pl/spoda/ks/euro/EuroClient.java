@@ -9,16 +9,17 @@ import pl.spoda.ks.euro.model.request.MatchRequest;
 import pl.spoda.ks.euro.model.response.EuroCalendarResponse;
 import pl.spoda.ks.euro.model.response.GroupStageTables;
 import pl.spoda.ks.euro.model.response.MatchSquadResponse;
+import pl.spoda.ks.euro.model.response.ThirdPlacesResponse;
 
 @FeignClient(url = "${euro.service.url}", value = "EuroClient")
 public interface EuroClient {
 
 
-    @GetMapping("/calendar/{group}")
-    EuroCalendarResponse getEuroCalendar(@PathVariable(required = false) TournamentGroup group);
+    @GetMapping("/calendar")
+    EuroCalendarResponse getEuroCalendar(@RequestParam(required = false) TournamentGroup group);
 
-    @GetMapping("/groups-tables/{group}")
-    GroupStageTables getGroupsTables(@PathVariable(required = false) TournamentGroup group);
+    @GetMapping("/groups-tables")
+    GroupStageTables getGroupsTables(@RequestParam(required = false) TournamentGroup group);
 
     @PostMapping("/add-result")
     void addResult(@RequestBody MatchRequest request);
@@ -35,5 +36,7 @@ public interface EuroClient {
     @GetMapping("/teams/{matchNumber}")
     MatchSquadResponse getMatchTeams(@PathVariable Integer matchNumber);
 
+    @GetMapping("/third-places")
+    ThirdPlacesResponse getThirdPlacesTable();
 
 }

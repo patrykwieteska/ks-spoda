@@ -19,6 +19,18 @@ public interface MatchDetailsRepository extends JpaRepository<MatchDetails, Inte
                         order by md.id desc
                         limit 1
             """,
-    nativeQuery = true)
+            nativeQuery = true)
     Integer findNewestPlayerMatchInLeague(@Param("playerId") Integer playerId, @Param("leagueId") Integer leagueId);
+
+    @Query(value = """
+            SELECT count(*) from MATCH_DETAILS where SEASON_ID =:seasonId
+            """,
+            nativeQuery = true)
+    Integer getSeasonMatchesCount(Integer seasonId);
+
+    @Query(value = """
+            SELECT count(*) from MATCH_DETAILS where SEASON_ID =:matchDayId
+            """,
+            nativeQuery = true)
+    Integer getMatchDayMatchesCount(Integer matchDayId);
 }

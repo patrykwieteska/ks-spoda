@@ -21,6 +21,8 @@ public class Match extends BaseResponse {
     private MatchTeam awayTeam;
     private Integer homeGoals;
     private Integer awayGoals;
+    private PenaltyKicks penalties;
+    private boolean isPlayOffMatch;
 
 
 }

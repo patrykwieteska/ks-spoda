@@ -1,6 +1,7 @@
 package pl.spoda.ks.api.match;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -107,7 +108,7 @@ public class MatchService {
     @Transactional
     public ResponseEntity<BaseResponse> editMatch(Integer matchId, EditMatchRequest request) {
         MatchDto matchDto = matchServiceDB.getMatchById( matchId );
-
+        validateCompleteMatch( request, matchDto.getIsPlayOffMatch() );
         Pair<Integer, Integer> matchTeams = matchTeamsResolver.prepareMatchTeams(
                 matchDto.getHomeTeam().getGameTeamId(),
                 matchDto.getAwayTeam().getGameTeamId(),
@@ -144,6 +145,20 @@ public class MatchService {
         );
         euroMatchService.updateEuroMatch( updatedMatch, matchDayDto.getSeason().getIsEuro(), request.getIsComplete() );
         return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( updatedMatchId ).build() );
+    }
+
+    private void validateCompleteMatch(EditMatchRequest request, boolean playOffMatch) {
+        if (BooleanUtils.isNotTrue( request.getIsComplete() )) {
+            return;
+        }
+
+        boolean isDraw = request.getHomeGoals().equals( request.getAwayGoals() );
+
+        if (isDraw && playOffMatch && (request.getPenalties() == null || request.getPenalties().getHomeGoals() == request.getAwayGoals())) {
+            throw new SpodaApplicationException( "Nie można zakończyć meczu pucharowego remisem.\nPopraw wynik w " +
+                    "rzutach karnych" );
+
+        }
     }
 
     @Transactional
