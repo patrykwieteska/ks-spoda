@@ -58,14 +58,16 @@ public class MatchService {
     @Transactional
     public ResponseEntity<BaseResponse> createMatch(CreateMatchRequest request) {
         Integer matchDayId = request.getMatchDayId();
+        MatchDayDto matchDay = matchDayServiceDB.getMatchDay( matchDayId );
         Pair<Integer, Integer> matchTeams = matchTeamsResolver.prepareMatchTeams( request.getHomeGameTeamId(),
                 request.getAwayGameTeamId()
-                , request.getEuroMatchId() );
+                , request.getEuroMatchId(),
+                matchDay.getSeason().getEuroTournamentId());
 
         request.setHomeGameTeamId( matchTeams.getFirst() );
         request.setAwayGameTeamId( matchTeams.getSecond() );
 
-        MatchDayDto matchDay = matchDayServiceDB.getMatchDay( matchDayId );
+
         SeasonDto season = matchDay.getSeason();
         LeagueDto league = leagueServiceDB.getSingleLeague( season.getLeagueId() );
         Integer leagueId = season.getLeagueId();
@@ -92,7 +94,7 @@ public class MatchService {
                 seasonTable,
                 matchDayTable,
                 newMatchDetails );
-        euroMatchService.updateEuroMatch( matchDto, season.getIsEuro(), false );
+        euroMatchService.updateEuroMatch( matchDto, season.getIsEuro(), false,season.getEuroTournamentId() );
         return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( newMatchId ).build() );
     }
 
@@ -108,17 +110,19 @@ public class MatchService {
     @Transactional
     public ResponseEntity<BaseResponse> editMatch(Integer matchId, EditMatchRequest request) {
         MatchDto matchDto = matchServiceDB.getMatchById( matchId );
+
         validateCompleteMatch( request, matchDto.getIsPlayOffMatch() );
+
+        MatchDayDto matchDayDto = matchDayServiceDB.getMatchDay( matchDto.getMatchDayId() );
         Pair<Integer, Integer> matchTeams = matchTeamsResolver.prepareMatchTeams(
                 matchDto.getHomeTeam().getGameTeamId(),
                 matchDto.getAwayTeam().getGameTeamId(),
-                request.getEuroMatchId()
+                request.getEuroMatchId(), matchDayDto.getSeason().getEuroTournamentId()
         );
 
         request.setHomeGameTeamId( matchTeams.getFirst() );
         request.setAwayGameTeamId( matchTeams.getSecond() );
 
-        MatchDayDto matchDayDto = matchDayServiceDB.getMatchDay( matchDto.getMatchDayId() );
         matchValidator.validateEdit( matchDto, matchDayDto, request );
         List<MatchDetailsDto> findMatchDetailsList = matchDetailsServiceDB.findMatchDetailsList( matchId );
         List<MatchDetailsDto> storedMatchDetails = new ArrayList<>( findMatchDetailsList );
@@ -143,7 +147,8 @@ public class MatchService {
                 matchDayTable,
                 updatedMatchDetailsList
         );
-        euroMatchService.updateEuroMatch( updatedMatch, matchDayDto.getSeason().getIsEuro(), request.getIsComplete() );
+        euroMatchService.updateEuroMatch( updatedMatch, matchDayDto.getSeason().getIsEuro(), request.getIsComplete(),
+                matchDayDto.getSeason().getEuroTournamentId() );
         return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( updatedMatchId ).build() );
     }
 
@@ -160,7 +165,6 @@ public class MatchService {
 
         }
     }
-
     @Transactional
     public ResponseEntity<BaseResponse> removeMatch(Integer matchId) {
         MatchDto matchDto = matchServiceDB.getMatchById( matchId );
@@ -168,7 +172,7 @@ public class MatchService {
         Integer leagueId = storedMatchDetails.get( 0 ).getLeagueId();
         Integer seasonId = storedMatchDetails.get( 0 ).getSeasonId();
         Integer matchDayId = storedMatchDetails.get( 0 ).getMatchDayId();
-
+        MatchDayDto matchDay = matchDayServiceDB.getMatchDay( matchDto.getMatchDayId() );
 
         if (matchServiceDB.getNewestMatch( leagueId ) > matchId) {
             throw new SpodaApplicationException( InfoMessage.REMOVE_NEWEST_MATCHES );
@@ -179,7 +183,7 @@ public class MatchService {
         List<LeagueTableDto> leagueTable = leagueTableService.updateBeforeRemoveMatch( storedMatchDetails, leagueId );
 
         matchServiceDB.removeMatch( matchDto.getId(), storedMatchDetails, matchDayTable, seasonTable, leagueTable );
-        euroMatchService.resetEuroMatch( matchDto.getEuroMatchId() );
+        euroMatchService.resetEuroMatch( matchDto.getEuroMatchId(),matchDay.getSeason().getEuroTournamentId() );
         return responseResolver.prepareResponse( MatchCreated.builder().matchId( matchId ).build() );
     }
 

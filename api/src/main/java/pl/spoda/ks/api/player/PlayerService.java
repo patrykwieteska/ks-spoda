@@ -64,7 +64,7 @@ public class PlayerService {
     }
 
     @LogEvent
-    public ResponseEntity<BaseResponse> editPlayer(Integer playerId, PlayerRequest playerRequest) {
+    public ResponseEntity<BaseResponse> editPlayer(Integer playerId, EditPlayerRequest playerRequest) {
         try {
             playerServiceDB.editPlayer(playerId, playerMapper.mapToPlayerDto( playerRequest ));
         } catch (Exception e) {

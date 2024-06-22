@@ -17,8 +17,10 @@ import pl.spoda.ks.database.mapper.EntityMapper;
 import pl.spoda.ks.database.repository.MatchDayRepository;
 import pl.spoda.ks.database.repository.SeasonRepository;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -76,11 +78,19 @@ public class MatchDayServiceDB {
             List<MatchDay> storedMatchDays,
             Integer seasonId
     ) {
-        if (matchDayRepository.findByDateAndSeasonId( matchDayDto.getDate(),seasonId ).isPresent()) {
-            throw new SpodaApplicationException( String.format( "Istnieje już kolejka z dnia %s",
-                    matchDayDto.getDate() ) );
-        }
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern( "d MMMM yyyy" ,new Locale("pl"));
+        String lastMatchDayDate  = storedMatchDays.stream()
+                .map( MatchDay::getDate )
+                .max( Comparator.naturalOrder() )
+                .map( x -> x.format( dateTimeFormatter ) )
+                .orElse( null );
 
+        Integer matchDaysBeforeRequestedDate = matchDayRepository.findBySeasonIdAndDateBefore( matchDayDto.getDate(), seasonId );
+        if (matchDaysBeforeRequestedDate != 0) {
+
+            throw new SpodaApplicationException( String.format( "Istnieją już kolejki rozegrane do dnia: %s",
+                    lastMatchDayDate ) );
+        }
 
         if (isAnyMatchDayUnfinished( storedMatchDays ))
             throw new SpodaApplicationException(  InfoMessage.UNFINISHED_MATCH_DAYS);

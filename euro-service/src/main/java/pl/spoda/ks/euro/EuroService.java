@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.euro.model.*;
-import pl.spoda.ks.euro.model.request.MatchRequest;
+import pl.spoda.ks.euro.model.request.EuroMatchRequest;
 import pl.spoda.ks.euro.model.response.*;
 
 import java.util.List;
@@ -23,9 +23,10 @@ public class EuroService {
             Integer euroMatchId,
             boolean isMatchComplete,
             Integer awayPenaltyGoals,
-            Integer homePenaltyGoals
+            Integer homePenaltyGoals,
+            String euroId
     ) {
-        MatchRequest request = MatchRequest.builder()
+        EuroMatchRequest request = EuroMatchRequest.builder()
                 .homePlayers( homePlayers )
                 .awayPlayers( awayPlayers )
                 .homeGoals( homeGoals )
@@ -35,7 +36,7 @@ public class EuroService {
                 .penalties( mapToPenaltyKicks(awayPenaltyGoals,homePenaltyGoals) )
                 .build();
 
-        euroClient.addResult( request );
+        euroClient.addResult( euroId,request );
     }
 
     private PenaltyKicks mapToPenaltyKicks(Integer awayPenaltyGoals, Integer homePenaltyGoals) {
@@ -49,19 +50,19 @@ public class EuroService {
                  .build();
     }
 
-    public void clearEuroMatch(Integer euroMatchId) {
-        euroClient.clearResult(euroMatchId);
+    public void clearEuroMatch(Integer euroMatchId,String euroId) {
+        euroClient.clearResult(euroId,euroMatchId);
     }
 
 
 
-    public EuroCalendarResponse getEuroCalendar(String group) {
-        return euroClient.getEuroCalendar( TournamentGroup.getByName( group ) );
+    public EuroCalendarResponse getEuroCalendar(String group, String euroId) {
+        return euroClient.getEuroCalendar( euroId,TournamentGroup.getByName( group ) );
 
     }
 
-    public GroupStageTables getGroupsTables( String group) {
-        return euroClient.getGroupsTables( TournamentGroup.getByName( group ) );
+    public GroupStageTables getGroupsTables( String group, String euroId) {
+        return euroClient.getGroupsTables( euroId ,TournamentGroup.getByName( group ));
     }
 
     public void updatePlayerData(Integer playerId, String alias, String playerImg) {
@@ -72,20 +73,20 @@ public class EuroService {
                 .build());
     }
 
-    public Pair<Integer,Integer> getMatchTeams(Integer matchNumber) {
-        MatchSquadResponse matchTeams = euroClient.getMatchTeams( matchNumber );
+    public Pair<Integer,Integer> getMatchTeams(Integer matchNumber, String euroId) {
+        MatchSquadResponse matchTeams = euroClient.getMatchTeams( euroId,matchNumber );
         return Pair.of( matchTeams.getHomeTeamId(),matchTeams.getAwayTeamId() );
     }
 
-    public ThirdPlacesResponse getThirdPlacesTable() {
-        return euroClient.getThirdPlacesTable();
+    public ThirdPlacesResponse getThirdPlacesTable(String euroId) {
+        return euroClient.getThirdPlacesTable(euroId);
     }
 
-    public CurrentStage getCurrentStage() {
-        TournamentStage currentStage = euroClient.getCurrentStage();
-        return CurrentStage.builder()
-                .stage( currentStage )
-                .description( currentStage.getDescription() )
-                .build();
+    public CurrentStage getCurrentStage(String euroId) {
+        return euroClient.getCurrentStage(euroId);
+    }
+
+    public String addNewEuroTournament() {
+        return euroClient.addEuroTournament();
     }
 }

@@ -8,9 +8,6 @@ import pl.spoda.ks.api.commons.DeleteResponse;
 import pl.spoda.ks.api.commons.ResponseResolver;
 import pl.spoda.ks.api.matchday.model.*;
 import pl.spoda.ks.api.matchday.model.init.InitMatchDayResponse;
-import pl.spoda.ks.api.matchday.players.MatchInRowService;
-import pl.spoda.ks.api.matchday.players.OpponentsService;
-import pl.spoda.ks.api.matchday.players.TeammatesService;
 import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.database.dto.LeagueDto;
 import pl.spoda.ks.database.dto.MatchDayDto;
@@ -33,10 +30,8 @@ public class MatchDayService {
     private final InitMatchDayMapper initMatchDayMapper;
     private final SeasonServiceDB seasonServiceDb;
     private final LeagueServiceDB leagueServiceDb;
-    private final OpponentsService opponentsService;
-    private final TeammatesService teammatesService;
-    private final MatchInRowService matchInRowService;
     private final MatchDayTableServiceDB matchDayTableServiceDB;
+    private final MatchDayPlayerMapper matchDayPlayerMapper;
 
     @LogEvent
     public ResponseEntity<BaseResponse> createMatchDay(CreateMatchDayRequest request) {
@@ -92,13 +87,7 @@ public class MatchDayService {
     }
 
     private MatchDayPlayer mapToMatchDayPlayer(String playerAlias, List<MatchDto> matchesByMatchDay, List<String> matchDayPlayers) {
-
-        return MatchDayPlayer.builder()
-                .alias( playerAlias )
-                .matchesInRow( matchInRowService.getMatchesInRow(playerAlias,matchesByMatchDay) )
-                .opponents( opponentsService.getPlayerOpponents(playerAlias,matchesByMatchDay,matchDayPlayers) )
-                .teammates( teammatesService.getPlayerTeammates(playerAlias,matchesByMatchDay,matchDayPlayers) )
-                .build();
+        return matchDayPlayerMapper.mapMatchDayPlayer(playerAlias,matchesByMatchDay,matchDayPlayers);
 
     }
 }

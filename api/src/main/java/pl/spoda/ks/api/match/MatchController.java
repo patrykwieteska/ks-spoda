@@ -3,6 +3,7 @@ package pl.spoda.ks.api.match;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.spoda.ks.api.commons.BaseResponse;
 import pl.spoda.ks.api.match.model.CreateMatchRequest;
@@ -56,6 +57,7 @@ public class MatchController {
     @DeleteMapping("/remove-match")
     @CrossOrigin
     @LogEvent
+    @Transactional
     public ResponseEntity<BaseResponse> removeMatch(
             @RequestParam(value = "matchId") Integer matchId
     ) {

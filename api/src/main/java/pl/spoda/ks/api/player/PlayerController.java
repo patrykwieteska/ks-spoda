@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.spoda.ks.api.commons.BaseResponse;
+import pl.spoda.ks.api.player.model.EditPlayerRequest;
 import pl.spoda.ks.api.player.model.PlayerRequest;
 import pl.spoda.ks.comons.aspects.LogEvent;
 
@@ -43,9 +44,10 @@ public class PlayerController {
 
     @PostMapping("/edit/{playerId}")
     @LogEvent
+    @CrossOrigin
     public ResponseEntity<BaseResponse> editPlayer(
             @PathVariable Integer playerId,
-            @RequestBody PlayerRequest playerRequest
+            @RequestBody EditPlayerRequest playerRequest
     ) {
         return playerService.editPlayer(playerId, playerRequest);
     }

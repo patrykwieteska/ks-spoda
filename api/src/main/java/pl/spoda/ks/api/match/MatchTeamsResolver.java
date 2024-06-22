@@ -11,10 +11,15 @@ public class MatchTeamsResolver {
 
     private final EuroService euroService;
 
-    public Pair<Integer, Integer> prepareMatchTeams(Integer homeGameTeamId, Integer awayGameTeamId, Integer euroMatchId) {
+    public Pair<Integer, Integer> prepareMatchTeams(
+            Integer homeGameTeamId,
+            Integer awayGameTeamId,
+            Integer euroMatchId,
+            String euroId
+    ) {
         return euroMatchId == null
                 ? Pair.of( homeGameTeamId,awayGameTeamId )
-                : euroService.getMatchTeams( euroMatchId );
+                : euroService.getMatchTeams( euroMatchId,euroId );
 
     }
 }

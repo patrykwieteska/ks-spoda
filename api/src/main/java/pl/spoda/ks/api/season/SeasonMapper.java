@@ -1,6 +1,7 @@
 package pl.spoda.ks.api.season;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.api.season.enums.PointCountingMethod;
@@ -11,6 +12,7 @@ import pl.spoda.ks.comons.date.DateService;
 import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.SeasonDto;
+import pl.spoda.ks.euro.EuroService;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -22,6 +24,7 @@ import java.util.Optional;
 public class SeasonMapper {
 
     private final DateService dateService;
+    private final EuroService euroService;
 
     @Value("${application.initial-rating}")
     public String initialRating;
@@ -35,6 +38,7 @@ public class SeasonMapper {
                 .isEuro( request.getIsEuro() )
                 .image( request.getImage() )
                 .seasonName(request.getSeasonName())
+                .euroTournamentId( addEuro(request.getIsEuro()) )
                 .build();
 
         if (PointCountingMethod.RATING.equals( request.getPointCountingMethod() )) {
@@ -44,6 +48,13 @@ public class SeasonMapper {
                     .orElseThrow( () -> new SpodaApplicationException( InfoMessage.RATING_TYPE_REQUIRED ) ) );
         }
         return seasonDto;
+    }
+
+    private String addEuro(Boolean isEuro) {
+        if(BooleanUtils.isNotTrue(isEuro)) {
+            return null;
+        }
+        return euroService.addNewEuroTournament();
     }
 
     public List<SeasonData> mapToSeasonList(List<SeasonDto> seasonDtoList) {
@@ -67,6 +78,7 @@ public class SeasonMapper {
                 .isEuro( seasonDto.getIsEuro() )
                 .image(seasonDto.getImage())
                 .seasonName(seasonDto.getSeasonName())
+                .euroId( seasonDto.getEuroTournamentId() )
                 .build();
     }
 }

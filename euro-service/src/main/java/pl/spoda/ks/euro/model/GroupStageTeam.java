@@ -17,4 +17,5 @@ public class GroupStageTeam {
     private int goalsScored;
     private int goalsConceded;
     private int groupPosition;
+    private boolean matchInProgress;
 }

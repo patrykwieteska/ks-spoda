@@ -16,4 +16,6 @@ public class MatchDayPlayer {
     private List<MatchDayPlayerRow> opponents;
     private List<MatchDayPlayerRow> teammates;
     private Integer matchesInRow;
+    private MatchStats seasonStats;
+    private MatchStats matchDayStats;
 }

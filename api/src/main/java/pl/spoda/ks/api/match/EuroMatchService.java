@@ -24,7 +24,8 @@ public class EuroMatchService {
     public void updateEuroMatch(
             MatchDto matchDto,
             Boolean isEuro,
-            boolean isMatchComplete
+            boolean isMatchComplete,
+            String euroId
     ) {
         if (BooleanUtils.isNotTrue( isEuro )) {
             return;
@@ -46,7 +47,8 @@ public class EuroMatchService {
                 euroMatchId,
                 isMatchComplete,
                 matchDto.getAwayPenaltyGoals(),
-                matchDto.getHomePenaltyGoals()
+                matchDto.getHomePenaltyGoals(),
+                euroId
         );
     }
 
@@ -64,16 +66,16 @@ public class EuroMatchService {
                 .build();
     }
 
-    public void resetEuroMatch(Integer euroMatchId) {
+    public void resetEuroMatch(Integer euroMatchId, String euroId) {
         if(euroMatchId == null) {
             return;
         }
 
-        euroService.clearEuroMatch( euroMatchId );
+        euroService.clearEuroMatch( euroMatchId,euroId );
     }
 
-    public EuroMatchSchedule getNotPlayedMatches() {
-        List<EuroMatch> nextMatches = euroService.getEuroCalendar( null )
+    public EuroMatchSchedule getNotPlayedMatches(String euroId) {
+        List<EuroMatch> nextMatches = euroService.getEuroCalendar( null,euroId )
                 .getEuroMatches().stream()
                 .filter( euroMatch -> !euroMatch.isPlayed() )
                 .sorted( Comparator.comparing( EuroMatch::getMatchNumber ) )
@@ -84,23 +86,24 @@ public class EuroMatchService {
                 .build();
     }
 
-    public EuroMatch getNextEuroMatch() {
-        return euroService.getEuroCalendar( null )
+    public EuroMatch getNextEuroMatch(String euroId) {
+        return euroService.getEuroCalendar( null,euroId )
                 .getEuroMatches().stream()
                 .filter( euroMatch -> !euroMatch.isPlayed() )
-                .sorted( Comparator.comparing( EuroMatch::getMatchNumber ) )
+                .sorted( Comparator.comparing( EuroMatch::getDateTime )
+                        .thenComparing( EuroMatch::getMatchNumber ) )
                 .limit( 1 )
                 .findFirst()
                 .orElseThrow(() -> new SpodaApplicationException("Brak meczów, prawdopodobnie turniej został " +
                         "zakończony"));
     }
 
-    public EuroMatchSchedule getPlayedMatches(String group, long limit) {
+    public EuroMatchSchedule getPlayedMatches(String group, long limit, String euroId) {
         if(limit <=0 || limit > 51) {
             limit=51;
         }
 
-        List<EuroMatch> nextMatches = euroService.getEuroCalendar( group )
+        List<EuroMatch> nextMatches = euroService.getEuroCalendar( group,euroId )
                 .getEuroMatches().stream()
                 .filter( EuroMatch::isPlayed )
                 .sorted( Comparator.comparing( EuroMatch::getMatchNumber ) )

@@ -26,5 +26,6 @@ public class SeasonDto extends BaseDto {
     private Boolean isEuro;
     private String image;
     private String seasonName;
+    private String euroTournamentId;
 
 }

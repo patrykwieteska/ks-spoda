@@ -8,6 +8,7 @@ import lombok.Data;
 public class CurrentStage {
 
     private TournamentStage stage;
+    private Integer selectedTab;
     private String description;
 
 }

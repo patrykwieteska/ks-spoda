@@ -13,13 +13,14 @@ import pl.spoda.ks.comons.utils.CollectionUtils;
 import pl.spoda.ks.database.dto.LeagueTableDto;
 import pl.spoda.ks.database.dto.PlayerDto;
 import pl.spoda.ks.database.dto.TableBaseDto;
-import pl.spoda.ks.database.entity.LeagueTable;
 import pl.spoda.ks.database.entity.Player;
 import pl.spoda.ks.database.mapper.EntityMapper;
-import pl.spoda.ks.database.repository.LeagueTableRepository;
 import pl.spoda.ks.database.repository.PlayerRepository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,6 +110,9 @@ public class PlayerServiceDB {
         if (!Objects.isNull(playerDto.getAlias())) {
             player.setAlias( playerDto.getAlias() );
         }
+
+        player.setPlayerImg( playerDto.getPlayerImg() );
+        player.setDesc( playerDto.getDesc() );
     }
 
     @Transactional

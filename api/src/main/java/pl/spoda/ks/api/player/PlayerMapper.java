@@ -1,6 +1,7 @@
 package pl.spoda.ks.api.player;
 
 import org.springframework.stereotype.Service;
+import pl.spoda.ks.api.player.model.EditPlayerRequest;
 import pl.spoda.ks.api.player.model.PlayerData;
 import pl.spoda.ks.api.player.model.PlayerRequest;
 import pl.spoda.ks.comons.utils.CollectionUtils;
@@ -19,6 +20,15 @@ public class PlayerMapper {
                 .alias( request.getAlias() )
                 .name( request.getName() )
                 .playerImg( request.getPlayerImg() )
+                .build();
+    }
+
+    public PlayerDto mapToPlayerDto(EditPlayerRequest request) {
+        return PlayerDto.builder()
+                .alias( request.getAlias() )
+                .name( request.getName() )
+                .playerImg( request.getPlayerImg() )
+                .desc( request.getDescription() )
                 .build();
     }
 

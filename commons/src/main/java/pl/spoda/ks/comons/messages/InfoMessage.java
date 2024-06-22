@@ -11,7 +11,7 @@ public class InfoMessage {
     public static final String NOT_IMPLEMENTED_YET = "Nie zaimplementowano funkcjonalności";
     public static final String PLAYER_HAS_MATCH_IN_PROGRESS = "Przynajmniej jeden z graczy aktualnie rozgrywa mecz.\nZakończ mecze graczy przed tworzeniem kolejnych";
     public static final String NO_PLAYER_IN_THE_LEAGUE = "W meczu znajdują się gracze nienależący do tej ligi";
-    public static final String MATCH_DAY_FINISHED = "Brak możliwości dodania meczu. Zakończono kolejkę: ";
+    public static final String MATCH_DAY_FINISHED = "Brak możliwości dodania meczu. Kolejka została zakończona.";
     public static final String MATCH_FINISHED = "Brak możliwości edycji zakończonego meczu ";
     public static final String DUPLICATE_PLAYERS_IN_MATCH_REQUEST = "W meczu znajdują się duplikaty graczy";
     public static final String NOT_FINISHED_MATCHES = "Istnieją niezakończone mecze w kolejce. Zakończ mecze przed " +
