@@ -84,8 +84,7 @@ public class MatchValidator {
 
     private void validateMatchDay(MatchDayDto matchDay) {
         if (Boolean.TRUE.equals( matchDay.getIsFinished() ))
-            throw new SpodaApplicationException( InfoMessage.getMessage( InfoMessage.MATCH_DAY_FINISHED,
-                    matchDay.getId().toString() ) );
+            throw new SpodaApplicationException( InfoMessage.MATCH_DAY_FINISHED );
     }
 
     private void validatePlayersInLeague(List<Integer> playerList, Integer leagueId) {

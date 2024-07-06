@@ -30,5 +30,6 @@ public class SeasonData extends BaseResponse {
     private Boolean isEuro;
     private String image;
     private String seasonName;
+    private String euroId;
 
 }

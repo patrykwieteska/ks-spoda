@@ -25,5 +25,7 @@ public class EuroMatch {
     private String playedCity;
     private LocalDateTime created;
     private LocalDateTime updated;
+    private Boolean matchInProgress;
+    private String message;
 
 }

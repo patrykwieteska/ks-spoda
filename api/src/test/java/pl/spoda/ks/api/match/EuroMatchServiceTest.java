@@ -28,8 +28,8 @@ class EuroMatchServiceTest {
 
     @Test
     void getNotPlayedMatches() {
-        Mockito.when( euroService.getEuroCalendar( GROUP ) ).thenReturn( stubResponse() );
-        EuroMatchSchedule result = euroMatchService.getNotPlayedMatches();
+        Mockito.when( euroService.getEuroCalendar( GROUP, "EURO_ID" ) ).thenReturn( stubResponse() );
+        EuroMatchSchedule result = euroMatchService.getNotPlayedMatches("EURO_ID");
 
         Assertions.assertThat( result ).isEqualTo(
                 EuroMatchSchedule.builder()
@@ -53,8 +53,8 @@ class EuroMatchServiceTest {
 
     @Test
     void getPlayedMatches() {
-        Mockito.when( euroService.getEuroCalendar( GROUP ) ).thenReturn( stubResponse() );
-        EuroMatchSchedule result = euroMatchService.getPlayedMatches( GROUP, 4 );
+        Mockito.when( euroService.getEuroCalendar( GROUP, "EURO_ID" ) ).thenReturn( stubResponse() );
+        EuroMatchSchedule result = euroMatchService.getPlayedMatches( GROUP, 4,"EURO_ID" );
         Assertions.assertThat( result ).isEqualTo(
                 EuroMatchSchedule.builder()
                         .matches( List.of(

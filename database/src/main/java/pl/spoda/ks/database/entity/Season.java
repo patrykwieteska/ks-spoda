@@ -46,6 +46,8 @@ public class Season extends BaseEntity {
     private String image;
     @Column(name="SEASON_NAME")
     private String seasonName;
+    @Column(name="EURO_TOURNAMENT_ID")
+    private String euroTournamentId;
 
     @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)

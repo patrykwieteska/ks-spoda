@@ -1,6 +1,7 @@
 package pl.spoda.ks.api.season;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.api.commons.BaseResponse;
@@ -69,5 +70,10 @@ public class SeasonService {
     public ResponseEntity<BaseResponse> completeSeason(StoredSeason request) {
         seasonServiceDb.completeSeason( request.getSeasonId() );
         return responseResolver.prepareResponse( request );
+    }
+
+    @CachePut(key = "seasonId")
+    public String getEuroId(Integer seasonId) {
+        return seasonServiceDb.getSingleSeason( seasonId ).getEuroTournamentId();
     }
 }

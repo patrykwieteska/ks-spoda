@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class MatchRequest {
+public class EuroMatchRequest {
 
     private List<Player> homePlayers;
     private List<Player> awayPlayers;
