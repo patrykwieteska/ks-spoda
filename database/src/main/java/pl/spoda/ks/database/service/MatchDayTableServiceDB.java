@@ -8,6 +8,7 @@ import pl.spoda.ks.database.entity.MatchDayTable;
 import pl.spoda.ks.database.mapper.EntityMapper;
 import pl.spoda.ks.database.repository.MatchDayTableRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,17 +31,23 @@ public class MatchDayTableServiceDB {
 
     public void saveTable(List<MatchDayTableDto> matchDayTableDtoSet) {
         List<MatchDayTable> matchDayTableList = new ArrayList<>();
+        List<Integer> rowsIdsToRemove = new ArrayList<>();
         matchDayTableDtoSet.stream()
                 .map( mapper::mapToMatchDayTable )
-                .forEach( details -> {
-                    if (details.getId() != null) {
-                        baseServiceDB.updateEntity( details );
+                .forEach( matchDayTableRow -> {
+                    if (matchDayTableRow.getId() != null) {
+                        baseServiceDB.updateEntity( matchDayTableRow );
                     } else {
-                        baseServiceDB.createEntity( details );
+                        baseServiceDB.createEntity( matchDayTableRow );
                     }
-                    matchDayTableList.add( details );
+                    matchDayTableList.add( matchDayTableRow );
+
+                    if(matchDayTableRow.getMatches().equals( BigDecimal.ZERO )) {
+                        rowsIdsToRemove.add( matchDayTableRow.getId() ) ;
+                    }
                 } );
         matchDayTableRepository.saveAll( matchDayTableList );
+        matchDayTableRepository.deleteAllById( rowsIdsToRemove );
     }
 
     public List<MatchDayTableDto> getMatchDayTable(Integer matchDayId) {

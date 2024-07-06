@@ -68,13 +68,13 @@ public class LeagueTableServiceDB {
         List<LeagueTable> leagueTableList = new ArrayList<>();
         leagueTableDtoSet.stream()
                 .map( mapper::mapToLeagueTable )
-                .forEach( leagueTable -> {
-                    if (leagueTable.getId() != null) {
-                        baseServiceDB.updateEntity( leagueTable );
+                .forEach( leagueTableRow -> {
+                    if (leagueTableRow.getId() != null) {
+                        baseServiceDB.updateEntity( leagueTableRow );
                     } else {
-                        baseServiceDB.createEntity( leagueTable );
+                        baseServiceDB.createEntity( leagueTableRow );
                     }
-                    leagueTableList.add( leagueTable );
+                    leagueTableList.add( leagueTableRow );
                 } );
         leagueTableRepository.saveAll( leagueTableList );
     }

@@ -28,8 +28,6 @@ public class TableService {
     private final SeasonServiceDB seasonServiceDB;
     private final PlayerServiceDB playerServiceDB;
     private final MatchDayTableServiceDB matchDayTableServiceDB;
-    private final MatchDayServiceDB matchDayServiceDB;
-    private final SortTableService sortTableService;
 
     public ResponseEntity<BaseResponse> getLeagueTable(Integer leagueId) {
         List<MatchDto> matchesByLeague = matchServiceDB.findMatchesByLeague( leagueId );
@@ -90,6 +88,6 @@ public class TableService {
                 .collect( Collectors.toSet() );
         Set<TableResultRow> tableRows = tableRowsService.getTableRows( matchesBySeason, matchDayPlayers, matchDayTableDtoSet );
         List<TableResultRow> result = getSortedTableRows( tableRows );
-        return prepareTableResponse( result, null, PointCountingMethod.POINTS_TOTAL );
+        return prepareTableResponse( result, null, PointCountingMethod.RATING );
     }
 }

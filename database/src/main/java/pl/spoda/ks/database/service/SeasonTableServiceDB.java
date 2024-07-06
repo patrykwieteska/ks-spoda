@@ -8,6 +8,7 @@ import pl.spoda.ks.database.entity.SeasonTable;
 import pl.spoda.ks.database.mapper.EntityMapper;
 import pl.spoda.ks.database.repository.SeasonTableRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,17 +31,24 @@ public class SeasonTableServiceDB {
 
     public void saveTable(List<SeasonTableDto> seasonPlayerDetailsDtoSet) {
         List<SeasonTable> seasonTableList = new ArrayList<>();
+        List<Integer> rowsIdsToRemove = new ArrayList<>();
         seasonPlayerDetailsDtoSet.stream()
                 .map( mapper::mapToSeasonTable )
-                .forEach( details -> {
-                    if (details.getId() != null) {
-                        baseServiceDB.updateEntity( details );
+                .forEach( seasonTableRow -> {
+                    if (seasonTableRow.getId() != null) {
+                        baseServiceDB.updateEntity( seasonTableRow );
                     } else {
-                        baseServiceDB.createEntity( details );
+                        baseServiceDB.createEntity( seasonTableRow );
                     }
-                    seasonTableList.add( details );
+                    seasonTableList.add( seasonTableRow );
+
+                    if(seasonTableRow.getMatches().equals( BigDecimal.ZERO )) {
+                        rowsIdsToRemove.add( seasonTableRow.getId() ) ;
+                    }
                 } );
         seasonTableRepository.saveAll( seasonTableList );
+        seasonTableRepository.deleteAllById( rowsIdsToRemove );
+
     }
 
     public List<SeasonTableDto> getSeasonTable(Integer seasonId) {

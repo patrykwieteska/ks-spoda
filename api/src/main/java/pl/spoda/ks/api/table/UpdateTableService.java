@@ -90,8 +90,6 @@ public class UpdateTableService {
     private <T extends TableBaseDto> void updateBeforeDelete(
             T row, List<MatchDetailsDto> matchDetailsList
     ) {
-
-
         MatchDetailsDto matchPlayerDetails = getPlayerMatchDetails( matchDetailsList, row.getPlayer() );
         BigDecimal updatedRating = getRatingBefore( matchPlayerDetails, row.getCompetitionType() );
         BigDecimal updatedPointsTotal = row.getPointsTotal().subtract( new BigDecimal( matchPlayerDetails.getMatchPoints() ) );
