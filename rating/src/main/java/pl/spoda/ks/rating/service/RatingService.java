@@ -24,7 +24,8 @@ public class RatingService {
     private final ActualScoreService actualScoreService;
     private final GoalsService goalsService;
 
-    private static final BigDecimal WEIGHT_INDEX = BigDecimal.valueOf( 20 );
+    private static final BigDecimal MATCH_WEIGHT_INDEX = BigDecimal.valueOf( 20 ); // im wyższa waga meczu tym większa
+    // czułość zmiany ratingu
 
     @LogEvent
     public RatingResponse calculateRating(@Valid RatingRequest request) {
@@ -80,7 +81,7 @@ public class RatingService {
     }
 
     private static BigDecimal calculateRatingDifference(BigDecimal actualScore, BigDecimal expectedScore, BigDecimal goalsDifferenceIndex) {
-        return WEIGHT_INDEX
+        return MATCH_WEIGHT_INDEX
                 .multiply( goalsDifferenceIndex )
                 .multiply( actualScore.subtract( expectedScore ) )
                 .divide( new BigDecimal( 1 ), 0,

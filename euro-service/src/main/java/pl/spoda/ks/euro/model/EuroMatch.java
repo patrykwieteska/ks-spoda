@@ -26,5 +26,6 @@ public class EuroMatch {
     private LocalDateTime created;
     private LocalDateTime updated;
     private Boolean matchInProgress;
+    private String message;
 
 }

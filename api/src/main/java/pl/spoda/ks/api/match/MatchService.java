@@ -159,7 +159,7 @@ public class MatchService {
 
         boolean isDraw = request.getHomeGoals().equals( request.getAwayGoals() );
 
-        if (isDraw && playOffMatch && (request.getPenalties() == null || request.getPenalties().getHomeGoals() == request.getAwayGoals())) {
+        if (isDraw && playOffMatch && (request.getPenalties() == null || request.getPenalties().getHomeGoals() == request.getPenalties().getAwayGoals())) {
             throw new SpodaApplicationException( "Nie można zakończyć meczu pucharowego remisem.\nPopraw wynik w " +
                     "rzutach karnych" );
 
