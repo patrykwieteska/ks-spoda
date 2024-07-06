@@ -51,18 +51,19 @@ public class MatchDetailsService {
             CreateMatchRequest request,
             List<MatchDetailsDto> latestMatchDetails,
             SeasonDto season,
-            Integer leagueId) {
-        int seasonMatchesCount = matchDetailsServiceDB.getSeasonMatchesCount( season.getId() );
-        int matchDayMatchesCount = matchDetailsServiceDB.getMatchDayMatchesCount( request.getMatchDayId() );
+            Integer leagueId
+    ) {
         PointCountingMethod pointCountingMethod = PointCountingMethod.getByName( season.getPointCountingMethod() );
         List<MatchDetailsDto> newMatchDetailsList = requestPlayerIds.stream()
-                .map( playerId -> createMatchDetails( request, playerId, latestMatchDetails, pointCountingMethod,
-                        leagueId, season.getId(),seasonMatchesCount,matchDayMatchesCount ) )
+                .map( playerId -> createMatchDetails(
+                        request,
+                        playerId,
+                        latestMatchDetails,
+                        pointCountingMethod,
+                        leagueId,
+                        season.getId() ) )
                 .toList();
-
-
         updateByRatingData( request, newMatchDetailsList, season.getRatingType(), pointCountingMethod );
-
         return newMatchDetailsList;
     }
 
@@ -102,12 +103,9 @@ public class MatchDetailsService {
             List<MatchDetailsDto> latestMatchDetails,
             PointCountingMethod pointCountingMethod,
             Integer leagueId,
-            Integer seasonId,
-            int seasonMatchesCount,
-            int matchDayMatchesCount
+            Integer seasonId
     ) {
-        Optional<MatchDetailsDto> lastPlayerMatchDetail =
-                getLastPlayerMatchDetails( playerId, latestMatchDetails );
+        MatchDetailsDto lastPlayerMatchDetail = getLastPlayerMatchDetails( playerId, latestMatchDetails ).orElse( null );
         MatchResult result = matchResultService.getMatchResult( request, playerId );
         return MatchDetailsDto.builder()
                 .playerId( playerId )
@@ -119,22 +117,30 @@ public class MatchDetailsService {
                 .matchPoints( result.getPoints() )
                 .matchResult( result.name() )
                 .matchInProgress( true )
-                .leagueRatingBeforeMatch( lastPlayerMatchDetail.map( MatchDetailsDto::getLeagueRatingAfterMatch ).orElse( getInitialRating( PointCountingMethod.RATING ) ) )
-                .seasonRatingBeforeMatch( getRatingBefore( pointCountingMethod, lastPlayerMatchDetail.orElse( null ), seasonMatchesCount,MatchDetailsDto::getSeasonRatingAfterMatch ) )
-                .matchDayRatingBeforeMatch( getRatingBefore( pointCountingMethod, lastPlayerMatchDetail.orElse( null ),matchDayMatchesCount, MatchDetailsDto::getMatchDayRatingAfterMatch ) )
+                .leagueRatingBeforeMatch( prepareLeagueRating( lastPlayerMatchDetail ) )
+                .seasonRatingBeforeMatch( prepareSeasonRating( pointCountingMethod, seasonId, lastPlayerMatchDetail ) )
+                .matchDayRatingBeforeMatch( prepareMatchDayRating( request, pointCountingMethod, lastPlayerMatchDetail ) )
                 .build();
     }
 
-    private BigDecimal getRatingBefore(
-            PointCountingMethod pointCountingMethod,
-            MatchDetailsDto lastPlayerMatchDetails,
-            int matchDayMatchesCount,
-            Function<MatchDetailsDto,BigDecimal> getRatingAfterMatchFunction) {
+    private BigDecimal prepareLeagueRating(MatchDetailsDto lastPlayerMatchDetail) {
+        return Optional.ofNullable(lastPlayerMatchDetail).map( MatchDetailsDto::getLeagueRatingAfterMatch ).orElse( getInitialRating( PointCountingMethod.RATING ) );
+    }
 
-        if(lastPlayerMatchDetails == null || matchDayMatchesCount==0) {
+    private BigDecimal prepareMatchDayRating(CreateMatchRequest request, PointCountingMethod pointCountingMethod, MatchDetailsDto lastPlayerMatchDetail) {
+        if(lastPlayerMatchDetail==null || !Objects.equals( request.getMatchDayId(),
+                lastPlayerMatchDetail.getMatchDayId())
+        ) {
             return getInitialRating( pointCountingMethod );
         }
-        return getRatingAfterMatchFunction.apply( lastPlayerMatchDetails );
+        return lastPlayerMatchDetail.getMatchDayRatingAfterMatch();
+    }
+
+    private BigDecimal prepareSeasonRating(PointCountingMethod pointCountingMethod, Integer seasonId,MatchDetailsDto lastPlayerMatchDetail) {
+        if(lastPlayerMatchDetail==null || !Objects.equals( seasonId,lastPlayerMatchDetail.getSeasonId() )) {
+            return getInitialRating( pointCountingMethod );
+        }
+        return lastPlayerMatchDetail.getSeasonRatingAfterMatch();
     }
 
     private BigDecimal getInitialRating(PointCountingMethod pointCountingMethod) {
