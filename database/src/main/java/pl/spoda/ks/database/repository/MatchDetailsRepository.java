@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import pl.spoda.ks.database.entity.MatchDetails;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MatchDetailsRepository extends JpaRepository<MatchDetails, Integer> {
@@ -21,4 +22,14 @@ public interface MatchDetailsRepository extends JpaRepository<MatchDetails, Inte
             """,
             nativeQuery = true)
     Integer findNewestPlayerMatchInLeague(@Param("playerId") Integer playerId, @Param("leagueId") Integer leagueId);
+
+    @Query(nativeQuery = true, value = """
+            SELECT * FROM MATCH_DETAILS
+            WHERE PLAYER_ID = :playerId
+            AND league_id = :leagueId
+            and match_id < :matchId
+            order by id desc
+            limit 1
+            """)
+    Optional<MatchDetails> findPreviousLeagueMatch(Integer playerId, Integer leagueId, Integer matchId);
 }

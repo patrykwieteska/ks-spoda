@@ -13,6 +13,7 @@ import pl.spoda.ks.comons.aspects.LogEvent;
 import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.PlayerDto;
+import pl.spoda.ks.database.service.LeagueTableServiceDB;
 import pl.spoda.ks.database.service.PlayerServiceDB;
 import pl.spoda.ks.database.service.SeasonServiceDB;
 
@@ -29,18 +30,27 @@ public class PlayerService {
     private final ResponseResolver responseResolver;
     private final SeasonServiceDB seasonServiceDB;
     private final EuroPlayerService euroPlayerService;
+    private final LeagueTableServiceDB leagueTableServiceDB;
 
     @LogEvent
     public ResponseEntity<BaseResponse> addPlayer(PlayerRequest playerRequest) {
-        Integer newPlayerId;
-        try {
-            newPlayerId = playerServiceDB.add( playerMapper.mapToPlayerDto( playerRequest ),playerRequest.getLeagueId() );
-        } catch (SpodaApplicationException e) {
-            log.error( e.getMessage(), e );
-            return responseResolver.prepareResponse( HttpStatus.CONFLICT, InfoMessage.ALIAS_ALREADY_EXISTS );
+        Integer playerId;
+        if(playerRequest.getPlayerId()== null) {
+            try {
+                playerId = playerServiceDB.add( playerMapper.mapToPlayerDto( playerRequest ),playerRequest.getLeagueId() );
+            } catch (SpodaApplicationException e) {
+                log.error( e.getMessage(), e );
+                return responseResolver.prepareResponse( HttpStatus.CONFLICT, InfoMessage.ALIAS_ALREADY_EXISTS );
+            }
+        } else {
+
+            leagueTableServiceDB.validatePlayerInTheLeague( playerRequest.getLeagueId(),playerRequest.getPlayerId()  );
+            PlayerDto player = playerServiceDB.getPlayer( playerRequest.getPlayerId() );
+            playerServiceDB.add(player,playerRequest.getLeagueId() );
+            playerId = player.getId();
         }
 
-        return responseResolver.prepareResponseCreated( StoredPlayer.builder().playerId( newPlayerId ).build() );
+        return responseResolver.prepareResponseCreated( StoredPlayer.builder().playerId( playerId ).build() );
     }
 
     @LogEvent

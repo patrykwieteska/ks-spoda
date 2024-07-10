@@ -13,6 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class TableResultRow {
 
+    /*
+     * Podczas zapisywania tabel nie zapisujemy pozycji gracza w tabeli.
+     * Podczas odczytywania tabel sortujemy i generujemy pozycje w tabeli.
+     */
+
     private PlayerData player;
     private Integer matches;
     private BigDecimal rating;

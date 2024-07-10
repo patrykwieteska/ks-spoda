@@ -2,7 +2,6 @@ package pl.spoda.ks.api.table;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.spoda.ks.api.season.enums.PointCountingMethod;
 import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.dto.MatchDetailsDto;
 import pl.spoda.ks.database.dto.SeasonDto;
@@ -22,13 +21,11 @@ public class SeasonTableService {
 
     private final SeasonTableServiceDB seasonTableServiceDB;
     private final PlayerServiceDB playerServiceDB;
-    private final SortTableService sortTableService;
     private final UpdateTableService updateTableService;
 
-    public List<SeasonTableDto> getCurrentTable(
+    public List<SeasonTableDto> getCurrentTableAfterMatchCreated(
             Integer seasonId,
-            List<MatchDetailsDto> matchDetailsList,
-            PointCountingMethod pointCountingMethod
+            List<MatchDetailsDto> matchDetailsList
     ) {
         Set<SeasonTableDto> currentSeasonTable = seasonTableServiceDB.getCurrentSeasonTable( seasonId );
         List<SeasonTableDto> updatedMatchTable = new ArrayList<>( currentSeasonTable );
@@ -36,11 +33,12 @@ public class SeasonTableService {
         matchDetailsList.forEach( matchDetail -> {
             if (isPlayerInTable( currentSeasonTable, matchDetail.getPlayerId() )) {
                 updateTableRow( matchDetail, updatedMatchTable );
-            } else {
-                updatedMatchTable.add( getNewRow( matchDetail,currentSeasonTable.size(),pointCountingMethod ) );
+                return;
             }
+            updatedMatchTable.add( getNewRow( matchDetail ) );
+
         } );
-        return sortTableService.getSortedTable( updatedMatchTable, pointCountingMethod,true );
+        return updatedMatchTable;
     }
 
     private void updateTableRow(MatchDetailsDto matchDetail, List<SeasonTableDto> updatedMatchTable) {
@@ -55,17 +53,15 @@ public class SeasonTableService {
                 } );
     }
 
-    private SeasonTableDto getNewRow(MatchDetailsDto matchDetail, int tableSize, PointCountingMethod pointCountingMethod) {
-        int defaultPosition = tableSize +1;
+    private SeasonTableDto getNewRow(MatchDetailsDto matchDetail) {
         return SeasonTableDto.builder()
                 .seasonId( matchDetail.getSeasonId() )
                 .player( playerServiceDB.getPlayer( matchDetail.getPlayerId() ) )
                 .matches( BigDecimal.ONE )
                 .pointsTotal( new BigDecimal( matchDetail.getMatchPoints() ) )
-                .currentPosition( defaultPosition)
-                .previousPosition( defaultPosition )
-                .standbyPosition( defaultPosition )
-                .currentRating( preparePointCountingMethod( pointCountingMethod, matchDetail.getSeasonRatingAfterMatch()) )
+                .currentRating( null )
+                .previousRating( matchDetail.getSeasonRatingBeforeMatch() )
+                .matchCurrentRating( matchDetail.getSeasonRatingAfterMatch() )
                 .isNewPlayer( true )
                 .matchInProgress( matchDetail.getMatchInProgress() )
                 .build();
@@ -76,27 +72,17 @@ public class SeasonTableService {
                 .anyMatch( row -> row.getPlayer().getId().equals( playerId ) );
     }
 
-    private BigDecimal preparePointCountingMethod(
-            PointCountingMethod pointCountingMethod,
-            BigDecimal ratingAfterMatch
-    ) {
-        return pointCountingMethod.equals(  PointCountingMethod.RATING)
-                ? ratingAfterMatch
-                : null;
-    }
-
-    public List<SeasonTableDto> updateTable(
+    public List<SeasonTableDto> getUpdatedTable(
             List<MatchDetailsDto> matchDetailsList,
             List<MatchDetailsDto> updatedMatchDetailsList,
-            MatchDayDto matchDayDto
+            MatchDayDto matchDayDto,
+            Boolean isComplete
     ) {
         SeasonDto season = matchDayDto.getSeason();
         List<SeasonTableDto> seasonTable = seasonTableServiceDB.getSeasonTable( season.getId() );
         List<SeasonTableDto> updatedSeasonTable = new ArrayList<>( seasonTable );
-        PointCountingMethod countingMethod = PointCountingMethod.getByName( season.getPointCountingMethod() );
-
-        updateTableService.updateTable( updatedSeasonTable,matchDetailsList,updatedMatchDetailsList,countingMethod );
-        return sortTableService.getSortedTable( updatedSeasonTable, countingMethod,false );
+        updateTableService.updateTable( updatedSeasonTable, matchDetailsList, updatedMatchDetailsList, isComplete );
+        return updatedSeasonTable;
     }
 
     public List<SeasonTableDto> updateBeforeRemoveMatch(List<MatchDetailsDto> matchDetailsList, Integer seasonId) {

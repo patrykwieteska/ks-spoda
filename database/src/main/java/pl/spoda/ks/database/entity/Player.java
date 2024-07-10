@@ -31,9 +31,11 @@ public class Player extends BaseEntity {
     private String desc;
 
     @OneToMany(mappedBy = "player")
+    @ToString.Exclude
     private List<SeasonTable> seasonTable;
 
     @OneToMany(mappedBy = "player")
+    @ToString.Exclude
     private List<LeagueTable> leagueTable;
 
     @ManyToMany

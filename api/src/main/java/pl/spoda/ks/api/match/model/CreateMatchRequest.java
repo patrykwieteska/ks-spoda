@@ -17,10 +17,10 @@ public class CreateMatchRequest {
     @NotNull(message = "request.matchDayId is null")
     private Integer matchDayId;
 
-    @NotEmpty(message = "request.homePlayers is empty")
+    @NotEmpty(message = "Brak graczy gospodarzy")
     private List<Integer> homePlayers;
 
-    @NotEmpty(message = "request.awayPlayers is empty")
+    @NotEmpty(message = "Brak graczy gości")
     private List<Integer> awayPlayers;
 
     @NotNull(message = "request.homeGoals is null")

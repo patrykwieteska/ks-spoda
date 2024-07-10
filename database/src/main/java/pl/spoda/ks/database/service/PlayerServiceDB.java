@@ -40,9 +40,8 @@ public class PlayerServiceDB {
             Integer leagueId
     ) {
         Optional<Player> existingPlayer = playerRepository.findByAlias( playerDto.getAlias() );
-        if (existingPlayer.isPresent()) {
-            throw new SpodaDatabaseException( String.format( InfoMessage.ALIAS_ALREADY_EXISTS,
-                    playerDto.getAlias() ) );
+        if (playerDto.getId() == null && existingPlayer.isPresent()) {
+            throw new SpodaApplicationException( String.format( InfoMessage.ALIAS_ALREADY_EXISTS ));
         }
         Player newPlayer = savePlayer( playerDto );
         leagueTableServiceDB.addPlayerToLeague(newPlayer,leagueId);

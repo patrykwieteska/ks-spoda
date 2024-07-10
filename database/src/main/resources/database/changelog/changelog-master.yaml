@@ -21,6 +21,10 @@ databaseChangeLog:
       file: database/changelog/changelog-1.9.sql
   - include:
       file: database/changelog/changelog-1.10.sql
+  - include:
+      file: database/changelog/changelog-1.11.sql
+  - include:
+      file: database/changelog/changelog-1.12.sql
 
 
 ### ------------ DEV/TEST DATA ------------

@@ -19,14 +19,11 @@ public class TableBase extends BaseEntity {
     @Column(name = "CURRENT_RATING", nullable = false)
     private BigDecimal currentRating;
 
-    @Column(name = "CURRENT_POSITION")
-    private Integer currentPosition;
+    @Column(name = "PREVIOUS_RATING", nullable = false)
+    private BigDecimal previousRating;
 
-    @Column(name = "PREVIOUS_POSITION")
-    private Integer previousPosition;
-
-    @Column(name = "STANDBY_POSITION")
-    private Integer standbyPosition;
+    @Column(name = "MATCH_CURRENT_RATING", nullable = false)
+    private BigDecimal matchCurrentRating;
 
     @Column(name = "MATCHES")
     private BigDecimal matches;
