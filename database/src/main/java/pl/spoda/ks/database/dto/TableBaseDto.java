@@ -13,13 +13,12 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-public abstract class TableBaseDto extends BaseDto implements Competition{
+public abstract class TableBaseDto extends BaseDto implements Competition {
 
     private PlayerDto player;
     private BigDecimal currentRating;
-    private Integer currentPosition;
-    private Integer previousPosition;
-    private Integer standbyPosition;
+    private BigDecimal previousRating;
+    private BigDecimal matchCurrentRating;
     private BigDecimal matches;
     private BigDecimal pointsTotal;
     private Boolean matchInProgress;

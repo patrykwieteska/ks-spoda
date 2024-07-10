@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
 import pl.spoda.ks.database.dto.LeagueTableDto;
 import pl.spoda.ks.database.entity.LeagueTable;
 import pl.spoda.ks.database.entity.Player;
@@ -11,10 +12,7 @@ import pl.spoda.ks.database.mapper.EntityMapper;
 import pl.spoda.ks.database.repository.LeagueTableRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,12 +37,12 @@ public class LeagueTableServiceDB {
     public void createLeagueTable(Set<Player> players, Integer leagueId) {
         List<LeagueTable> leagueTableList = players.stream()
                 .map( player -> {
+                    BigDecimal initialRatingValue = new BigDecimal( initialRating );
                     LeagueTable leagueTable = LeagueTable.builder()
                             .leagueId( leagueId )
-                            .currentPosition( 1 )
-                            .previousPosition( 1 )
                             .player( player )
-                            .currentRating( new BigDecimal( initialRating ) )
+                            .currentRating( initialRatingValue )
+                            .previousRating( initialRatingValue )
                             .matches( BigDecimal.ZERO )
                             .pointsTotal( BigDecimal.ZERO )
                             .build();
@@ -89,19 +87,25 @@ public class LeagueTableServiceDB {
             Player newPlayer,
             Integer leagueId
     ) {
-        List<LeagueTable> leagueTable = leagueTableRepository.findByLeagueId( leagueId );
+        BigDecimal initialRatingValue = new BigDecimal( initialRating );
         LeagueTable newPlayerTable = LeagueTable.builder()
                 .leagueId( leagueId )
-                .currentPosition( leagueTable.size()+1 )
-                .previousPosition( leagueTable.size()+1 )
                 .player( newPlayer )
-                .currentRating( new BigDecimal( initialRating ) )
+                .currentRating( initialRatingValue )
+                .previousRating( initialRatingValue )
                 .matches( BigDecimal.ZERO )
                 .pointsTotal( BigDecimal.ZERO )
                 .build();
 
         baseServiceDB.createEntity( newPlayerTable );
+        leagueTableRepository.flush();
         leagueTableRepository.save( newPlayerTable );
+    }
 
+    public void validatePlayerInTheLeague(Integer leagueId, Integer playerId) {
+        Optional<LeagueTable> playerInLeague = leagueTableRepository.findByLeagueIdAndPlayerId( leagueId, playerId );
+        if (playerInLeague.isPresent()) {
+            throw new SpodaApplicationException( "Gracz został już dodany do ligi" );
+        }
     }
 }

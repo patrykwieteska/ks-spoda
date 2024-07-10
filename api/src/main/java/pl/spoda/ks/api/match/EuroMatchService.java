@@ -94,8 +94,7 @@ public class EuroMatchService {
                         .thenComparing( EuroMatch::getMatchNumber ) )
                 .limit( 1 )
                 .findFirst()
-                .orElse( EuroMatch.builder().message("Brak następnych meczów. Turniej został " +
-                        "zakończony lub trwa ostatni mecz").build());
+                .orElse( EuroMatch.builder().message("Brak następnych meczów. Turniej zakończony").build());
     }
 
     public EuroMatchSchedule getPlayedMatches(String group, long limit, String euroId) {

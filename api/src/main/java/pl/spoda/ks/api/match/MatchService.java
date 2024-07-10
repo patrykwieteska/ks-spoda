@@ -12,7 +12,6 @@ import pl.spoda.ks.api.league.enums.TeamStructure;
 import pl.spoda.ks.api.match.matchdetails.MatchDetailsService;
 import pl.spoda.ks.api.match.model.*;
 import pl.spoda.ks.api.match.validator.MatchValidator;
-import pl.spoda.ks.api.season.enums.PointCountingMethod;
 import pl.spoda.ks.api.table.LeagueTableService;
 import pl.spoda.ks.api.table.MatchDayTableService;
 import pl.spoda.ks.api.table.SeasonTableService;
@@ -62,7 +61,7 @@ public class MatchService {
         Pair<Integer, Integer> matchTeams = matchTeamsResolver.prepareMatchTeams( request.getHomeGameTeamId(),
                 request.getAwayGameTeamId()
                 , request.getEuroMatchId(),
-                matchDay.getSeason().getEuroTournamentId());
+                matchDay.getSeason().getEuroTournamentId() );
 
         request.setHomeGameTeamId( matchTeams.getFirst() );
         request.setAwayGameTeamId( matchTeams.getSecond() );
@@ -73,18 +72,14 @@ public class MatchService {
         Integer leagueId = season.getLeagueId();
         List<Integer> requestPlayerIds = prepareMatchPlayerList( request );
         List<MatchDetailsDto> latestMatchDetails = matchDetailsService.getLatestMatchDetails( requestPlayerIds, leagueId );
-        PointCountingMethod pointCountingMethod = PointCountingMethod.getByName( season.getPointCountingMethod() );
         TeamStructure teamStructure = TeamStructure.getByName( league.getTeamStructure() );
         matchValidator.validateCreate( request, requestPlayerIds, leagueId, latestMatchDetails, matchDay, teamStructure );
 
         List<MatchDetailsDto> newMatchDetails = matchDetailsService.createNewMatchDetails( requestPlayerIds, request, latestMatchDetails, season, leagueId );
 
-        List<MatchDayTableDto> matchDayTable = matchDayTableService.getCurrentTable( matchDayId, newMatchDetails,
-                PointCountingMethod.RATING );
-        List<SeasonTableDto> seasonTable = seasonTableService.getCurrentTable( season.getId(), newMatchDetails,
-                pointCountingMethod );
-        List<LeagueTableDto> leagueTable = leagueTableService.getCurrentTable( leagueId, newMatchDetails,
-                PointCountingMethod.RATING );
+        List<MatchDayTableDto> matchDayTable = matchDayTableService.getCurrentTableAfterMatchCreated( matchDayId, newMatchDetails );
+        List<SeasonTableDto> seasonTable = seasonTableService.getCurrentTableAfterMatchCreated( season.getId(), newMatchDetails );
+        List<LeagueTableDto> leagueTable = leagueTableService.getCurrentTableAfterMatchCreated( leagueId, newMatchDetails );
 
         MatchDto matchDto = matchMapper.mapToNewDto( request, matchDayTable );
 
@@ -94,7 +89,7 @@ public class MatchService {
                 seasonTable,
                 matchDayTable,
                 newMatchDetails );
-        euroMatchService.updateEuroMatch( matchDto, season.getIsEuro(), false,season.getEuroTournamentId() );
+        euroMatchService.updateEuroMatch( matchDto, season.getIsEuro(), false, season.getEuroTournamentId() );
         return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( newMatchId ).build() );
     }
 
@@ -126,17 +121,19 @@ public class MatchService {
         matchValidator.validateEdit( matchDto, matchDayDto, request );
         List<MatchDetailsDto> findMatchDetailsList = matchDetailsServiceDB.findMatchDetailsList( matchId );
         List<MatchDetailsDto> storedMatchDetails = new ArrayList<>( findMatchDetailsList );
-        List<MatchDetailsDto> updatedMatchDetailsList = matchDetailsService.getUpdatedDetails( storedMatchDetails,
-                request, matchDto, matchDayDto );
+        List<MatchDetailsDto> updatedMatchDetailsList = matchDetailsService.getUpdatedDetails( storedMatchDetails, request, matchDto, matchDayDto );
 
-        List<MatchDayTableDto> matchDayTable = matchDayTableService.updateTable( storedMatchDetails,
-                updatedMatchDetailsList, matchDto, matchDayDto.getSeason().getPointCountingMethod() );
+        List<MatchDayTableDto> matchDayTable = matchDayTableService.getUpdatedTable(
+                storedMatchDetails, updatedMatchDetailsList, matchDto, request.getIsComplete()
+        );
 
-        List<SeasonTableDto> seasonTable = seasonTableService.updateTable( storedMatchDetails,
-                updatedMatchDetailsList, matchDayDto );
+        List<SeasonTableDto> seasonTable = seasonTableService.getUpdatedTable(
+                storedMatchDetails, updatedMatchDetailsList, matchDayDto, request.getIsComplete()
+        );
 
-        List<LeagueTableDto> leagueTable = leagueTableService.updateTable( storedMatchDetails,
-                updatedMatchDetailsList, matchDayDto );
+        List<LeagueTableDto> leagueTable = leagueTableService.getUpdatedTable(
+                storedMatchDetails, updatedMatchDetailsList, matchDayDto, request.getIsComplete()
+        );
 
         MatchDto updatedMatch = matchMapper.updateMatch( matchDto, request );
 
@@ -165,6 +162,7 @@ public class MatchService {
 
         }
     }
+
     @Transactional
     public ResponseEntity<BaseResponse> removeMatch(Integer matchId) {
         MatchDto matchDto = matchServiceDB.getMatchById( matchId );
@@ -183,7 +181,7 @@ public class MatchService {
         List<LeagueTableDto> leagueTable = leagueTableService.updateBeforeRemoveMatch( storedMatchDetails, leagueId );
 
         matchServiceDB.removeMatch( matchDto.getId(), storedMatchDetails, matchDayTable, seasonTable, leagueTable );
-        euroMatchService.resetEuroMatch( matchDto.getEuroMatchId(),matchDay.getSeason().getEuroTournamentId() );
+        euroMatchService.resetEuroMatch( matchDto.getEuroMatchId(), matchDay.getSeason().getEuroTournamentId() );
         return responseResolver.prepareResponse( MatchCreated.builder().matchId( matchId ).build() );
     }
 

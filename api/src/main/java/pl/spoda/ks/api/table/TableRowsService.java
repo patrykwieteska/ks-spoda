@@ -3,12 +3,11 @@ package pl.spoda.ks.api.table;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.api.player.PlayerMapper;
-import pl.spoda.ks.api.table.enums.PreviousPositionReference;
 import pl.spoda.ks.api.table.model.TableResultRow;
 import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
-import pl.spoda.ks.database.dto.TableBaseDto;
 import pl.spoda.ks.database.dto.MatchDto;
 import pl.spoda.ks.database.dto.PlayerDto;
+import pl.spoda.ks.database.dto.TableBaseDto;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,6 +17,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TableRowsService {
+
+    /*
+     * Podczas zapisywania tabel nie zapisujemy pozycji gracza w tabeli.
+     * Podczas odczytywania tabel sortujemy i generujemy pozycje w tabeli.
+     */
 
     private final PlayerMapper playerMapper;
 
@@ -63,8 +67,8 @@ public class TableRowsService {
         int wins = 0;
         int draws = 0;
         int loses = 0;
-        Integer goalsScored = 0;
-        Integer goalsConceded = 0;
+        int goalsScored = 0;
+        int goalsConceded = 0;
         for (MatchDto match : playerMatches
         ) {
             if (isPlayerInHomeTeam( match, player )) {
@@ -77,13 +81,13 @@ public class TableRowsService {
                 wins = wins + calculateWins( match.getAwayGoals(), match.getHomeGoals() );
                 draws = draws + calculateDraws( match.getAwayGoals(), match.getHomeGoals() );
                 loses = loses + calculateLoses( match.getAwayGoals(), match.getHomeGoals() );
-                goalsScored = goalsScored +match.getAwayGoals();
+                goalsScored = goalsScored + match.getAwayGoals();
                 goalsConceded = goalsConceded + match.getHomeGoals();
             }
         }
 
         BigDecimal pointsTotal =
-                BigDecimal.valueOf( 3 ).multiply(BigDecimal.valueOf( wins)).add( BigDecimal.valueOf( draws ));
+                BigDecimal.valueOf( 3 ).multiply( BigDecimal.valueOf( wins ) ).add( BigDecimal.valueOf( draws ) );
         int matchListSize = playerMatches.size();
         return TableResultRow.builder()
                 .player( playerMapper.mapToPlayerData( player ) )
@@ -97,23 +101,10 @@ public class TableRowsService {
                 .matches( matchListSize )
                 .pointsPerMatch( getPointPerMatch( pointsTotal, matchListSize ) )
                 .playerForm( calculatePlayerForm( player, playerMatches ) )
-                .rating( tablePlayerDetails.getCurrentRating() )
-                .previousPositionReference( preparePreviousPositionReference(
-                        tablePlayerDetails.getCurrentPosition(), tablePlayerDetails.getPreviousPosition() )
-                        .getValue() )
-                .currentPosition( tablePlayerDetails.getCurrentPosition() )
-                .previousPosition( tablePlayerDetails.getPreviousPosition() )
-                .matchInProgress( tablePlayerDetails.getMatchInProgress())
+                .rating( Optional.ofNullable( tablePlayerDetails.getMatchCurrentRating() ).orElse( tablePlayerDetails.getCurrentRating() ) )
+                .previousRating( tablePlayerDetails.getPreviousRating() )
+                .matchInProgress( tablePlayerDetails.getMatchInProgress() )
                 .build();
-    }
-
-    private PreviousPositionReference preparePreviousPositionReference(Integer currentPosition, Integer previousPosition) {
-        if (currentPosition.equals( previousPosition ))
-            return PreviousPositionReference.NONE;
-
-        return currentPosition > previousPosition
-                ? PreviousPositionReference.DOWN
-                : PreviousPositionReference.UP;
     }
 
     private BigDecimal getPointPerMatch(BigDecimal pointsTotal, int matchCount) {
@@ -121,7 +112,7 @@ public class TableRowsService {
             return BigDecimal.ZERO;
         }
 
-        return pointsTotal.divide( BigDecimal.valueOf( matchCount ), 2,RoundingMode.HALF_UP );
+        return pointsTotal.divide( BigDecimal.valueOf( matchCount ), 2, RoundingMode.HALF_UP );
     }
 
     private List<String> calculatePlayerForm(PlayerDto player, List<MatchDto> playerMatches) {

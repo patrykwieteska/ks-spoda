@@ -15,6 +15,11 @@ import java.util.List;
 @NoArgsConstructor
 public class TableResult extends BaseResponse {
 
+    /*
+     * Podczas zapisywania tabel nie zapisujemy pozycji gracza w tabeli.
+     * Podczas odczytywania tabel sortujemy i generujemy pozycje w tabeli.
+     */
+
     private String header;
     private PointCountingMethod pointCountingMethod;
     private List<TableResultRow> tableRows;

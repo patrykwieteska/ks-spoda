@@ -5,10 +5,9 @@ public class InfoMessage {
     public static final String MATCHDAYS_NOT_FINISHED = "Aby zakończyć sezon należy w pierwszej kolejności zakończyć " +
             "wszystkie kolejki w danym sezonie";
     public static final String UNFINISHED_SEASONS_IN_LEAGUE = "Istnieją niezakończone sezony w lidze";
-    public static final String ALIAS_ALREADY_EXISTS = "Player with alias '%s' already exists";
+    public static final String ALIAS_ALREADY_EXISTS = "W lidze istnieje już gracz o podanej nazwie";
     public static final String NO_PLAYERS_FOUND = "Nie znaleziono graczy";
     public static final String RATING_TYPE_REQUIRED = "Należy wybrać typ ratingu";
-    public static final String NOT_IMPLEMENTED_YET = "Nie zaimplementowano funkcjonalności";
     public static final String PLAYER_HAS_MATCH_IN_PROGRESS = "Przynajmniej jeden z graczy aktualnie rozgrywa mecz.\nZakończ mecze graczy przed tworzeniem kolejnych";
     public static final String NO_PLAYER_IN_THE_LEAGUE = "W meczu znajdują się gracze nienależący do tej ligi";
     public static final String MATCH_DAY_FINISHED = "Brak możliwości dodania meczu. Kolejka została zakończona.";

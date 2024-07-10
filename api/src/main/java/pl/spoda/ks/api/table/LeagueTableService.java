@@ -2,7 +2,6 @@ package pl.spoda.ks.api.table;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.spoda.ks.api.season.enums.PointCountingMethod;
 import pl.spoda.ks.database.dto.LeagueTableDto;
 import pl.spoda.ks.database.dto.MatchDayDto;
 import pl.spoda.ks.database.dto.MatchDetailsDto;
@@ -21,13 +20,11 @@ public class LeagueTableService {
 
     private final LeagueTableServiceDB leagueTableServiceDB;
     private final PlayerServiceDB playerServiceDB;
-    private final SortTableService sortTableService;
     private final UpdateTableService updateTableService;
 
-    public List<LeagueTableDto> getCurrentTable(
+    public List<LeagueTableDto> getCurrentTableAfterMatchCreated(
             Integer leagueId,
-            List<MatchDetailsDto> matchDetailsList,
-            PointCountingMethod pointCountingMethod
+            List<MatchDetailsDto> matchDetailsList
     ) {
         Set<LeagueTableDto> currentLeagueTable = leagueTableServiceDB.getCurrentLeagueTable( leagueId );
         List<LeagueTableDto> updatedLeagueTable = new ArrayList<>( currentLeagueTable );
@@ -36,10 +33,10 @@ public class LeagueTableService {
             if (isPlayerInTable( currentLeagueTable, matchDetail.getPlayerId() )) {
                 updateTableRow( matchDetail, updatedLeagueTable );
             } else {
-                updatedLeagueTable.add( getNewRow( matchDetail, currentLeagueTable.size(), pointCountingMethod ) );
+                updatedLeagueTable.add( getNewRow( matchDetail ) );
             }
         } );
-        return sortTableService.getSortedTable( updatedLeagueTable, pointCountingMethod, true );
+        return updatedLeagueTable;
     }
 
     private void updateTableRow(MatchDetailsDto matchDetail, List<LeagueTableDto> updatedLeagueTable) {
@@ -54,29 +51,18 @@ public class LeagueTableService {
                 } );
     }
 
-    private LeagueTableDto getNewRow(MatchDetailsDto matchDetail, int tableSize, PointCountingMethod pointCountingMethod) {
-        int defaultPosition = tableSize + 1;
+    private LeagueTableDto getNewRow(MatchDetailsDto matchDetail) {
         return LeagueTableDto.builder()
                 .leagueId( matchDetail.getLeagueId() )
                 .player( playerServiceDB.getPlayer( matchDetail.getPlayerId() ) )
                 .matches( BigDecimal.ONE )
                 .pointsTotal( new BigDecimal( matchDetail.getMatchPoints() ) )
-                .currentPosition( defaultPosition )
-                .previousPosition( defaultPosition )
-                .standbyPosition( defaultPosition )
-                .currentRating( preparePointCountingMethod( pointCountingMethod, matchDetail.getLeagueRatingAfterMatch() ) )
+                .currentRating( null )
+                .matchCurrentRating( matchDetail.getLeagueRatingAfterMatch() )
+                .previousRating( matchDetail.getLeagueRatingBeforeMatch() )
                 .isNewPlayer( true )
                 .matchInProgress( matchDetail.getMatchInProgress() )
                 .build();
-    }
-
-    private BigDecimal preparePointCountingMethod(
-            PointCountingMethod pointCountingMethod,
-            BigDecimal ratingAfterMatch
-    ) {
-        return pointCountingMethod.equals( PointCountingMethod.RATING )
-                ? ratingAfterMatch
-                : null;
     }
 
     private boolean isPlayerInTable(Set<LeagueTableDto> currentTable, Integer playerId) {
@@ -84,16 +70,16 @@ public class LeagueTableService {
                 .anyMatch( row -> row.getPlayer().getId().equals( playerId ) );
     }
 
-    public List<LeagueTableDto> updateTable(
+    public List<LeagueTableDto> getUpdatedTable(
             List<MatchDetailsDto> matchDetailsList,
             List<MatchDetailsDto> updatedMatchDetailsList,
-            MatchDayDto matchDayDto
+            MatchDayDto matchDayDto,
+            Boolean isComplete
     ) {
         List<LeagueTableDto> leagueTableDtoList = leagueTableServiceDB.getLeagueTable( matchDayDto.getSeason().getLeagueId() );
         List<LeagueTableDto> updatedLeagueTable = new ArrayList<>( leagueTableDtoList );
-        PointCountingMethod pointCountingMethod = PointCountingMethod.RATING;
-        updateTableService.updateTable( updatedLeagueTable, matchDetailsList, updatedMatchDetailsList, pointCountingMethod );
-        return sortTableService.getSortedTable( updatedLeagueTable, pointCountingMethod, false );
+        updateTableService.updateTable( updatedLeagueTable, matchDetailsList, updatedMatchDetailsList, isComplete );
+        return updatedLeagueTable;
     }
 
     public List<LeagueTableDto> updateBeforeRemoveMatch(List<MatchDetailsDto> matchDetailsList, Integer leagueId) {

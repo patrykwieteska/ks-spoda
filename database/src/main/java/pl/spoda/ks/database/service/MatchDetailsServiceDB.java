@@ -10,6 +10,7 @@ import pl.spoda.ks.database.repository.MatchDetailsRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +52,10 @@ public class MatchDetailsServiceDB {
                     matchDetailsEntities.add( details );
                 });
         matchDetailsRepository.saveAll( matchDetailsEntities );
+    }
+
+    public Optional<MatchDetailsDto> getPlayerPreviousLeagueMatch(Integer playerId, Integer leagueId, Integer matchId) {
+        return matchDetailsRepository.findPreviousLeagueMatch( playerId, leagueId,matchId ).map( entityMapper::mapToMatchDetailsDto );
+
     }
 }

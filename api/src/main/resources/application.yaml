@@ -9,3 +9,9 @@ application:
 rating:
   controller:
     enabled: true
+
+logging:
+  level:
+    com:
+      zaxxer:
+        hikari: debug
