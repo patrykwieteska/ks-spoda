@@ -63,23 +63,25 @@ public class MatchDetailsService {
                         leagueId,
                         season.getId() ) )
                 .toList();
-        updateByRatingData( request, newMatchDetailsList, season.getRatingType(), pointCountingMethod );
+        updateByRatingData( request, newMatchDetailsList, season.getRatingType(), pointCountingMethod, season.getMatchWeightIndex() );
         return newMatchDetailsList;
     }
 
-    private void updateByRatingData(CreateMatchRequest request, List<MatchDetailsDto> newMatchDetailsList, String ratingType, PointCountingMethod pointCountingMethod) {
+    private void updateByRatingData(CreateMatchRequest request, List<MatchDetailsDto> newMatchDetailsList, String ratingType, PointCountingMethod pointCountingMethod, BigDecimal matchWeightIndex) {
         if (pointCountingMethod.equals( PointCountingMethod.RATING )) {
             Map<Integer, BigDecimal> seasonRatings = ratingResolver.getRatingResponse(
                     request,
                     ratingType,
                     newMatchDetailsList,
-                    MatchDetailsDto::getSeasonRatingBeforeMatch );
+                    MatchDetailsDto::getSeasonRatingBeforeMatch,
+                    matchWeightIndex );
 
             Map<Integer, BigDecimal> matchDayRatings = ratingResolver.getRatingResponse(
                     request,
                     ratingType,
                     newMatchDetailsList,
-                    MatchDetailsDto::getMatchDayRatingBeforeMatch );
+                    MatchDetailsDto::getMatchDayRatingBeforeMatch,
+                    matchWeightIndex );
 
             newMatchDetailsList.forEach( details -> {
                 details.setSeasonRatingAfterMatch( seasonRatings.get( details.getPlayerId() ) );
@@ -91,7 +93,8 @@ public class MatchDetailsService {
                 request,
                 RatingType.SINGLE.name(),
                 newMatchDetailsList,
-                MatchDetailsDto::getLeagueRatingBeforeMatch );
+                MatchDetailsDto::getLeagueRatingBeforeMatch,
+                matchWeightIndex );
 
         newMatchDetailsList.forEach( details ->
                 details.setLeagueRatingAfterMatch( leagueRatings.get( details.getPlayerId() ) ) );
@@ -124,20 +127,20 @@ public class MatchDetailsService {
     }
 
     private BigDecimal prepareLeagueRating(MatchDetailsDto lastPlayerMatchDetail) {
-        return Optional.ofNullable(lastPlayerMatchDetail).map( MatchDetailsDto::getLeagueRatingAfterMatch ).orElse( getInitialRating( PointCountingMethod.RATING ) );
+        return Optional.ofNullable( lastPlayerMatchDetail ).map( MatchDetailsDto::getLeagueRatingAfterMatch ).orElse( getInitialRating( PointCountingMethod.RATING ) );
     }
 
     private BigDecimal prepareMatchDayRating(CreateMatchRequest request, PointCountingMethod pointCountingMethod, MatchDetailsDto lastPlayerMatchDetail) {
-        if(lastPlayerMatchDetail==null || !Objects.equals( request.getMatchDayId(),
-                lastPlayerMatchDetail.getMatchDayId())
+        if (lastPlayerMatchDetail == null || !Objects.equals( request.getMatchDayId(),
+                lastPlayerMatchDetail.getMatchDayId() )
         ) {
             return getInitialRating( pointCountingMethod );
         }
         return lastPlayerMatchDetail.getMatchDayRatingAfterMatch();
     }
 
-    private BigDecimal prepareSeasonRating(PointCountingMethod pointCountingMethod, Integer seasonId,MatchDetailsDto lastPlayerMatchDetail) {
-        if(lastPlayerMatchDetail==null || !Objects.equals( seasonId,lastPlayerMatchDetail.getSeasonId() )) {
+    private BigDecimal prepareSeasonRating(PointCountingMethod pointCountingMethod, Integer seasonId, MatchDetailsDto lastPlayerMatchDetail) {
+        if (lastPlayerMatchDetail == null || !Objects.equals( seasonId, lastPlayerMatchDetail.getSeasonId() )) {
             return getInitialRating( pointCountingMethod );
         }
         return lastPlayerMatchDetail.getSeasonRatingAfterMatch();
@@ -158,7 +161,8 @@ public class MatchDetailsService {
     public List<MatchDetailsDto> getUpdatedDetails(
             List<MatchDetailsDto> storedMatchDetailsList,
             EditMatchRequest request,
-            MatchDto matchDto, MatchDayDto matchDayDto
+            MatchDto matchDto,
+            MatchDayDto matchDayDto
     ) {
         List<MatchDetailsDto> updatedMatchDetails = new ArrayList<>();
 
@@ -180,7 +184,9 @@ public class MatchDetailsService {
                 RatingType.SINGLE.name(),
                 homePlayers,
                 awayPlayers,
-                beforeLeagueDayRating
+                beforeLeagueDayRating,
+                season.getMatchWeightIndex()
+
         );
         Map<Integer, BigDecimal> seasonRatings = null;
         Map<Integer, BigDecimal> matchDayRatings = null;
@@ -196,7 +202,8 @@ public class MatchDetailsService {
                     ratingType.name(),
                     homePlayers,
                     awayPlayers,
-                    beforeSeasonDayRating
+                    beforeSeasonDayRating,
+                    season.getMatchWeightIndex()
             );
 
             matchDayRatings = ratingResolver.getRatingResponseForMatchUpdate(
@@ -204,7 +211,8 @@ public class MatchDetailsService {
                     ratingType.name(),
                     homePlayers,
                     awayPlayers,
-                    beforeMatchDayRating
+                    beforeMatchDayRating,
+                    season.getMatchWeightIndex()
             );
         }
 

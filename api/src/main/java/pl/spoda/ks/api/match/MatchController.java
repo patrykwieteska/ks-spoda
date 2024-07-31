@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.spoda.ks.api.commons.BaseResponse;
+import pl.spoda.ks.api.commons.ResponseResolver;
 import pl.spoda.ks.api.match.model.CreateMatchRequest;
 import pl.spoda.ks.api.match.model.EditMatchRequest;
+import pl.spoda.ks.api.match.model.MatchCreated;
 import pl.spoda.ks.comons.aspects.LogEvent;
 
 @RestController
@@ -16,22 +18,24 @@ import pl.spoda.ks.comons.aspects.LogEvent;
 public class MatchController {
 
     private final MatchService matchService;
+    private final ResponseResolver responseResolver;
+
 
     @GetMapping("/getLeagueMatches")
     @CrossOrigin
     public ResponseEntity<BaseResponse> getMatchesByLeague(
-            @RequestParam(name="leagueId") Integer leagueId
+            @RequestParam(name = "leagueId") Integer leagueId
     ) {
-       return matchService.getMatchesByLeague(leagueId);
+        return matchService.getMatchesByLeague( leagueId );
     }
 
     @GetMapping("/getMatchDayMatches")
     @CrossOrigin
     @LogEvent
     public ResponseEntity<BaseResponse> getMatchesByMatchDay(
-            @RequestParam(name="matchDayId") Integer matchDayId
+            @RequestParam(name = "matchDayId") Integer matchDayId
     ) {
-        return matchService.getMatchesByMatchDay(matchDayId);
+        return matchService.getMatchesByMatchDay( matchDayId );
     }
 
 
@@ -41,7 +45,8 @@ public class MatchController {
     public ResponseEntity<BaseResponse> createMatch(
             @RequestBody @Valid CreateMatchRequest createMatchRequest
     ) {
-         return matchService.createMatch( createMatchRequest );
+        MatchCreated newMatch = matchService.createMatch( createMatchRequest );
+        return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( newMatch.getMatchId() ).build() );
     }
 
     @PostMapping("/edit-match")
@@ -51,7 +56,7 @@ public class MatchController {
             @RequestParam(value = "matchId") Integer matchId,
             @RequestBody @Valid EditMatchRequest editMatchRequest
     ) {
-        return matchService.editMatch( matchId,editMatchRequest );
+        return matchService.editMatch( matchId, editMatchRequest );
     }
 
     @DeleteMapping("/remove-match")
@@ -67,8 +72,8 @@ public class MatchController {
     @GetMapping("/initGameTeams")
     @CrossOrigin
     public ResponseEntity<BaseResponse> initGameTeams(
-            @RequestParam(name="matchDayId") Integer matchDayId
+            @RequestParam(name = "matchDayId") Integer matchDayId
     ) {
-        return matchService.initGameTeams(matchDayId);
+        return matchService.initGameTeams( matchDayId );
     }
 }

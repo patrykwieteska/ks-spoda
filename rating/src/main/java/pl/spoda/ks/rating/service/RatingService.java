@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -24,7 +25,7 @@ public class RatingService {
     private final ActualScoreService actualScoreService;
     private final GoalsService goalsService;
 
-    private static final BigDecimal MATCH_WEIGHT_INDEX = BigDecimal.valueOf( 20 ); // im wyższa waga meczu tym większa
+    private static final BigDecimal MATCH_WEIGHT_INDEX_DEFAULT = BigDecimal.valueOf( 20 ); // im wyższa waga meczu tym większa
     // czułość zmiany ratingu
 
     @LogEvent
@@ -45,7 +46,7 @@ public class RatingService {
         ).toList();
 
         return RatingResponse.builder()
-                .players( prepareRatingMap( players, actualScores, expectedScores, goalsDifferenceIndex ) )
+                .players( prepareRatingMap( players, actualScores, expectedScores, goalsDifferenceIndex, request.getMatchWeightIndex() ) )
                 .build();
     }
 
@@ -53,7 +54,8 @@ public class RatingService {
             List<GamePlayerData> players,
             Map<String, BigDecimal> actualScores,
             Map<String, BigDecimal> expectedScores,
-            BigDecimal goalsDifferenceIndex
+            BigDecimal goalsDifferenceIndex,
+            BigDecimal matchWeightIndex
     ) {
         return players.stream()
                 .map( player -> {
@@ -61,7 +63,7 @@ public class RatingService {
                     BigDecimal expectedScore = expectedScores.get( player.getId() );
 
                     BigDecimal ratingDifference = calculateRatingDifference( actualScore, expectedScore,
-                            goalsDifferenceIndex );
+                            goalsDifferenceIndex,matchWeightIndex );
 
                     return GamePlayerData.builder()
                             .id( player.getId() )
@@ -80,8 +82,8 @@ public class RatingService {
         return playerRating.add( ratingDifference );
     }
 
-    private static BigDecimal calculateRatingDifference(BigDecimal actualScore, BigDecimal expectedScore, BigDecimal goalsDifferenceIndex) {
-        return MATCH_WEIGHT_INDEX
+    private BigDecimal calculateRatingDifference(BigDecimal actualScore, BigDecimal expectedScore, BigDecimal goalsDifferenceIndex, BigDecimal matchWeightIndex) {
+        return Optional.ofNullable(matchWeightIndex).orElse( MATCH_WEIGHT_INDEX_DEFAULT )
                 .multiply( goalsDifferenceIndex )
                 .multiply( actualScore.subtract( expectedScore ) )
                 .divide( new BigDecimal( 1 ), 0,

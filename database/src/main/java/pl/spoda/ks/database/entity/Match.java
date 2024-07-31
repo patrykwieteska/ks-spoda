@@ -36,6 +36,8 @@ public class Match extends BaseEntity {
     private Integer awayPenaltyGoals;
     @Column(name="IS_PLAYOFF_MATCH")
     private Boolean isPlayOffMatch;
+    @Column(name="COMMENTARY")
+    private String commentary;
 
     @ManyToOne
     @JoinColumn(name = "MATCH_DAY_ID")

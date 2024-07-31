@@ -3,10 +3,11 @@ package pl.spoda.ks.api.league.model;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import pl.spoda.ks.api.league.enums.TeamStructure;
 import pl.spoda.ks.api.league.enums.LeagueType;
+import pl.spoda.ks.api.league.enums.TeamStructure;
 import pl.spoda.ks.api.player.model.PlayerData;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -26,8 +27,9 @@ public class LeagueRequest {
     private TeamStructure teamStructure;
     @NotNull(message = "League type cannot be null")
     private LeagueType type;
-    @Size(min=2)
+    @Size(min = 2)
     private List<PlayerData> playerList;
     private Boolean isPrivate;
+    private LocalDate startDate;
 
 }

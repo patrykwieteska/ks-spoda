@@ -6,6 +6,7 @@ spring:
 base.request: "/api/v1"
 application:
   initial-rating: "1000.0"
+  default-match-weight-index: "50"
 rating:
   controller:
     enabled: true
@@ -15,3 +16,11 @@ logging:
     com:
       zaxxer:
         hikari: debug
+---
+spring:
+  config:
+    activate:
+      on-profile: upload-test
+match-import:
+  enabled: false
+  file-path: /upload/data.csv

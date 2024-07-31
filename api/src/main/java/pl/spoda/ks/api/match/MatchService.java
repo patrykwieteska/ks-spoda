@@ -54,8 +54,8 @@ public class MatchService {
                 .build() );
     }
 
-    @Transactional
-    public ResponseEntity<BaseResponse> createMatch(CreateMatchRequest request) {
+//    @Transactional
+    public MatchCreated createMatch(CreateMatchRequest request) {
         Integer matchDayId = request.getMatchDayId();
         MatchDayDto matchDay = matchDayServiceDB.getMatchDay( matchDayId );
         Pair<Integer, Integer> matchTeams = matchTeamsResolver.prepareMatchTeams( request.getHomeGameTeamId(),
@@ -90,7 +90,7 @@ public class MatchService {
                 matchDayTable,
                 newMatchDetails );
         euroMatchService.updateEuroMatch( matchDto, season.getIsEuro(), false, season.getEuroTournamentId() );
-        return responseResolver.prepareResponseCreated( MatchCreated.builder().matchId( newMatchId ).build() );
+        return MatchCreated.builder().matchId( newMatchId ).build();
     }
 
     private List<Integer> prepareMatchPlayerList(

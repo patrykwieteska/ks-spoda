@@ -30,9 +30,11 @@ public class RatingResolver {
             CreateMatchRequest createMatchRequest,
             String ratingType,
             List<MatchDetailsDto> newMatchDetailsList,
-            Function<MatchDetailsDto, BigDecimal> function
+            Function<MatchDetailsDto, BigDecimal> function,
+            BigDecimal matchWeightIndex
     ) {
         RatingRequest request = ratingRequestMapper.mapRequest(
+                matchWeightIndex,
                 createMatchRequest,
                 ratingType,
                 preparePlayerRatingMap( newMatchDetailsList, function )
@@ -65,7 +67,8 @@ public class RatingResolver {
             String ratingType,
             List<Integer> homePlayers,
             List<Integer> awayPlayers,
-            Map<Integer, BigDecimal> beforeRatingMap
+            Map<Integer, BigDecimal> beforeRatingMap,
+            BigDecimal matchWeightIndex
     ) {
         RatingRequest ratingRequest = RatingRequest.builder()
                 .mode( ratingType )
@@ -89,6 +92,7 @@ public class RatingResolver {
                                                 .build() )
                                         .toList() )
                         .build() )
+                .matchWeightIndex( matchWeightIndex )
                 .build();
 
         RatingResponse ratingResponse = ratingService.calculateRating( ratingRequest );

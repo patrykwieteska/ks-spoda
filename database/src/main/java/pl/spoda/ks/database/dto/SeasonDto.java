@@ -27,5 +27,6 @@ public class SeasonDto extends BaseDto {
     private String image;
     private String seasonName;
     private String euroTournamentId;
+    private BigDecimal matchWeightIndex;
 
 }

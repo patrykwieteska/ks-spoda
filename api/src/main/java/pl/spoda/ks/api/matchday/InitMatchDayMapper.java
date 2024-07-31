@@ -33,6 +33,7 @@ public class InitMatchDayMapper {
                 .isFinished( matchDay.getIsFinished() )
                 .location( matchDay.getLocation() )
                 .seasonMatchDay( matchDay.getSeasonMatchDay() )
+                .title( matchDay.getTitle() )
                 .build();
     }
 }

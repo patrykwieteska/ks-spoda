@@ -3,7 +3,7 @@ package pl.spoda.ks.rating.model.request;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-
+import java.math.BigDecimal;
 
 @Data
 @Builder
@@ -17,5 +17,7 @@ public class RatingRequest {
 
     @NotNull(message = "Rating mode cannot be null")
     private String mode;
+
+    private BigDecimal matchWeightIndex;
 
 }

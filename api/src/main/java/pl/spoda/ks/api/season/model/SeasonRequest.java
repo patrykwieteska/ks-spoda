@@ -5,6 +5,7 @@ import lombok.*;
 import pl.spoda.ks.api.season.enums.PointCountingMethod;
 import pl.spoda.ks.api.season.enums.RatingType;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -26,5 +27,6 @@ public class SeasonRequest {
     private Boolean isEuro;
     private String image;
     private String seasonName;
+    private BigDecimal matchWeightIndex;
 
 }

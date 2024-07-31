@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -34,4 +35,5 @@ public class CreateMatchRequest {
     private Integer awayGameTeamId;
     private Integer euroMatchId;
     private Boolean isPlayOffMatch;
+    private LocalDateTime matchTime;
 }

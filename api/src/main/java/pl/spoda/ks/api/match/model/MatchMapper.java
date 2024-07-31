@@ -9,6 +9,7 @@ import pl.spoda.ks.database.dto.*;
 import pl.spoda.ks.database.service.GameTeamServiceDB;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,19 +31,20 @@ public class MatchMapper {
                 .homeGoals( matchDto.getHomeGoals() )
                 .homeTeam( mapToMatchTeam( matchDto.getHomeTeam() ) )
                 .awayTeam( mapToMatchTeam( matchDto.getAwayTeam() ) )
-                .isPlayOffMatch( matchDto.getIsPlayOffMatch())
-                .penalties( mapPenalties(matchDto.getHomePenaltyGoals(),matchDto.getAwayPenaltyGoals(),
-                        matchDto.getId()) )
+                .isPlayOffMatch( matchDto.getIsPlayOffMatch() )
+                .penalties( mapPenalties( matchDto.getHomePenaltyGoals(), matchDto.getAwayPenaltyGoals(),
+                        matchDto.getId() ) )
+                .matchCommentary( matchDto.getCommentary() )
                 .build();
     }
 
     private PenaltyKicks mapPenalties(Integer homePenaltyGoals, Integer awayPenaltyGoals, Integer matchId) {
-        if(homePenaltyGoals == null && awayPenaltyGoals == null) {
+        if (homePenaltyGoals == null && awayPenaltyGoals == null) {
             return null;
         }
 
-        if(homePenaltyGoals == null || awayPenaltyGoals == null) {
-            throw new SpodaApplicationException( "Penalty result is wrong for match: "+ matchId);
+        if (homePenaltyGoals == null || awayPenaltyGoals == null) {
+            throw new SpodaApplicationException( "Penalty result is wrong for match: " + matchId );
         }
 
         return PenaltyKicks.builder()
@@ -62,7 +64,7 @@ public class MatchMapper {
     private GameTeam mapGameTeam(MatchTeamDto matchTeam) {
         return Optional.ofNullable( matchTeam.getGameTeamId() )
                 .map( gameTeamServiceDB::getGameTeamById )
-                .map(this::mapToGameTeam )
+                .map( this::mapToGameTeam )
                 .orElse( null );
     }
 
@@ -83,7 +85,7 @@ public class MatchMapper {
                 .awayGoals( createMatchRequest.getAwayGoals() )
                 .homeGoals( createMatchRequest.getHomeGoals() )
                 .matchDayId( createMatchRequest.getMatchDayId() )
-                .matchTime( LocalDateTime.now() )
+                .matchTime( Optional.ofNullable( createMatchRequest.getMatchTime() ).orElse( LocalDateTime.now( ZoneId.of( "Europe/Warsaw" ) ) ) )
                 .isFinished( false )
                 .homeTeam( mapMatchTeam( createMatchRequest.getHomePlayers(), matchDayTable, createMatchRequest.getHomeGameTeamId() ) )
                 .awayTeam( mapMatchTeam( createMatchRequest.getAwayPlayers(), matchDayTable, createMatchRequest.getAwayGameTeamId() ) )
@@ -128,6 +130,7 @@ public class MatchMapper {
         matchDto.getHomeTeam().setGameTeamId( Optional.ofNullable( request.getHomeGameTeamId() ).orElse( matchDto.getHomeTeam().getGameTeamId() ) );
         matchDto.setHomePenaltyGoals( Optional.ofNullable( request.getPenalties() ).map( PenaltyKicks::getHomeGoals ).orElse( null ) );
         matchDto.setAwayPenaltyGoals( Optional.ofNullable( request.getPenalties() ).map( PenaltyKicks::getAwayGoals ).orElse( null ) );
+        matchDto.setCommentary( request.getMatchCommentary() );
         return matchDto;
     }
 }

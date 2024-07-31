@@ -34,7 +34,7 @@ public class TableBase extends BaseEntity {
     @Column(name = "MATCH_IN_PROGRESS")
     private Boolean matchInProgress;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_id", referencedColumnName = "id")
     @ToString.Exclude
     private Player player;

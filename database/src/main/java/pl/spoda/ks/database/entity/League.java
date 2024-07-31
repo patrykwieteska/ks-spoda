@@ -1,11 +1,15 @@
 package pl.spoda.ks.database.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -32,15 +36,17 @@ public class League extends BaseEntity {
     private String type;
     @Column(name = "TEAM_STRUCTURE")
     private String teamStructure;
-    @Column(name="IS_PRIVATE")
+    @Column(name = "IS_PRIVATE")
     private Boolean isPrivate;
+    @Column(name = "START_DATE")
+    private LocalDate startDate;
 
     @OneToMany(mappedBy = "league", cascade = CascadeType.ALL)
     @Fetch(FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<Season> seasons;
 
-    @ManyToMany(mappedBy = "leagues")
+    @ManyToMany(mappedBy = "leagues", fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Player> players;
 

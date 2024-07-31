@@ -33,14 +33,18 @@ public class MatchDay extends BaseEntity {
     private Boolean isFinished;
     @Column(name="SEASON_MATCH_DAY")
     private Integer seasonMatchDay;
+    @Column(name="TITLE")
+    private String title;
+    @Column(name="HEADER_IMG")
+    private String headerImg;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="SEASON_ID")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Season season;
 
-    @OneToMany(mappedBy = "matchDay", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "matchDay", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<Match> matchList;

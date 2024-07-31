@@ -20,4 +20,6 @@ public class GameTeamData {
     @NotEmpty(message = "Players list cannot be empty")
     @Max(value = 2)
     private List<GamePlayerData> players;
+
+    private Integer teamOverallRating;
 }
