@@ -48,13 +48,15 @@ public class Season extends BaseEntity {
     private String seasonName;
     @Column(name="EURO_TOURNAMENT_ID")
     private String euroTournamentId;
+    @Column(name="MATCH_WEIGHT_INDEX")
+    private BigDecimal matchWeightIndex;
 
-    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @ToString.Exclude
     private List<MatchDay> matchDayList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "LEAGUE_ID")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

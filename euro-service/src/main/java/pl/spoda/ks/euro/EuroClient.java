@@ -14,7 +14,6 @@ import pl.spoda.ks.euro.model.response.ThirdPlacesResponse;
 @FeignClient(url = "${euro.service.url}", value = "EuroClient")
 public interface EuroClient {
 
-
     @GetMapping("/calendar/{tournamentId}")
     EuroCalendarResponse getEuroCalendar(
             @PathVariable("tournamentId") String tournamentId,

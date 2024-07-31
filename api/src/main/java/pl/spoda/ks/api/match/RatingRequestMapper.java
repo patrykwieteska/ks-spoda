@@ -12,7 +12,8 @@ import java.util.Map;
 
 @Service
 public class RatingRequestMapper {
-    public RatingRequest mapRequest(CreateMatchRequest createMatchRequest, String ratingType,
+    public RatingRequest mapRequest(BigDecimal matchWeightIndex, CreateMatchRequest createMatchRequest,
+                                    String ratingType,
                                     Map<Integer, BigDecimal> playerCurrentRatingMap) {
         return RatingRequest.builder()
                 .teamA( GameTeamData.builder()
@@ -24,6 +25,7 @@ public class RatingRequestMapper {
                         .players( mapToGamePlayerDataList( createMatchRequest.getAwayPlayers(),playerCurrentRatingMap ) )
                         .build() )
                 .mode( ratingType)
+                .matchWeightIndex( matchWeightIndex)
                 .build();
 
     }

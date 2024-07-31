@@ -23,6 +23,7 @@ public class Match extends BaseResponse {
     private Integer awayGoals;
     private PenaltyKicks penalties;
     private boolean isPlayOffMatch;
+    private String matchCommentary;
 
 
 }

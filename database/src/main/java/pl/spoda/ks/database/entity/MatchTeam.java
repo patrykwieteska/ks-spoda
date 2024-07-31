@@ -25,7 +25,7 @@ public class MatchTeam extends BaseEntity {
     @Column(name="GAME_TEAM_ID")
     private Integer gameTeamId;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="MATCH_TEAM_PLAYER",
             joinColumns = @JoinColumn(name="match_team_id"),

@@ -62,7 +62,7 @@ public class MatchValidator {
         if (awayGameTeamId == null && homeGameTeamId == null)
             return;
 
-        if (homeGameTeamId.equals( awayGameTeamId )) {
+        if (homeGameTeamId.equals( awayGameTeamId ) && homeGameTeamId!=751) {
             throw new SpodaApplicationException( "Przeciwko sobie nie mogą grać takie same drużyny" );
         }
     }

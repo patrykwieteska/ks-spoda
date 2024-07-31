@@ -17,4 +17,5 @@ public class EditMatchRequest {
     private Boolean isComplete;
     private Integer euroMatchId;
     private PenaltyKicks penalties;
+    private String matchCommentary;
 }

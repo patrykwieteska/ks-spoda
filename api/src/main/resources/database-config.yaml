@@ -40,3 +40,19 @@ spring:
     hibernate:
       ddl-auto: none
     show-sql: true
+---
+spring:
+  config:
+    activate:
+      on-profile: upload-test
+  datasource:
+    url: jdbc:mysql://localhost:3306/KS_SPODA_UPLOAD_TEST_DB?allowPublicKeyRetrieval=true&useSSL=false # URL PROD
+    username: ks_spoda_test_user #PROD
+    password: PASS@!TEST2 #PROD
+  liquibase:
+    change-log: ./database/changelog/changelog-master.yaml
+    contexts: prod
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true

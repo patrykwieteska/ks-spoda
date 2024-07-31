@@ -32,4 +32,11 @@ public interface MatchDetailsRepository extends JpaRepository<MatchDetails, Inte
             limit 1
             """)
     Optional<MatchDetails> findPreviousLeagueMatch(Integer playerId, Integer leagueId, Integer matchId);
+
+    @Query(nativeQuery = true, value = """
+            SELECT * FROM MATCH_DETAILS
+            order by id desc
+            limit 1
+            """)
+    Optional<MatchDetails> findLastMatchDetails();
 }

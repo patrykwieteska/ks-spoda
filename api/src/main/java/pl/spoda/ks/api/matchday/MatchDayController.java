@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.spoda.ks.api.commons.BaseResponse;
+import pl.spoda.ks.api.commons.ResponseResolver;
 import pl.spoda.ks.api.matchday.model.CreateMatchDayRequest;
 import pl.spoda.ks.api.matchday.model.MatchDayStored;
 import pl.spoda.ks.comons.aspects.LogEvent;
@@ -14,6 +15,7 @@ import pl.spoda.ks.comons.aspects.LogEvent;
 public class MatchDayController {
 
     private final MatchDayService matchDayService;
+    private final ResponseResolver responseResolver;
 
     @GetMapping("/list")
     @LogEvent
@@ -31,7 +33,8 @@ public class MatchDayController {
     public ResponseEntity<BaseResponse> createMatchDay(
             @RequestBody CreateMatchDayRequest request
     ) {
-        return matchDayService.createMatchDay( request );
+        MatchDayStored newMatchDay = matchDayService.createMatchDay( request );
+        return responseResolver.prepareResponseCreated( MatchDayStored.builder().matchDayId( newMatchDay.getMatchDayId() ).build() );
     }
 
     @CrossOrigin

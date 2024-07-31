@@ -25,4 +25,5 @@ public class MatchDto extends BaseDto {
     private Integer homePenaltyGoals;
     private Integer awayPenaltyGoals;
     private Boolean isPlayOffMatch;
+    private String commentary;
 }

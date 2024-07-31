@@ -140,8 +140,8 @@ public class TableService {
                 .map( MatchDayTableDto::getPlayer )
                 .collect( Collectors.toSet() );
         Set<TableResultRow> tableRows = tableRowsService.getTableRows( matchesBySeason, matchDayPlayers, matchDayTableDtoSet );
-        List<TableResultRow> result = getSortedTableRows( tableRows, PointCountingMethod.RATING );
-        return prepareTableResponse( result, null, PointCountingMethod.RATING );
+        List<TableResultRow> result = getSortedTableRows( tableRows, PointCountingMethod.POINTS_TOTAL );
+        return prepareTableResponse( result, null, PointCountingMethod.POINTS_TOTAL );
     }
 
     private Function<TableResultRow, BigDecimal> preparePositionComparator(PointCountingMethod countingMethod) {

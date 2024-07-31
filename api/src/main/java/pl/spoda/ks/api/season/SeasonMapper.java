@@ -9,8 +9,6 @@ import pl.spoda.ks.api.season.enums.RatingType;
 import pl.spoda.ks.api.season.model.SeasonData;
 import pl.spoda.ks.api.season.model.SeasonRequest;
 import pl.spoda.ks.comons.date.DateService;
-import pl.spoda.ks.comons.exceptions.SpodaApplicationException;
-import pl.spoda.ks.comons.messages.InfoMessage;
 import pl.spoda.ks.database.dto.SeasonDto;
 import pl.spoda.ks.euro.EuroService;
 
@@ -29,29 +27,27 @@ public class SeasonMapper {
     @Value("${application.initial-rating}")
     public String initialRating;
 
+    @Value("${application.default-match-weight-index}")
+    public String defaultMatchWeightIndex;
+
     public SeasonDto mapSeason(SeasonRequest request) {
-        SeasonDto seasonDto = SeasonDto.builder()
+        return SeasonDto.builder()
                 .startDate( dateService.dateOf( request.getStartDate() ) )
                 .leagueId( request.getLeagueId() )
                 .isFinished( false )
                 .pointCountingMethod( request.getPointCountingMethod().name() )
                 .isEuro( request.getIsEuro() )
                 .image( request.getImage() )
-                .seasonName(request.getSeasonName())
-                .euroTournamentId( addEuro(request.getIsEuro()) )
+                .seasonName( request.getSeasonName() )
+                .euroTournamentId( addEuro( request.getIsEuro() ) )
+                .matchWeightIndex( Optional.ofNullable( request.getMatchWeightIndex() ).orElse( new BigDecimal( defaultMatchWeightIndex ) ) )
+                .initialRating( new BigDecimal( initialRating ) )
+                .ratingType( Optional.ofNullable( request.getRatingType() ).map( RatingType::name ).orElse( RatingType.SINGLE.name() ) )
                 .build();
-
-        if (PointCountingMethod.RATING.equals( request.getPointCountingMethod() )) {
-
-            seasonDto.setInitialRating( new BigDecimal( initialRating ) );
-            seasonDto.setRatingType( Optional.ofNullable( request.getRatingType() ).map( Enum::name )
-                    .orElseThrow( () -> new SpodaApplicationException( InfoMessage.RATING_TYPE_REQUIRED ) ) );
-        }
-        return seasonDto;
     }
 
     private String addEuro(Boolean isEuro) {
-        if(BooleanUtils.isNotTrue(isEuro)) {
+        if (BooleanUtils.isNotTrue( isEuro )) {
             return null;
         }
         return euroService.addNewEuroTournament();
@@ -76,8 +72,8 @@ public class SeasonMapper {
                 .seasonCount( seasonDto.getLeagueSeasonCount() )
                 .ratingType( RatingType.getByName( seasonDto.getRatingType() ) )
                 .isEuro( seasonDto.getIsEuro() )
-                .image(seasonDto.getImage())
-                .seasonName(seasonDto.getSeasonName())
+                .image( seasonDto.getImage() )
+                .seasonName( seasonDto.getSeasonName() )
                 .euroId( seasonDto.getEuroTournamentId() )
                 .build();
     }

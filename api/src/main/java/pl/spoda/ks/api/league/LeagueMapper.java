@@ -26,6 +26,7 @@ public class LeagueMapper {
                 .playerList(playerMapper.mapToPlayerDtoList( request.getPlayerList() ))
                 .logoUrl( request.getLogoUrl() )
                 .isPrivate(request.getIsPrivate())
+                .startDate(request.getStartDate())
                 .build();
     }
 

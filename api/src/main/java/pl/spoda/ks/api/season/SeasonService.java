@@ -34,9 +34,9 @@ public class SeasonService {
     private final PlayerService playerService;
 
     @LogEvent
-    public ResponseEntity<BaseResponse> createSeason(SeasonRequest request) {
+    public StoredSeason createSeason(SeasonRequest request) {
         SeasonDto result = seasonServiceDb.save( seasonMapper.mapSeason( request ) );
-        return responseResolver.prepareResponseCreated( StoredSeason.builder().seasonId( result.getId() ).build() );
+        return StoredSeason.builder().seasonId( result.getId() ).build() ;
     }
 
     @LogEvent

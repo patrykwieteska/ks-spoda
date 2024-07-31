@@ -19,4 +19,5 @@ public class MatchDayData {
     private Boolean isFinished;
     private Integer matchDayId;
     private List<Match> matches;
+    private String title;
 }

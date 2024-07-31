@@ -3,6 +3,7 @@ package pl.spoda.ks.database.dto;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -23,5 +24,6 @@ public class LeagueDto extends BaseDto {
     private LocalDateTime creationDate;
     private Set<PlayerDto> playerList;
     private Boolean isPrivate;
+    private LocalDate startDate;
 
 }

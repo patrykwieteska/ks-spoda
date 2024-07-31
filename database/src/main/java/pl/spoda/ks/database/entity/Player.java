@@ -38,7 +38,7 @@ public class Player extends BaseEntity {
     @ToString.Exclude
     private List<LeagueTable> leagueTable;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="LEAGUE_TABLE",
             joinColumns = @JoinColumn(name="player_id"),
@@ -46,7 +46,7 @@ public class Player extends BaseEntity {
     @ToString.Exclude
     private Set<League> leagues;
 
-    @ManyToMany(mappedBy = "teamPlayers")
+    @ManyToMany(mappedBy = "teamPlayers", fetch = FetchType.EAGER)
     @ToString.Exclude
     @Transient
     private Set<MatchTeam> matchTeams;

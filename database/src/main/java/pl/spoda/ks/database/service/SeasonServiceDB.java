@@ -3,7 +3,6 @@ package pl.spoda.ks.database.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.BooleanUtils;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import pl.spoda.ks.comons.aspects.LogEvent;
@@ -41,7 +40,7 @@ public class SeasonServiceDB {
         League storedLeague = leagueRepository.findById( seasonDto.getLeagueId() ).orElse( null );
         validateLeague( seasonDto.getLeagueId(), storedLeague );
 
-        int storedSeasonCount = validateUnfinishedSeasonsInTheLeague( storedLeague.getId() );
+        int storedSeasonCount = getCurrentLeagueSeasonSize( storedLeague.getId() );
 
         Season season = mapper.mapToSeason( seasonDto );
         season.setLeagueSeasonCount( storedSeasonCount + 1 );
@@ -56,14 +55,8 @@ public class SeasonServiceDB {
         return mapper.mapToSeasonDto( season );
     }
 
-    private int validateUnfinishedSeasonsInTheLeague(Integer leagueId) {
-        List<Season> seasons = seasonRepository.findByLeagueId( leagueId );
-        if (seasons.stream()
-                .anyMatch( season -> BooleanUtils.isNotTrue( season.getIsFinished() ) ))
-            throw new SpodaApplicationException( InfoMessage.getMessage( InfoMessage.UNFINISHED_SEASONS_IN_LEAGUE,
-                    leagueId.toString() ) );
-
-        return seasons.size();
+    private int getCurrentLeagueSeasonSize(Integer leagueId) {
+        return seasonRepository.findByLeagueId( leagueId ).size();
     }
 
     public List<SeasonDto> getSeasonsByLeague(Integer leagueId) {

@@ -22,5 +22,7 @@ public class MatchDayDto extends BaseDto {
     private Boolean isFinished;
     private List<MatchDto> matchList;
     private SeasonDto season;
+    private String title;
+    private String headerImg;
 
 }

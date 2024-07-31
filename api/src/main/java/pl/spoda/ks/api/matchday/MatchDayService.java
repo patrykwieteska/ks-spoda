@@ -34,10 +34,10 @@ public class MatchDayService {
     private final MatchDayPlayerMapper matchDayPlayerMapper;
 
     @LogEvent
-    public ResponseEntity<BaseResponse> createMatchDay(CreateMatchDayRequest request) {
+    public MatchDayStored createMatchDay(CreateMatchDayRequest request) {
         matchDayValidator.validateMatchDay( request );
         MatchDayDto matchDay = matchDayServiceDb.createMatchDay( matchDayMapper.mapMatchDay( request ) );
-        return responseResolver.prepareResponseCreated( MatchDayStored.builder().matchDayId( matchDay.getId() ).build() );
+        return MatchDayStored.builder().matchDayId( matchDay.getId() ).build();
     }
 
     @LogEvent

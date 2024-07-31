@@ -15,5 +15,7 @@ public class CreateMatchDayRequest {
     private Integer seasonId;
     private LocalDate matchDayDate;
     private String location;
+    private String title;
+    private String headerImg;
 
 }
